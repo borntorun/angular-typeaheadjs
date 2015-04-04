@@ -1,0 +1,44 @@
+{
+  "name": "angular-remote-typeaheadjs",
+  "version": "0.0.1",
+  "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
+  "main": "dist/angular-remote-typeaheadjs.js",
+  "scripts": {
+    "test": "karma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/borntorun/angular-remote-typeaheadjs.git"
+  },
+  "keywords": [
+    "angularjs",
+    "directive",
+    "typeahead",
+    "typeaheadjs",
+    "autocomplete",
+    "bloodhound",
+    "jquery",
+    "remote",
+    "javascript"
+  ],
+  "author": "João Carvalho <jmmtcarvalho@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/borntorun/angular-remote-typeaheadjs/issues"
+  },
+  "homepage": "https://github.com/borntorun/angular-remote-typeaheadjs",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.11.1",
+    "grunt-contrib-uglify": "^0.8.1",
+    "grunt-karma": "^0.10.1",
+    "grunt-ng-annotate": "^0.10.0",
+    "jasmine-core": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-jasmine": "^0.3.5",
+    "karma-phantomjs-launcher": "^0.1.4"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "angular-remote-typeaheadjs",
+  "version": "0.0.1",
+  "authors": [
+    "Joao Carvalho <jmmtcarvalho@gmail.com>"
+  ],
+  "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
+  "main": "angular-remote-typeaheadjs.js",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "angularjs",
+    "directive",
+    "typeahead",
+    "typeaheadjs",
+    "autocomplete",
+    "bloodhound",
+    "jquery",
+    "remote",
+    "javascript"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/borntorun/angular-remote-typeaheadjs",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.14",
+    "typeahead.js": "~0.10.5"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.3.14",
+    "angular-scenario": "~1.3.14",
+    "jasmine-sinon": "~0.4.0"
+  }
+}
