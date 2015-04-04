@@ -78,5 +78,7 @@ Authors
 License
 -------
 
+Copyright (c) 2015 João Carvalho
+
 Licensed under the MIT License
 
