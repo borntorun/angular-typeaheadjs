@@ -15,9 +15,13 @@ How to use
 
 Get and install the requirements.
 
-Get the javascript in dist folder: angular-remote-typeaheadjs.min.js
+* Install with Bower
 
-<!-- * Install with [Bower]: `$ bower install angular-remote-typeaheadjs` -->
+```
+$ bower install angular-remote-typeaheadjs
+```
+
+* or get the javascript in dist folder: angular-remote-typeaheadjs.js
 
 In your html template:
 ```
