@@ -2,7 +2,6 @@ node_modules
 .tmp
 .idea
 bower_components
-dist
 *.sublime-*
 TODO
 npm*.log

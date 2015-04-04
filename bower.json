@@ -6,9 +6,6 @@
   ],
   "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
   "main": "angular-remote-typeaheadjs.js",
-  "moduleType": [
-    "es6"
-  ],
   "keywords": [
     "angularjs",
     "directive",
@@ -20,14 +17,17 @@
     "remote",
     "javascript"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/borntorun/angular-remote-typeaheadjs.git"
+  },
   "license": "MIT",
   "homepage": "https://github.com/borntorun/angular-remote-typeaheadjs",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
     "tests"
   ],
   "dependencies": {

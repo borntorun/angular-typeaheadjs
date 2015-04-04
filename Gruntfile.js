@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            src: 'src/angular-remote-typeaheadjs.js'
+            src: 'dist/<%= pkg.name %>.js'
           }
         ]
       }
@@ -38,7 +38,7 @@ module.exports = function (grunt) {
       },
       build: {
         files: {
-          'dist/<%= pkg.name %>.min.js':  ['src/**/*.js']
+          'dist/<%= pkg.name %>.min.js':  ['dist/<%= pkg.name %>.js']
         }
       }
     },

@@ -140,4 +140,5 @@
       }
     }
   }
+  angularRemoteTypeaheadjs.$inject = ["$log"];
 }());
