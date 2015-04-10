@@ -140,7 +140,7 @@ module.exports = function (grunt) {
              */
             tag: {
                 command: function (ok) {
-                    return (ok && 'echo ok #git tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\'') || '$(exit 1)';
+                    return (ok && 'git tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\'') || '$(exit 1)';
                 },
                 options: {
                     stdout: false,
@@ -161,7 +161,7 @@ module.exports = function (grunt) {
              */
             push: {
                 command: function (ok) {
-                    return (ok && 'echo ok #git push <%= grunt.option("remote") %> master --tags') || '$(exit 1)';
+                    return (ok && 'git push <%= grunt.option("remote") %> master --tags') || '$(exit 1)';
                 },
                 options: {
                     stdout: false,
