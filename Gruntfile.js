@@ -281,8 +281,8 @@ module.exports = function (grunt) {
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('default', ['test', 'build']);
-    grunt.registerTask('test', ['karma', 'jshint']);
-    grunt.registerTask('build', ['concat', 'ngAnnotate', 'uglify', 'sed:version']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('test', ['jshint', 'karma']);
+    grunt.registerTask('build', ['jshint', 'concat', 'ngAnnotate', 'uglify', 'sed:version']);
 
 };
