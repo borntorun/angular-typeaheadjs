@@ -1,6 +1,6 @@
 {
   "name": "angular-remote-typeaheadjs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
   "main": "dist/angular-remote-typeaheadjs.js",
   "scripts": {
