@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/borntorun/angular-remote-typeaheadjs.svg?branch=master)](https://travis-ci.org/borntorun/angular-remote-typeaheadjs)
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+
+
 angular-remote-typeaheadjs
 =======================
 
