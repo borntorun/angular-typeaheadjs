@@ -5,7 +5,7 @@ if [ "$TEST_SUITE" == "unit" ]; then
 elif [ "$TRAVIS_SECURE_ENV_VARS" == "true" -a "$TEST_SUITE" == "integration" ]; then
   static -p 8888 &
   sleep 3
-  ./node_modules/mocha/bin/mocha --harmony -R spec ./tests/integration/tests.js || true
+  ./node_modules/mocha/bin/mocha --harmony -R spec ./tests/integration/test.js || true
 else
   echo "Tests did not run"
   exit 1

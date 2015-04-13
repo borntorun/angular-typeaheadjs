@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/borntorun/angular-remote-typeaheadjs",
   "devDependencies": {
+    "chai": "^2.2.0",
     "grunt": "^0.4.5",
     "grunt-concurrent": "^1.0.0",
     "grunt-contrib-clean": "^0.6.0",
