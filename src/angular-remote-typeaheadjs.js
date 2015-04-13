@@ -56,7 +56,7 @@
                 return '<input type="text" ng-model="model" placeholder="{{placeholder}}" class="typeahead {{cssinput}}"/>';
             },
             link: linkfunction
-        }
+        };
         return directive;
         ////////////////
         function linkfunction(scope, element, attrs, ctrl) {
