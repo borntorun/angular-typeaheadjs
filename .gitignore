@@ -6,3 +6,5 @@ bower_components
 TODO
 npm*.log
 ./*.log
+tests/integration
+.travis.yml

@@ -113,6 +113,7 @@
             function configTypeaheadBloodhound() {
                 if (!scope.remote) {
                     logerror('Attribute [remote] was not defined.');
+                    return;
                 }
                 if (!scope.datasource) {
                     scope.datasource = 'datasource';
@@ -123,7 +124,7 @@
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(scope.key),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     limit: scope.limit,
-                    remote: scope.remote + '%QUERY'
+                    remote: scope.remote
                 });
 
                 //if (scope.remote) {

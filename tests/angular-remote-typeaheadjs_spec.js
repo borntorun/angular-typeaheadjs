@@ -10,7 +10,8 @@ describe('angular-remote-typeaheadjs', function () {
     }]));
     describe('Render element', function () {
         it('should render full typeaheadjs structure', function () {
-            var element = angular.element('<angular-remote-typeaheadjs/>'), el;
+            var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}"/>'), el;
+            $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
             el = element[0];
@@ -36,7 +37,7 @@ describe('angular-remote-typeaheadjs', function () {
         it('Attribute remote was passed so it should not be undefined and log.error should not been called', function () {
             spyOn($log, 'error');
             var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}"/>'), el;
-            $scope.urlremote = 'some-url';
+            $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
             el = element[0];
@@ -47,11 +48,11 @@ describe('angular-remote-typeaheadjs', function () {
         it('Should call Bloodhound and attribute "remote" passed to it', function () {
             var spy = sinon.spy(window, 'Bloodhound'),
                 element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}"/>');
-            $scope.urlremote = 'some-url';
+            $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
             expect(spy).toHaveBeenCalledWith();
-            expect(spy.args[0][0].remote).toBe($scope.urlremote + '%QUERY');
+            expect(spy.args[0][0].remote).toBe($scope.urlremote);
         });
         it('Test attributes', function () {
             var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}" key="{{key}}" datasource="{{datasource}}"' +
@@ -65,7 +66,7 @@ describe('angular-remote-typeaheadjs', function () {
             $scope.placeholder = 'insert test';
             $scope.cssinput = 'testcssinput';
             $scope.cssdropdown = 'testcssdropdown';
-            $scope.urlremote = 'some-url';
+            $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
             var el = element[0];

@@ -51,7 +51,7 @@ Example
 In a controller:
 ```
 var vm = this;
-vm.urlRemote = '/api/categories/search/';
+vm.urlRemote = '/api/categories/search/%QUERY';
 vm.onSelected = function (item) {
   //do something with item.name
 }
