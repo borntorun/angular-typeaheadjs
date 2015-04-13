@@ -4,7 +4,7 @@
   "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
   "main": "dist/angular-remote-typeaheadjs.js",
   "scripts": {
-    "test": "karma"
+    "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
@@ -47,7 +47,9 @@
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "load-grunt-tasks": "^3.1.0",
+    "mocha": "^2.2.4",
     "readline-sync": "^0.8.0",
-    "semver": "^4.3.3"
+    "semver": "^4.3.3",
+    "yiewd": "^0.6.0"
   }
 }

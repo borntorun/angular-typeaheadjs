@@ -124,6 +124,7 @@
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(scope.key),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     limit: scope.limit,
+                    prefetch: undefined,
                     remote: scope.remote
                 });
 
