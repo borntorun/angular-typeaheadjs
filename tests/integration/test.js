@@ -27,7 +27,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-remote-typeaheadjs', function() {
-    var driver, body, input, inputid, hint, dropdown, allPassed = true;
+    var driver, body, input, inputx, hint, dropdown, allPassed = true;
 
     this.timeout(300000);
 
@@ -62,9 +62,12 @@ describe('angular-remote-typeaheadjs', function() {
 
             body = this.elementByTagName('body');
             input = yield this.elementByCssSelector('div.test input:last-child');
+            inputx = yield this.elementByCssSelector('input.typeahead.ng-dirty.ng-valid-parse.ng-touched');
             //input = yield this.elementByCssSelector('span.twitter-typeahead input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
+
+            body > div > span > input.typeahead.ng-dirty.ng-valid-parse.ng-touched
 
             done();
         });
@@ -94,7 +97,9 @@ describe('angular-remote-typeaheadjs', function() {
         it('should show hint', function(done) {
             driver.run(function*() {
                 yield input.click();
-                yield input.type('lit');
+                yield input.type('test');
+                yield inputx.type('lit');
+                
                 expect('yes').to.equal('yes');
                 //expect(yield hint.getValue()).to.equal('Literatura');
                 done();
