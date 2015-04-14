@@ -63,8 +63,8 @@ describe('angular-remote-typeaheadjs', function() {
             body = this.elementByTagName('body');
             input = yield this.elementByCssSelector('div.test input:last-child');
 
-            this.wait(until.elementLocated(By.css('span.twitter-typeahead input:last-child'), 10000));
-            this.isElementPresent(By.css('span.twitter-typeahead input:last-child')).then(function(){
+            this.wait(this.elementLocated(this.By.css('span.twitter-typeahead input:last-child'), 10000));
+            this.isElementPresent(this.By.css('span.twitter-typeahead input:last-child')).then(function(){
                 console.log(' > ' + 'sim'.green);
             },function(){
                 console.log(' > ' + 'nao'.red);
