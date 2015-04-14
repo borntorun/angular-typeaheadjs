@@ -67,6 +67,7 @@ describe('angular-remote-typeaheadjs', function() {
 
             body = this.elementByTagName('body');
             input = yield this.elementByCssSelector('span.twitter-typeahead > input[id]');
+            itemonSelected = yield this.elementById('itemonSelected');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
 
@@ -116,11 +117,24 @@ describe('angular-remote-typeaheadjs', function() {
         it('on type "lit" on input and autocomplete, input value should be "literatura"', function(done) {
             driver.run(function*() {
                 yield input.click();
-                yield input.type('mi');
-
+                yield input.type('lit');
+                yield driver.sleep(500);
                 yield input.type(wd.SPECIAL_KEYS['Tab']);
                 expect(yield input.getValue()).to.equal('literatura');
+                expect(yield itemonSelected.getValue()).to.equal('literatura');
 
+                done();
+            });
+        });
+        it('on type "lit" on input and autocomplete should trigger onselected event', function(done) {
+            //event trigger is ok if input element 'itemonSelected' has value autocompleted
+            //caused by databind in onselected callback
+            driver.run(function*() {
+                yield input.click();
+                yield input.type('lit');
+                yield driver.sleep(500);
+                yield input.type(wd.SPECIAL_KEYS['Tab']);
+                expect(yield itemonSelected.getValue()).to.equal('literatura');
                 done();
             });
         });
