@@ -3,10 +3,17 @@
  * Code inspired in https://github.com/twitter/typeahead.js/blob/master/test/integration/test.js
  */
 var wd = require('yiewd'),
+    //_ = require('lodash'),
     colors = require('colors'),
     expect = require('chai').expect,
+    //expect = require('chai'),
+    //chaiAsPromised = require("chai-as-promised"),
     f = require('util').format,
     env = process.env;
+
+//chai.use(chaiAsPromised);
+//chai.should();
+//chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
 var browser = (process.env.BROWSER || 'chrome').split(':'),
     caps = {
@@ -14,14 +21,12 @@ var browser = (process.env.BROWSER || 'chrome').split(':'),
         browserName: browser[0]
     };
 
-
-
 setIf(caps, 'version', browser[1]);
 setIf(caps, 'platform', browser[2]);
 setIf(caps, 'tunnel-identifier', env['TRAVIS_JOB_NUMBER']);
 setIf(caps, 'build', env['TRAVIS_BUILD_NUMBER']);
 setIf(caps, 'tags', env['CI'] ? ['CI'] : ['local']);
-console.log('teste1:' + caps);
+
 function setIf(obj, key, val) {
     val && (obj[key] = val);
 }
@@ -61,22 +66,13 @@ describe('angular-remote-typeaheadjs', function() {
             yield this.get('http://localhost:8888/tests/integration/test.html');
 
             body = this.elementByTagName('body');
-            input = yield this.elementByCssSelector('div.test input:last-child');
+            //input = yield this.elementByCssSelector('div.test input:last-child');
+            //'span.twitter-typeahead input:last-child'
 
-            this.wait(this.elementLocated(this.By.css('span.twitter-typeahead input:last-child'), 10000));
-            this.isElementPresent(this.By.css('span.twitter-typeahead input:last-child')).then(function(){
-                console.log(' > ' + 'sim'.green);
-            },function(){
-                console.log(' > ' + 'nao'.red);
-            });
+            input = yield this.waitForElementByCss('span.twitter-typeahead input:last-child', 10000)
             //input = yield this.elementByCssSelector('span.twitter-typeahead input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
-
-
-
-
-            body > div > span > input.typeahead.ng-dirty.ng-valid-parse.ng-touched
 
             done();
         });
