@@ -99,8 +99,9 @@ describe('angular-remote-typeaheadjs', function() {
             driver.run(function*() {
                 yield input.click();
                 yield input.type('lit');
-
+                wd.sleep(10);
                 expect(yield dropdown.isDisplayed()).to.equal(true);
+
 
                 //expect(yield hint.getValue()).to.equal('literatura');
                 done();
