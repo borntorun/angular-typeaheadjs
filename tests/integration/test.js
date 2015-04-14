@@ -62,10 +62,19 @@ describe('angular-remote-typeaheadjs', function() {
 
             body = this.elementByTagName('body');
             input = yield this.elementByCssSelector('div.test input:last-child');
-            inputx = yield this.elementByCssSelector('input.typeahead.ng-dirty.ng-valid-parse.ng-touched');
+
+            this.wait(until.elementLocated(By.css('span.twitter-typeahead input:last-child'), 10000));
+            this.isElementPresent(By.css('span.twitter-typeahead input:last-child')).then(function(){
+                console.log(' > ' + 'sim'.green);
+            },function(){
+                console.log(' > ' + 'nao'.red);
+            });
             //input = yield this.elementByCssSelector('span.twitter-typeahead input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
+
+
+
 
             body > div > span > input.typeahead.ng-dirty.ng-valid-parse.ng-touched
 
@@ -98,8 +107,7 @@ describe('angular-remote-typeaheadjs', function() {
             driver.run(function*() {
                 yield input.click();
                 yield input.type('test');
-                yield inputx.type('lit');
-                
+
                 expect('yes').to.equal('yes');
                 //expect(yield hint.getValue()).to.equal('Literatura');
                 done();
