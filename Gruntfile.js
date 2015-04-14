@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                 multistr: true,
                 '-W030': true
             },
-            build: ['Grunfile.js', 'src/**/*.js', 'tests/**/*.js']
+            build: ['Grunfile.js', 'src/**/*.js', 'tests/*.js']
         },
         uglify: {
             options: {

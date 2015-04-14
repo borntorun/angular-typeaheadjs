@@ -2,7 +2,6 @@
 /**
  * Code inspired in https://github.com/twitter/typeahead.js/blob/master/test/integration/test.js
  */
-'use strict';
 var wd = require('yiewd'),
     colors = require('colors'),
     expect = require('chai').expect,
