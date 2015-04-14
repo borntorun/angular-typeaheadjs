@@ -66,10 +66,10 @@ describe('angular-remote-typeaheadjs', function() {
             yield this.get('http://localhost:8888/tests/integration/test.html');
 
             body = this.elementByTagName('body');
-            //input = yield this.elementByCssSelector('div.test input:last-child');
+            input = yield this.elementByCssSelector('span.twitter-typeahead > input[id]');
             //'span.twitter-typeahead input:last-child'
 
-            input = yield this.waitForElementByCss('span.twitter-typeahead input:last-child', 10000)
+            //input = yield this.waitForElementByCss('span.twitter-typeahead input:last-child', 10000)
             //input = yield this.elementByCssSelector('span.twitter-typeahead input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
@@ -102,7 +102,7 @@ describe('angular-remote-typeaheadjs', function() {
         it('should show hint', function(done) {
             driver.run(function*() {
                 yield input.click();
-                yield input.type('test');
+                yield input.type('lit');
 
                 expect('yes').to.equal('yes');
                 //expect(yield hint.getValue()).to.equal('Literatura');
