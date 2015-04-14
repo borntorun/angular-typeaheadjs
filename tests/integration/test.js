@@ -67,10 +67,6 @@ describe('angular-remote-typeaheadjs', function() {
 
             body = this.elementByTagName('body');
             input = yield this.elementByCssSelector('span.twitter-typeahead > input[id]');
-            //'span.twitter-typeahead input:last-child'
-
-            //input = yield this.waitForElementByCss('span.twitter-typeahead input:last-child', 10000)
-            //input = yield this.elementByCssSelector('span.twitter-typeahead input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
 
@@ -89,7 +85,7 @@ describe('angular-remote-typeaheadjs', function() {
     beforeEach(function(done) {
         driver.run(function*() {
             yield body.click();
-            //yield this.execute('window.jQuery("span.twitter-typeahead input:last-child").typeahead("val", "")');
+            yield this.execute('window.jQuery("span.twitter-typeahead > input[id]").typeahead("val", "")');
             done();
         });
     });
@@ -99,17 +95,14 @@ describe('angular-remote-typeaheadjs', function() {
     });
 
     describe('Test input', function() {
-        it('should show hint', function(done) {
+        it('on type "lit" should show hint equals to "Literatura"', function(done) {
             driver.run(function*() {
                 yield input.click();
                 yield input.type('lit');
-
-                expect('yes').to.equal('yes');
-                //expect(yield hint.getValue()).to.equal('Literatura');
+                expect(yield hint.getValue()).to.equal('Literatura');
                 done();
             });
         });
-
 
 
         /*it('should open dropdown', function(done) {
