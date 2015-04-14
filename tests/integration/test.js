@@ -98,9 +98,9 @@ describe('angular-remote-typeaheadjs', function() {
         it('on type "lit" should show hint equals to "literatura"', function(done) {
             driver.run(function*() {
                 yield input.click();
-                wd.sleep(500);
+                yield driver.sleep(500);
                 yield input.type('lit');
-                wd.sleep(500);
+                yield driver.sleep(500);
                 expect(yield dropdown.isDisplayed()).to.equal(true);
 
 
