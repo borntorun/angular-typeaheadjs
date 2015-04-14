@@ -53,7 +53,6 @@ describe('angular-remote-typeaheadjs', function() {
         });
 
         driver.on('command', function(meth, path, data) {
-            console.log('teste2:' + data);
             console.log(' > ' + meth.yellow, path.grey, data || '');
         });
 
@@ -62,8 +61,7 @@ describe('angular-remote-typeaheadjs', function() {
             yield this.get('http://localhost:8888/tests/integration/test.html');
 
             body = this.elementByTagName('body');
-            input = yield this.elementByClassName('typeahead');
-            inputid = input.getAttribute('id');
+            input = yield this.elementByCssSelector('div.container input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
 
@@ -82,7 +80,7 @@ describe('angular-remote-typeaheadjs', function() {
     beforeEach(function(done) {
         driver.run(function*() {
             yield body.click();
-            yield this.execute('window.jQuery("#' + inputid + '").typeahead("val", "")');
+            yield this.execute('window.jQuery("div.container input:last-child").typeahead("val", "")');
             done();
         });
     });
