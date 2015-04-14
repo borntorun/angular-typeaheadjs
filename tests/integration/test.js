@@ -95,21 +95,35 @@ describe('angular-remote-typeaheadjs', function() {
     });
 
     describe('Test: on input', function() {
-        it('on type "lit" should show hint equals to "literatura"', function(done) {
+        it('on type on input dropdown should be displayed', function(done) {
             driver.run(function*() {
                 yield input.click();
-                yield driver.sleep(500);
                 yield input.type('lit');
                 yield driver.sleep(500);
                 expect(yield dropdown.isDisplayed()).to.equal(true);
-
-
-                //expect(yield hint.getValue()).to.equal('literatura');
                 done();
             });
         });
+        it('on type "lit" on input hint should be "literatura"', function(done) {
+            driver.run(function*() {
+                yield input.click();
+                yield input.type('lit');
+                yield driver.sleep(500);
+                expect(yield hint.getValue()).to.equal('literatura');
+                done();
+            });
+        });
+        it('on type "lit" on input and autocomplete, input value should be "literatura"', function(done) {
+            driver.run(function*() {
+                yield input.click();
+                yield input.type('mi');
 
+                yield input.type(wd.SPECIAL_KEYS['Tab']);
+                expect(yield input.getValue()).to.equal('literatura');
 
+                done();
+            });
+        });
         /*it('should open dropdown', function(done) {
             driver.run(function*() {
                 yield input.click();
