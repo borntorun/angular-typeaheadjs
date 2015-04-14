@@ -94,12 +94,12 @@ describe('angular-remote-typeaheadjs', function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
 
-    describe('Test input', function() {
-        it('on type "lit" should show hint equals to "Literatura"', function(done) {
+    describe('Test: on input', function() {
+        it('on type "lit" should show hint equals to "literatura"', function(done) {
             driver.run(function*() {
                 yield input.click();
                 yield input.type('lit');
-                expect(yield hint.getValue()).to.equal('Literatura');
+                expect(yield hint.getValue()).to.equal('literatura');
                 done();
             });
         });
