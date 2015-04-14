@@ -14,6 +14,8 @@ var browser = (process.env.BROWSER || 'chrome').split(':'),
         browserName: browser[0]
     };
 
+
+console.log('teste1:' + caps);
 setIf(caps, 'version', browser[1]);
 setIf(caps, 'platform', browser[2]);
 setIf(caps, 'tunnel-identifier', env['TRAVIS_JOB_NUMBER']);
@@ -51,6 +53,7 @@ describe('angular-remote-typeaheadjs', function() {
         });
 
         driver.on('command', function(meth, path, data) {
+            console.log('teste2:' + data);
             console.log(' > ' + meth.yellow, path.grey, data || '');
         });
 
