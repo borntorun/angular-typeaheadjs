@@ -97,8 +97,9 @@ describe('angular-remote-typeaheadjs', function() {
 
     beforeEach(function(done) {
         driver.run(function*() {
-            yield body.click();
+            yield container1.input.click();
             yield this.execute('window.jQuery("span.twitter-typeahead > input[id]").typeahead("val", "")');
+            yield body.click();
             done();
         });
     });
@@ -107,7 +108,7 @@ describe('angular-remote-typeaheadjs', function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
 
-    describe('Test container1: on input', function() {
+    describe('Test container1: on input: ', function() {
         it('dropdown should be displayed on type on input', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
@@ -126,19 +127,18 @@ describe('angular-remote-typeaheadjs', function() {
                 done();
             });
         });
-
-        it('input value should be "literatura" on type "lit" on input and autocomplete with TAB', function(done) {
+        it('input value should be "Literatura" on typing "lit" and autocomplete with TAB', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
                 yield container1.input.type(wd.SPECIAL_KEYS['Tab']);
                 yield driver.sleep(500);
-                expect(yield container1.input.getValue()).to.equal('literatura');
+                expect(yield container1.input.getValue()).to.equal('Literatura');
                 done();
             });
         });
-        it('should trigger onselected event on type "lit" on input and autocomplete with TAB', function(done) {
+        it('should trigger onselected and onclosed events on typing "lit" and autocomplete with TAB', function(done) {
             //event trigger is ok if input element 'itemonSelected' has value autocompleted
             //caused by databind in onselected callback
             driver.run(function*() {
@@ -147,11 +147,12 @@ describe('angular-remote-typeaheadjs', function() {
                 yield driver.sleep(500);
                 yield container1.input.type(wd.SPECIAL_KEYS['Tab']);
                 yield driver.sleep(500);
-                expect(yield container1.itemonSelected.getValue()).to.equal('selected:literatura');
+                expect(yield container1.itemonSelected.getValue()).to.equal('selected:Literatura');
+                expect(yield container1.itemonClosed.getValue()).to.equal('closed:Literatura');
                 done();
             });
         });
-        it('should trigger onclosed event on type on input and lost focus', function(done) {
+        it('should trigger onclosed event after typing and lost focus', function(done) {
             //event trigger is ok if input element 'itemonSelected' has value autocompleted
             //caused by databind in onselected callback
             driver.run(function*() {
