@@ -15,13 +15,13 @@ var browser = (process.env.BROWSER || 'chrome').split(':'),
     };
 
 
-console.log('teste1:' + caps);
+
 setIf(caps, 'version', browser[1]);
 setIf(caps, 'platform', browser[2]);
 setIf(caps, 'tunnel-identifier', env['TRAVIS_JOB_NUMBER']);
 setIf(caps, 'build', env['TRAVIS_BUILD_NUMBER']);
 setIf(caps, 'tags', env['CI'] ? ['CI'] : ['local']);
-
+console.log('teste1:' + caps);
 function setIf(obj, key, val) {
     val && (obj[key] = val);
 }
@@ -61,7 +61,7 @@ describe('angular-remote-typeaheadjs', function() {
             yield this.get('http://localhost:8888/tests/integration/test.html');
 
             body = this.elementByTagName('body');
-            input = yield this.elementByCssSelector('div.container input:last-child');//('typeahead');
+            input = yield this.elementByCssSelector('span.twitter-typeahead input:last-child');//('typeahead');
             hint = yield this.elementByClassName('tt-hint');
             dropdown = yield this.elementByClassName('tt-dropdown-menu');
 
@@ -80,7 +80,7 @@ describe('angular-remote-typeaheadjs', function() {
     beforeEach(function(done) {
         driver.run(function*() {
             yield body.click();
-            yield this.execute('window.jQuery("div.container input:last-child").typeahead("val", "")');
+            yield this.execute('window.jQuery("span.twitter-typeahead input:last-child").typeahead("val", "")');
             done();
         });
     });
