@@ -4,6 +4,7 @@
  */
 'use strict';
 var wd = require('yiewd'),
+    colors = require('colors'),
     expect = require('chai').expect,
     f = require('util').format,
     env = process.env;
@@ -92,7 +93,18 @@ describe('angular-remote-typeaheadjs', function() {
     });
 
     describe('Test input', function() {
-        it('should open dropdown', function(done) {
+        it('should show hint', function(done) {
+            driver.run(function*() {
+                yield input.click();
+                yield input.type('lit');
+                expect(yield hint.getValue()).to.equal('Literatura');
+                done();
+            });
+        });
+
+
+
+        /*it('should open dropdown', function(done) {
             driver.run(function*() {
                 yield input.click();
                 yield input.type('lit');
@@ -128,6 +140,6 @@ describe('angular-remote-typeaheadjs', function() {
                 expect(yield hint.getValue()).to.equal('');
                 done();
             });
-        });
+        });*/
     });
 });
