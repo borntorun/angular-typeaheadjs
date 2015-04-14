@@ -32,7 +32,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-remote-typeaheadjs', function() {
-    var driver, body, input, inputx, hint, dropdown, allPassed = true;
+    var driver, body, input, itemonSelected, hint, dropdown, allPassed = true;
 
     this.timeout(300000);
 
@@ -120,9 +120,8 @@ describe('angular-remote-typeaheadjs', function() {
                 yield input.type('lit');
                 yield driver.sleep(500);
                 yield input.type(wd.SPECIAL_KEYS['Tab']);
+                yield driver.sleep(500);
                 expect(yield input.getValue()).to.equal('literatura');
-                expect(yield itemonSelected.getValue()).to.equal('literatura');
-
                 done();
             });
         });
@@ -132,48 +131,12 @@ describe('angular-remote-typeaheadjs', function() {
             driver.run(function*() {
                 yield input.click();
                 yield input.type('lit');
-                yield driver.sleep(500);
                 yield input.type(wd.SPECIAL_KEYS['Tab']);
+                yield driver.sleep(500);
                 expect(yield itemonSelected.getValue()).to.equal('literatura');
                 done();
             });
         });
-        /*it('should open dropdown', function(done) {
-            driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
-                expect(yield dropdown.isDisplayed()).to.equal(true);
-                done();
-            });
-        });
-        it('should close dropdown', function(done) {
-            driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
-                expect(yield dropdown.isDisplayed()).to.equal(true);
-                yield body.click();
-                expect(yield dropdown.isDisplayed()).to.equal(false);
-                done();
-            });
-        });
 
-        it('should show hint', function(done) {
-            driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
-                expect(yield hint.getValue()).to.equal('Literatura');
-                done();
-            });
-        });
-        it('should clear hint', function(done) {
-            driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
-                expect(yield hint.getValue()).to.equal('Literatura');
-                yield body.click();
-                expect(yield hint.getValue()).to.equal('');
-                done();
-            });
-        });*/
     });
 });
