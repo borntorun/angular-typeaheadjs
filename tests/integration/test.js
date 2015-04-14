@@ -32,7 +32,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-remote-typeaheadjs', function() {
-    var driver, body, input, itemonSelected, hint, dropdown, allPassed = true;
+    var driver, body, container1 = {}/*, input, itemonSelected, hint, dropdown*/, allPassed = true;
 
     this.timeout(300000);
 
@@ -61,15 +61,27 @@ describe('angular-remote-typeaheadjs', function() {
             console.log(' > ' + meth.yellow, path.grey, data || '');
         });
 
+        function getContainer(container) {
+            return {
+                input: f('div.%s > span.twitter-typeahead > input[id]', container),
+                hint: f('div.%s > span.twitter-typeahead > input.tt-hint', container),
+                dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
+                itemonSelected: f('div.%s > input#itemonSelected', container),
+                itemonClosed: f('div.%s > input#itemonClosed', container)
+            }
+        }
+
         driver.run(function*() {
             yield this.init(caps);
             yield this.get('http://localhost:8888/tests/integration/test.html');
 
             body = this.elementByTagName('body');
-            input = yield this.elementByCssSelector('span.twitter-typeahead > input[id]');
-            itemonSelected = yield this.elementById('itemonSelected');
-            hint = yield this.elementByClassName('tt-hint');
-            dropdown = yield this.elementByClassName('tt-dropdown-menu');
+            var selectors = getContainer('container1');
+            container1.input = yield this.elementByCssSelector(selectors.input);
+            container1.hint = yield this.elementByCssSelector(selectors.hint);
+            container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
+            container1.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
+            container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
 
             done();
         });
@@ -95,45 +107,59 @@ describe('angular-remote-typeaheadjs', function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
 
-    describe('Test: on input', function() {
-        it('on type on input dropdown should be displayed', function(done) {
+    describe('Test container1: on input', function() {
+        it('dropdown should be displayed on type on input', function(done) {
             driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
+                yield container1.input.click();
+                yield container1.input.type('lit');
                 yield driver.sleep(500);
-                expect(yield dropdown.isDisplayed()).to.equal(true);
+                expect(yield container1.dropdown.isDisplayed()).to.equal(true);
                 done();
             });
         });
-        it('on type "lit" on input hint should be "literatura"', function(done) {
+        it('hint should be "literatura" on type "lit" on input', function(done) {
             driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
+                yield container1.input.click();
+                yield container1.input.type('lit');
                 yield driver.sleep(500);
-                expect(yield hint.getValue()).to.equal('literatura');
+                expect(yield container1.hint.getValue()).to.equal('literatura');
                 done();
             });
         });
-        it('on type "lit" on input and autocomplete, input value should be "literatura"', function(done) {
+
+        it('input value should be "literatura" on type "lit" on input and autocomplete with TAB', function(done) {
             driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
+                yield container1.input.click();
+                yield container1.input.type('lit');
                 yield driver.sleep(500);
-                yield input.type(wd.SPECIAL_KEYS['Tab']);
+                yield container1.input.type(wd.SPECIAL_KEYS['Tab']);
                 yield driver.sleep(500);
-                expect(yield input.getValue()).to.equal('literatura');
+                expect(yield container1.input.getValue()).to.equal('literatura');
                 done();
             });
         });
-        it('on type "lit" on input and autocomplete should trigger onselected event', function(done) {
+        it('should trigger onselected event on type "lit" on input and autocomplete with TAB', function(done) {
             //event trigger is ok if input element 'itemonSelected' has value autocompleted
             //caused by databind in onselected callback
             driver.run(function*() {
-                yield input.click();
-                yield input.type('lit');
-                yield input.type(wd.SPECIAL_KEYS['Tab']);
+                yield container1.input.click();
+                yield container1.input.type('lit');
                 yield driver.sleep(500);
-                expect(yield itemonSelected.getValue()).to.equal('literatura');
+                yield container1.input.type(wd.SPECIAL_KEYS['Tab']);
+                yield driver.sleep(500);
+                expect(yield container1.itemonSelected.getValue()).to.equal('selected:literatura');
+                done();
+            });
+        });
+        it('should trigger onclosed event on type on input and lost focus', function(done) {
+            //event trigger is ok if input element 'itemonSelected' has value autocompleted
+            //caused by databind in onselected callback
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('test');
+                yield body.click();
+                yield driver.sleep(500);
+                expect(yield container1.itemonClosed.getValue()).to.equal('closed:test');
                 done();
             });
         });

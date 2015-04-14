@@ -8,8 +8,7 @@
     <script src="../../src/angular-remote-typeaheadjs.js"></script>
 
     <style>
-        .container {
-            width: 800px;
+        .container1 {
             margin: 50px auto;
         }
         .typeahead-wrapper {
@@ -29,16 +28,19 @@
 
 <body ng-app="myApp">
 
-    <div class="container" ng-controller="FilterCtrl as vm">
-        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" datasource="categories" placeholder="filter categories"
+    <div class="container1" ng-controller="FilterCtrl as vm">
+        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}"
             onselected="vm.onSelected"
             onclosed="vm.onClosed"
             oncursorchanged="vm.onCursorChanged"
-            logonwarn="true"
-            clearvalue="true"></angular-remote-typeaheadjs>
+            clearvalue="false"></angular-remote-typeaheadjs>
+        <br/>
+        <br/>
+        Selection: <input id="itemonSelected" ng-model="vm.itemonSelected"/>
+        On Close: <input id="itemonClosed" ng-model="vm.itemonClosed"/>
     </div>
 
-    Selection: <input id="itemonSelected" ng-model="vm.itemonSelected"/>
+
 
 
 <script>
@@ -48,16 +50,21 @@
 
     angular.module('myApp', [
         'angularRemoteTypeaheadjs'
-    ]).controller('FilterCtrl', FilterCtrl);
+    ]).controller('FilterCtrl', [ '$scope', FilterCtrl ]);
 
-    function FilterCtrl() {
+    function FilterCtrl($scope) {
         var vm = this;
+        vm.itemonSelected='';
+        vm.itemonClosed='';
         vm.prefetch = '/tests/integration/data.json'
         vm.urlRemote = '/tests/integration/%QUERY.json';
         vm.onSelected = function (item) {
-            vm.itemonSelected = item;
+            vm.itemonSelected = 'selected:' + item.name;
+            $scope.$apply();
         };
-        vm.onClosed = function() {
+        vm.onClosed = function(item) {
+            vm.itemonClosed = 'closed:' + item.name;
+            $scope.$apply();
         };
         vm.onCursorChanged = function() {
         };
