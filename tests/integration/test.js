@@ -68,11 +68,13 @@ describe('angular-remote-typeaheadjs', function() {
 
 
         driver.run(function*() {
+            var selectors;
             yield this.init(caps);
             yield this.get('http://localhost:8888/tests/integration/test.html');
 
             body = this.elementByTagName('body');
-            var selectors = getContainer('container1');
+
+            selectors = getContainer('container1');
             container1.input = yield this.elementByCssSelector(selectors.input);
             container1.hint = yield this.elementByCssSelector(selectors.hint);
             container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
@@ -80,6 +82,13 @@ describe('angular-remote-typeaheadjs', function() {
             container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
             container1.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
 
+            selectors = getContainer('container2');
+            container2.input = yield this.elementByCssSelector(selectors.input);
+            container2.hint = yield this.elementByCssSelector(selectors.hint);
+            container2.dropdown = yield this.elementByCssSelector(selectors.dropdown);
+            container2.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
+            container2.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
+            container2.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
 
             done();
         });
@@ -106,7 +115,7 @@ describe('angular-remote-typeaheadjs', function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
     describe('Test container1: on input: ', function() {
-        it('dropdown should only be displayed if minlensugestion is reached on type on input', function(done) {
+        it('dropdown should only be displayed if minlensugestion is reached', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
                 yield container1.input.type('l');
@@ -121,7 +130,7 @@ describe('angular-remote-typeaheadjs', function() {
                 done();
             });
         });
-        it('dropdown should be displayed on type on input', function(done) {
+        it('dropdown should be displayed', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
                 yield container1.input.type('lit');
@@ -140,7 +149,7 @@ describe('angular-remote-typeaheadjs', function() {
                 done();
             });
         });
-        it('hint should be "literatura" on type "lit" on input', function(done) {
+        it('hint should be "literatura" on type "lit"', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
                 yield container1.input.type('lit');
@@ -216,6 +225,80 @@ describe('angular-remote-typeaheadjs', function() {
                 expect(yield suggestions[0].text()).to.equal('Literatura');
                 expect(yield suggestions[1].text()).to.equal('Literatura Inglesa');
                 expect(yield suggestions[2].text()).to.equal('Politica & Religião');
+                done();
+            });
+        });
+        it('should trigger onselected event on click suggestion', function(done) {
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('lit');
+                yield driver.sleep(500);
+
+                var suggestions = yield container1.dropdown.elementsByClassName('tt-suggestion');
+                yield suggestions[1].click();
+                yield driver.sleep(500);
+                expect(yield container1.dropdown.isDisplayed()).to.equal(false);
+                expect(yield container1.input.getValue()).to.equal('Literatura Inglesa');
+                expect(yield container1.itemonSelected.getValue()).to.equal('selected:Literatura Inglesa');
+
+                done();
+            });
+        });
+
+    });
+    describe('Test container2: on input: ', function() {
+        it('should trigger $scope.on:typeahead:selected event on typing "lit" and autocomplete with TAB', function(done) {
+            driver.run(function*() {
+                yield container2.input.click();
+                yield container2.input.type('lit');
+                yield driver.sleep(500);
+                yield container2.input.type(wd.SPECIAL_KEYS['Tab']);
+                yield driver.sleep(500);
+                expect(yield container2.itemonSelected.getValue()).to.equal('selected:Literatura');
+                done();
+            });
+        });
+        it('should trigger $scope.on:typeahead:closed event after typing and lost focus', function(done) {
+            driver.run(function*() {
+                yield container2.input.click();
+                yield container2.input.type('test');
+                yield body.click();
+                yield driver.sleep(500);
+                expect(yield container2.itemonClosed.getValue()).to.equal('closed:test');
+                done();
+            });
+        });
+        it('should trigger $scope.on:typeahead:cursorchanged event after typing arrow keys UP and Down', function(done) {
+            driver.run(function*() {
+                yield container2.input.click();
+                yield container2.input.type('lit');
+                yield driver.sleep(500);
+                yield container2.input.type(wd.SPECIAL_KEYS['Down arrow']);
+                expect(yield container2.input.getValue()).to.equal('Literatura');
+                expect(yield container2.itemonCursorChanged.getValue()).to.equal('cursorchanged:Literatura');
+                yield container2.input.type(wd.SPECIAL_KEYS['Down arrow']);
+                yield container2.input.type(wd.SPECIAL_KEYS['Down arrow']);
+                expect(yield container2.input.getValue()).to.equal('Politica & Religião');
+                expect(yield container2.itemonCursorChanged.getValue()).to.equal('cursorchanged:Politica & Religião');
+                yield container2.input.type(wd.SPECIAL_KEYS['Up arrow']);
+                expect(yield container2.input.getValue()).to.equal('Literatura Inglesa');
+                expect(yield container2.itemonCursorChanged.getValue()).to.equal('cursorchanged:Literatura Inglesa');
+                done();
+            });
+        });
+        it('should trigger $scope.on:typeahead:selected event on click suggestion', function(done) {
+            driver.run(function*() {
+                yield container2.input.click();
+                yield container2.input.type('lit');
+                yield driver.sleep(500);
+
+                var suggestions = yield container2.dropdown.elementsByClassName('tt-suggestion');
+                yield suggestions[1].click();
+                yield driver.sleep(500);
+                expect(yield container2.dropdown.isDisplayed()).to.equal(false);
+                expect(yield container2.input.getValue()).to.equal('Literatura Inglesa');
+                expect(yield container2.itemonSelected.getValue()).to.equal('selected:Literatura Inglesa');
+
                 done();
             });
         });

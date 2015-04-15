@@ -28,7 +28,7 @@
 
 <body ng-app="myApp">
 
-    <div class="container1" ng-controller="FilterCtrl as vm">
+    <div class="container1" ng-controller="FilterCtrl1 as vm">
         <angular-remote-typeaheadjs remote="{{vm.urlRemote}}"
             placeholder="type lit"
             datasource="categories"
@@ -39,9 +39,17 @@
             limit="3"></angular-remote-typeaheadjs>
         <br/>
         <br/>
-        Selection: <input id="itemonSelected" ng-model="vm.itemonSelected"/>
-        On Close: <input id="itemonClosed" ng-model="vm.itemonClosed"/>
-        On Cursor Changed: <input id="itemonCursorChanged" ng-model="vm.itemonCursorChanged"/>
+        Selection: <input id="itemonSelected1" ng-model="vm.itemonSelected"/>
+        On Close: <input id="itemonClosed1" ng-model="vm.itemonClosed"/>
+        On Cursor Changed: <input id="itemonCursorChanged1" ng-model="vm.itemonCursorChanged"/>
+    </div>
+    <div class="container2" ng-controller="FilterCtrl2 as vm">
+        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="false"></angular-remote-typeaheadjs>
+        <br/>
+        <br/>
+        Selection: <input id="itemonSelected2" ng-model="vm.itemonSelected"/>
+        On Close: <input id="itemonClosed2" ng-model="vm.itemonClosed"/>
+        On Cursor Changed: <input id="itemonCursorChanged2" ng-model="vm.itemonCursorChanged"/>
     </div>
 
 
@@ -52,11 +60,11 @@
 (function() {
     'use strict';
 
-    angular.module('myApp', [
-        'angularRemoteTypeaheadjs'
-    ]).controller('FilterCtrl', [ '$scope', FilterCtrl ]);
+    angular.module('myApp', ['angularRemoteTypeaheadjs'])
+        .controller('FilterCtrl1', [ '$scope', FilterCtrl1 ])
+        .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ]);
 
-    function FilterCtrl($scope) {
+    function FilterCtrl1($scope) {
         var vm = this;
         vm.itemonSelected = '';
         vm.itemonClosed = '';
@@ -75,6 +83,32 @@
             vm.itemonCursorChanged = 'cursorchanged:' + item.name;
             $scope.$apply();
         };
+    }
+    function FilterCtrl2($scope) {
+        var vm = this;
+        vm.itemonSelected = '';
+        vm.itemonClosed = '';
+        vm.itemonCursorChanged = '';
+        vm.prefetch = '/tests/integration/data.json'
+        vm.urlRemote = '/tests/integration/%QUERY.json';
+
+        $scope.$on('typeahead:selected', function(event, data) {
+            vm.itemonSelected = 'selected:' + data.name;
+            $scope.$apply();
+        });
+        $scope.$on('typeahead:autocompleted', function(event, data) {
+            vm.itemonSelected = 'autocompleted:' + data.name;
+            $scope.$apply();
+        });
+        $scope.$on('typeahead:closed', function(event, data) {
+            vm.itemonClosed = 'closed:' + data.name;
+            $scope.$apply();
+        });
+        $scope.$on('typeahead:cursorchanged', function(event, data) {
+            vm.itemonCursorChanged = 'cursorchanged:' + data.name;
+            $scope.$apply();
+        });
+
     }
 
 }());
