@@ -105,7 +105,6 @@ describe('angular-remote-typeaheadjs', function() {
     afterEach(function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
-
     describe('Test container1: on input: ', function() {
         it('dropdown should only be displayed if minlensugestion is reached on type on input', function(done) {
             driver.run(function*() {
