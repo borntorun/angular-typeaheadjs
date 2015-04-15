@@ -38,6 +38,7 @@
         <br/>
         Selection: <input id="itemonSelected" ng-model="vm.itemonSelected"/>
         On Close: <input id="itemonClosed" ng-model="vm.itemonClosed"/>
+        On Cursor Changed: <input id="itemonCursorChanged" ng-model="vm.itemonCursorChanged"/>
     </div>
 
 
@@ -54,8 +55,9 @@
 
     function FilterCtrl($scope) {
         var vm = this;
-        vm.itemonSelected='';
-        vm.itemonClosed='';
+        vm.itemonSelected = '';
+        vm.itemonClosed = '';
+        vm.itemonCursorChanged = '';
         vm.prefetch = '/tests/integration/data.json'
         vm.urlRemote = '/tests/integration/%QUERY.json';
         vm.onSelected = function (item) {
@@ -66,7 +68,9 @@
             vm.itemonClosed = 'closed:' + item.name;
             $scope.$apply();
         };
-        vm.onCursorChanged = function() {
+        vm.onCursorChanged = function(item) {
+            vm.itemonCursorChanged = 'cursorchanged:' + item.name;
+            $scope.$apply();
         };
     }
 

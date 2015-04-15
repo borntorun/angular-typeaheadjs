@@ -67,7 +67,8 @@ describe('angular-remote-typeaheadjs', function() {
                 hint: f('div.%s > span.twitter-typeahead > input.tt-hint', container),
                 dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
                 itemonSelected: f('div.%s > input#itemonSelected', container),
-                itemonClosed: f('div.%s > input#itemonClosed', container)
+                itemonClosed: f('div.%s > input#itemonClosed', container),
+                itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container)
             }
         }
 
@@ -82,6 +83,8 @@ describe('angular-remote-typeaheadjs', function() {
             container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
             container1.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
             container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
+            container1.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
+
 
             done();
         });
@@ -138,7 +141,7 @@ describe('angular-remote-typeaheadjs', function() {
                 done();
             });
         });
-        it('should trigger onselected and onclosed events on typing "lit" and autocomplete with TAB', function(done) {
+        it('should trigger onselected event on typing "lit" and autocomplete with TAB', function(done) {
             //event trigger is ok if input element 'itemonSelected' has value autocompleted
             //caused by databind in onselected callback
             driver.run(function*() {
@@ -148,19 +151,38 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.type(wd.SPECIAL_KEYS['Tab']);
                 yield driver.sleep(500);
                 expect(yield container1.itemonSelected.getValue()).to.equal('selected:Literatura');
-                expect(yield container1.itemonClosed.getValue()).to.equal('closed:Literatura');
                 done();
             });
         });
         it('should trigger onclosed event after typing and lost focus', function(done) {
-            //event trigger is ok if input element 'itemonSelected' has value autocompleted
-            //caused by databind in onselected callback
+            //event trigger is ok if input element 'itemonClosed' has value
+            //caused by databind in onclosed callback
             driver.run(function*() {
                 yield container1.input.click();
                 yield container1.input.type('test');
                 yield body.click();
                 yield driver.sleep(500);
                 expect(yield container1.itemonClosed.getValue()).to.equal('closed:test');
+                done();
+            });
+        });
+        it('should trigger oncursorchanged event after typing arrow keys UP and Down', function(done) {
+            //event trigger is ok if input element 'itemonCursorChanged' has value
+            //caused by databind in oncursorchanged callback
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('lit');
+                yield driver.sleep(500);
+                yield input.type(wd.SPECIAL_KEYS['Down arrow']);
+                expect(yield input.getValue()).to.equal('Literatura');
+                expect(yield container1.itemonCursorChanged.getValue()).to.equal('cursorchanged:Literatura');
+                yield input.type(wd.SPECIAL_KEYS['Down arrow']);
+                yield input.type(wd.SPECIAL_KEYS['Down arrow']);
+                expect(yield input.getValue()).to.equal('Politica & Religião');
+                expect(yield container1.itemonCursorChanged.getValue()).to.equal('cursorchanged:Politica & Religião');
+                yield input.type(wd.SPECIAL_KEYS['Up arrow']);
+                expect(yield input.getValue()).to.equal('Literatura Inglesa');
+                expect(yield container1.itemonCursorChanged.getValue()).to.equal('cursorchanged:Literatura Inglesa');
                 done();
             });
         });
