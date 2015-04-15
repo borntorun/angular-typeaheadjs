@@ -36,8 +36,7 @@ describe('angular-remote-typeaheadjs', function() {
             dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
             itemonSelected: f('div.%s > input#itemonSelected', container),
             itemonClosed: f('div.%s > input#itemonClosed', container),
-            itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container),
-            suggestions: f('div.%s div.tt-suggestion', container)
+            itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container)
         }
     }
 
@@ -77,7 +76,6 @@ describe('angular-remote-typeaheadjs', function() {
             container1.input = yield this.elementByCssSelector(selectors.input);
             container1.hint = yield this.elementByCssSelector(selectors.hint);
             container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
-
             container1.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
             container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
             container1.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
@@ -108,8 +106,6 @@ describe('angular-remote-typeaheadjs', function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
     describe('Test container1: on input: ', function() {
-        var selectors = getContainer('container1');
-        
         it('dropdown should only be displayed if minlensugestion is reached on type on input', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
@@ -215,7 +211,7 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
 
-                var suggestions = yield this.elementByCssSelector(selectors.suggestions);
+                var suggestions = yield container1.dropdown.elementsByClassName('tt-suggestion');
                 expect(suggestions).to.have.length('3');
                 expect(yield suggestions[0].text()).to.equal('Literatura');
                 expect(yield suggestions[1].text()).to.equal('Literatura Inglesa');
