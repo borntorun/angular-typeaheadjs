@@ -34,9 +34,9 @@ describe('angular-remote-typeaheadjs', function() {
             input: f('div.container%s > span.twitter-typeahead > input[id]', container),
             hint: f('div.container%s > span.twitter-typeahead > input.tt-hint', container),
             dropdown: f('div.container%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
-            itemonSelected: f('div.container%s > input#itemonSelected%s', container),
-            itemonClosed: f('div.container%s > input#itemonClosed%s', container),
-            itemonCursorChanged: f('div.container%s > input#itemonCursorChanged%s', container)
+            itemonSelected: f('div.container%s > input#itemonSelected%s', container, container),
+            itemonClosed: f('div.container%s > input#itemonClosed%s', container, container),
+            itemonCursorChanged: f('div.container%s > input#itemonCursorChanged%s', container, container)
         }
     }
 
