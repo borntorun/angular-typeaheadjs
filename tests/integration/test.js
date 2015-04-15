@@ -29,6 +29,18 @@ describe('angular-remote-typeaheadjs', function() {
 
     this.timeout(300000);
 
+    function getContainer(container) {
+        return {
+            input: f('div.%s > span.twitter-typeahead > input[id]', container),
+            hint: f('div.%s > span.twitter-typeahead > input.tt-hint', container),
+            dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
+            itemonSelected: f('div.%s > input#itemonSelected', container),
+            itemonClosed: f('div.%s > input#itemonClosed', container),
+            itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container),
+            suggestions: f('div.%s div.tt-suggestion', container)
+        }
+    }
+
     before(function(done) {
         var host = 'ondemand.saucelabs.com', port = 80, username, password;
 
@@ -54,17 +66,7 @@ describe('angular-remote-typeaheadjs', function() {
             console.log(' > ' + meth.yellow, path.grey, data || '');
         });
 
-        function getContainer(container) {
-            return {
-                input: f('div.%s > span.twitter-typeahead > input[id]', container),
-                hint: f('div.%s > span.twitter-typeahead > input.tt-hint', container),
-                dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
-                itemonSelected: f('div.%s > input#itemonSelected', container),
-                itemonClosed: f('div.%s > input#itemonClosed', container),
-                itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container),
-                suggestions: f('div.%s div.tt-suggestion', container)
-            }
-        }
+
 
         driver.run(function*() {
             yield this.init(caps);
@@ -107,7 +109,7 @@ describe('angular-remote-typeaheadjs', function() {
     });
     describe('Test container1: on input: ', function() {
         var selectors = getContainer('container1');
-
+        
         it('dropdown should only be displayed if minlensugestion is reached on type on input', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
@@ -212,7 +214,7 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.click();
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
-                
+
                 var suggestions = yield this.elementByCssSelector(selectors.suggestions);
                 expect(suggestions).to.have.length('3');
                 expect(yield suggestions[0].text()).to.equal('Literatura');
