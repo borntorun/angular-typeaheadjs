@@ -3,17 +3,10 @@
  * Code inspired in https://github.com/twitter/typeahead.js/blob/master/test/integration/test.js
  */
 var wd = require('yiewd'),
-    //_ = require('lodash'),
     colors = require('colors'),
     expect = require('chai').expect,
-    //expect = require('chai'),
-    //chaiAsPromised = require("chai-as-promised"),
     f = require('util').format,
     env = process.env;
-
-//chai.use(chaiAsPromised);
-//chai.should();
-//chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
 var browser = (process.env.BROWSER || 'chrome').split(':'),
     caps = {
@@ -32,7 +25,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-remote-typeaheadjs', function() {
-    var driver, body, container1 = {}/*, input, itemonSelected, hint, dropdown*/, allPassed = true;
+    var driver, body, container1 = {}, allPassed = true;
 
     this.timeout(300000);
 
@@ -68,7 +61,8 @@ describe('angular-remote-typeaheadjs', function() {
                 dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
                 itemonSelected: f('div.%s > input#itemonSelected', container),
                 itemonClosed: f('div.%s > input#itemonClosed', container),
-                itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container)
+                itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container),
+                suggestions: f('div.%s div.tt-suggestion', container)
             }
         }
 
@@ -81,6 +75,7 @@ describe('angular-remote-typeaheadjs', function() {
             container1.input = yield this.elementByCssSelector(selectors.input);
             container1.hint = yield this.elementByCssSelector(selectors.hint);
             container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
+            container1.suggestions = yield this.elementByCssSelector(selectors.suggestions);
             container1.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
             container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
             container1.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
@@ -133,6 +128,16 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
                 expect(yield container1.dropdown.isDisplayed()).to.equal(true);
+                done();
+            });
+        });
+        it('class tt-dataset-<datasource> should be set', function(done) {
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('lit');
+                yield driver.sleep(500);
+                expect(yield container1.dropdown.isDisplayed()).to.equal(true);
+                expect(yield container1.dropdown.lastChild.className).to.equal('tt-dataset-categories');
                 done();
             });
         });
@@ -198,6 +203,18 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.type(wd.SPECIAL_KEYS['Up arrow']);
                 expect(yield container1.input.getValue()).to.equal('Literatura Inglesa');
                 expect(yield container1.itemonCursorChanged.getValue()).to.equal('cursorchanged:Literatura Inglesa');
+                done();
+            });
+        });
+        it('number of suggestions should be 3', function(done) {
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('lit');
+                yield driver.sleep(500);
+                expect(container1.suggestions).to.have.length('3');
+                expect(yield container1.suggestions[0].text()).to.equal('Literatura');
+                expect(yield container1.suggestions[1].text()).to.equal('Literatura Inglesa');
+                expect(yield container1.suggestions[2].text()).to.equal('Politica & Religião');
                 done();
             });
         });

@@ -30,10 +30,13 @@
 
     <div class="container1" ng-controller="FilterCtrl as vm">
         <angular-remote-typeaheadjs remote="{{vm.urlRemote}}"
+            placeholder="type lit"
+            datasource="categories"
             onselected="vm.onSelected"
             onclosed="vm.onClosed"
             oncursorchanged="vm.onCursorChanged"
-            clearvalue="false"></angular-remote-typeaheadjs>
+            clearvalue="false"
+            limit="3"></angular-remote-typeaheadjs>
         <br/>
         <br/>
         Selection: <input id="itemonSelected" ng-model="vm.itemonSelected"/>
