@@ -99,7 +99,6 @@ describe('angular-remote-typeaheadjs', function() {
             container4.input = yield this.elementByCssSelector(selectors.input);
             container4.hint = yield this.elementByCssSelector(selectors.hint);
             container4.dropdown = yield this.elementByCssSelector(selectors.dropdown);
-            container4.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
             container4.inputbound = yield this.elementByCssSelector(selectors.inputbound);
 
             done();
