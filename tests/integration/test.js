@@ -75,7 +75,7 @@ describe('angular-remote-typeaheadjs', function() {
             container1.input = yield this.elementByCssSelector(selectors.input);
             container1.hint = yield this.elementByCssSelector(selectors.hint);
             container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
-            container1.suggestions = yield this.elementByCssSelector(selectors.suggestions);
+
             container1.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
             container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
             container1.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
@@ -211,10 +211,11 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.click();
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
-                expect(container1.suggestions).to.have.length('3');
-                expect(yield container1.suggestions[0].text()).to.equal('Literatura');
-                expect(yield container1.suggestions[1].text()).to.equal('Literatura Inglesa');
-                expect(yield container1.suggestions[2].text()).to.equal('Politica & Religião');
+                var suggestions = yield this.elementByCssSelector(selectors.suggestions);
+                expect(suggestions).to.have.length('3');
+                expect(yield suggestions[0].text()).to.equal('Literatura');
+                expect(yield suggestions[1].text()).to.equal('Literatura Inglesa');
+                expect(yield suggestions[2].text()).to.equal('Politica & Religião');
                 done();
             });
         });
