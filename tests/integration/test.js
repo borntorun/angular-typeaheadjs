@@ -31,12 +31,12 @@ describe('angular-remote-typeaheadjs', function() {
 
     function getContainer(container) {
         return {
-            input: f('div.%s > span.twitter-typeahead > input[id]', container),
-            hint: f('div.%s > span.twitter-typeahead > input.tt-hint', container),
-            dropdown: f('div.%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
-            itemonSelected: f('div.%s > input#itemonSelected', container),
-            itemonClosed: f('div.%s > input#itemonClosed', container),
-            itemonCursorChanged: f('div.%s > input#itemonCursorChanged', container)
+            input: f('div.container%s > span.twitter-typeahead > input[id]', container),
+            hint: f('div.container%s > span.twitter-typeahead > input.tt-hint', container),
+            dropdown: f('div.container%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
+            itemonSelected: f('div.container%s > input#itemonSelected%s', container),
+            itemonClosed: f('div.container%s > input#itemonClosed%s', container),
+            itemonCursorChanged: f('div.container%s > input#itemonCursorChanged%s', container)
         }
     }
 
@@ -74,7 +74,7 @@ describe('angular-remote-typeaheadjs', function() {
 
             body = this.elementByTagName('body');
 
-            selectors = getContainer('container1');
+            selectors = getContainer('1');
             container1.input = yield this.elementByCssSelector(selectors.input);
             container1.hint = yield this.elementByCssSelector(selectors.hint);
             container1.dropdown = yield this.elementByCssSelector(selectors.dropdown);
@@ -82,7 +82,7 @@ describe('angular-remote-typeaheadjs', function() {
             container1.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
             container1.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
 
-            selectors = getContainer('container2');
+            selectors = getContainer('2');
             container2.input = yield this.elementByCssSelector(selectors.input);
             container2.hint = yield this.elementByCssSelector(selectors.hint);
             container2.dropdown = yield this.elementByCssSelector(selectors.dropdown);
