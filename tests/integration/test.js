@@ -25,7 +25,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-remote-typeaheadjs', function() {
-    var driver, body, container1 = {}, allPassed = true;
+    var driver, body, container1 = {}, container2 = {}, allPassed = true;
 
     this.timeout(300000);
 
