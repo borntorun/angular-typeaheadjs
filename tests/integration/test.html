@@ -8,8 +8,10 @@
     <script src="../../src/angular-remote-typeaheadjs.js"></script>
 
     <style>
-        .container1 {
-            margin: 50px auto;
+        .container1,
+        .container2,
+        .container3 {
+            margin: 75px auto;
         }
         .typeahead-wrapper {
             display: block;
@@ -51,7 +53,18 @@
         On Close: <input id="itemonClosed2" ng-model="vm.itemonClosed"/>
         On Cursor Changed: <input id="itemonCursorChanged2" ng-model="vm.itemonCursorChanged"/>
     </div>
-
+    <div class="container3" ng-controller="FilterCtrl3 as vm">
+        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="true"></angular-remote-typeaheadjs>
+        <br/>
+        <br/>
+        Selection: <input id="itemonSelected3" ng-model="vm.itemonSelected"/>
+    </div>
+    <div class="container4" ng-controller="FilterCtrl4 as vm">
+        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" model="vm.categorie" clearvalue="false"></angular-remote-typeaheadjs>
+        <br/>
+        <br/>
+        Selection: <input id="inputbound4" ng-model="vm.categorie"/>
+    </div>
 
 
 
@@ -62,7 +75,9 @@
 
     angular.module('myApp', ['angularRemoteTypeaheadjs'])
         .controller('FilterCtrl1', [ '$scope', FilterCtrl1 ])
-        .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ]);
+        .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ])
+        .controller('FilterCtrl3', [ '$scope', FilterCtrl3 ])
+        .controller('FilterCtrl4', [ '$scope', FilterCtrl4 ]);
 
     function FilterCtrl1($scope) {
         var vm = this;
@@ -73,15 +88,15 @@
         vm.urlRemote = '/tests/integration/%QUERY.json';
         vm.onSelected = function (item) {
             vm.itemonSelected = 'selected:' + item.name;
-            $scope.$apply();
+            //$scope.$apply();
         };
         vm.onClosed = function(item) {
             vm.itemonClosed = 'closed:' + item.name;
-            $scope.$apply();
+            //$scope.$apply();
         };
         vm.onCursorChanged = function(item) {
             vm.itemonCursorChanged = 'cursorchanged:' + item.name;
-            $scope.$apply();
+            //$scope.$apply();
         };
     }
     function FilterCtrl2($scope) {
@@ -94,23 +109,39 @@
 
         $scope.$on('typeahead:selected', function(event, data) {
             vm.itemonSelected = 'selected:' + data.name;
-            $scope.$apply();
+            //$scope.$apply();
         });
         $scope.$on('typeahead:autocompleted', function(event, data) {
             vm.itemonSelected = 'autocompleted:' + data.name;
-            $scope.$apply();
+            //$scope.$apply();
         });
         $scope.$on('typeahead:closed', function(event, data) {
             vm.itemonClosed = 'closed:' + data.name;
-            $scope.$apply();
+            //$scope.$apply();
         });
         $scope.$on('typeahead:cursorchanged', function(event, data) {
             vm.itemonCursorChanged = 'cursorchanged:' + data.name;
-            $scope.$apply();
+            //$scope.$apply();
         });
 
     }
+    function FilterCtrl3($scope) {
+        var vm = this;
+        vm.itemonSelected = '';
+        vm.prefetch = '/tests/integration/data.json'
+        vm.urlRemote = '/tests/integration/%QUERY.json';
 
+        $scope.$on('typeahead:selected', function(event, data) {
+            vm.itemonSelected = 'selected:' + data.name;
+            //$scope.$apply();
+        });
+    }
+    function FilterCtrl4($scope) {
+        var vm = this;
+        vm.categorie = '';
+        vm.prefetch = '/tests/integration/data.json'
+        vm.urlRemote = '/tests/integration/%QUERY.json';
+    }
 }());
 
 

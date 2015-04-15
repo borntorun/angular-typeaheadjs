@@ -31,7 +31,7 @@
     angular.module('angularRemoteTypeaheadjs', [])
         .directive('angularRemoteTypeaheadjs', angularRemoteTypeaheadjs);
     /* @ngInject */
-    function angularRemoteTypeaheadjs($log) {
+    function angularRemoteTypeaheadjs($log, $rootScope) {
         var directive = {
             // use as element: <angular-remote-typeaheadjs .../>
             restrict: 'E',
@@ -94,17 +94,27 @@
 
             function OnSelected(jqevent, item, dataset) {
                 callback.onselected(item);
-                ((scope.clearvalue === 'true') && element.typeahead('val', ''));
+                if (scope.clearvalue === 'true') {
+                    element.typeahead('val', '');
+                    scope.model = '';
+                }
+                else {
+                    scope.model = element.typeahead('val');
+                }
+                scope.$apply();
             }
 
             function OnClosed(jqevent) {
                 var o = {};
-                o[scope.key] = element.typeahead('val');
+                scope.model = o[scope.key] = element.typeahead('val');
                 callback.onclosed(o);
+                scope.$apply();
             }
 
             function OnCursorChanged(jqevent, item, dataset) {
                 callback.oncursorchanged(item);
+                scope.model = item[scope.key];
+                scope.$apply();
             }
 
             /**

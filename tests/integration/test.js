@@ -25,7 +25,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-remote-typeaheadjs', function() {
-    var driver, body, container1 = {}, container2 = {}, allPassed = true;
+    var driver, body, container1 = {}, container2 = {}, container3 = {}, container4 = {}, allPassed = true;
 
     this.timeout(300000);
 
@@ -36,7 +36,8 @@ describe('angular-remote-typeaheadjs', function() {
             dropdown: f('div.container%s > span.twitter-typeahead > span.tt-dropdown-menu', container),
             itemonSelected: f('div.container%s > input#itemonSelected%s', container, container),
             itemonClosed: f('div.container%s > input#itemonClosed%s', container, container),
-            itemonCursorChanged: f('div.container%s > input#itemonCursorChanged%s', container, container)
+            itemonCursorChanged: f('div.container%s > input#itemonCursorChanged%s', container, container),
+            inputbound: f('div.container%s > input#inputbound%s', container, container)
         }
     }
 
@@ -65,8 +66,6 @@ describe('angular-remote-typeaheadjs', function() {
             console.log(' > ' + meth.yellow, path.grey, data || '');
         });
 
-
-
         driver.run(function*() {
             var selectors;
             yield this.init(caps);
@@ -90,6 +89,19 @@ describe('angular-remote-typeaheadjs', function() {
             container2.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
             container2.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
 
+            selectors = getContainer('3');
+            container3.input = yield this.elementByCssSelector(selectors.input);
+            container3.hint = yield this.elementByCssSelector(selectors.hint);
+            container3.dropdown = yield this.elementByCssSelector(selectors.dropdown);
+            container3.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
+
+            selectors = getContainer('4');
+            container4.input = yield this.elementByCssSelector(selectors.input);
+            container4.hint = yield this.elementByCssSelector(selectors.hint);
+            container4.dropdown = yield this.elementByCssSelector(selectors.dropdown);
+            container4.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
+            container4.inputbound = yield this.elementByCssSelector(selectors.inputbound);
+
             done();
         });
     });
@@ -104,7 +116,7 @@ describe('angular-remote-typeaheadjs', function() {
 
     beforeEach(function(done) {
         driver.run(function*() {
-            yield container1.input.click();
+            //yield container1.input.click();
             yield this.execute('window.jQuery("span.twitter-typeahead > input[id]").typeahead("val", "")');
             yield body.click();
             done();
@@ -114,6 +126,7 @@ describe('angular-remote-typeaheadjs', function() {
     afterEach(function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
+
     describe('Test container1: on input: ', function() {
         it('dropdown should only be displayed if minlensugestion is reached', function(done) {
             driver.run(function*() {
@@ -302,6 +315,54 @@ describe('angular-remote-typeaheadjs', function() {
                 done();
             });
         });
+    });
+    describe('Test container3: on input: ', function() {
+        it('should trigger $scope.on:typeahead:selected event on click suggestion and clear value of input', function(done) {
+            driver.run(function*() {
+                yield container3.input.click();
+                yield container3.input.type('lit');
+                yield driver.sleep(500);
 
+                var suggestions = yield container3.dropdown.elementsByClassName('tt-suggestion');
+                yield suggestions[0].click();
+                yield driver.sleep(500);
+                expect(yield container3.input.getValue()).to.equal('');
+                expect(yield container3.itemonSelected.getValue()).to.equal('selected:Literatura');
+
+                done();
+            });
+        });
+    });
+    describe('Test container4: on input data binding: ', function() {
+        it('should active external data binding', function(done) {
+            driver.run(function*() {
+                yield container4.input.click();
+                yield container4.input.type('lit');
+                yield driver.sleep(500);
+                expect(yield container4.inputbound.getValue()).to.equal('lit');
+                done();
+            });
+        });
+        it('should active internal data binding', function(done) {
+            driver.run(function*() {
+                yield container4.inputbound.click();
+                yield container4.inputbound.type('test');
+                yield driver.sleep(500);
+                expect(yield container4.input.getValue()).to.equal('test');
+                done();
+            });
+        });
+        it('should active external data binding on select', function(done) {
+            driver.run(function*() {
+                yield container4.input.click();
+                yield container4.input.type('lit');
+                yield driver.sleep(500);
+                var suggestions = yield container4.dropdown.elementsByClassName('tt-suggestion');
+                yield suggestions[0].click();
+                yield driver.sleep(500);
+                expect(yield container4.inputbound.getValue()).to.equal('Literatura');
+                done();
+            });
+        });
     });
 });
