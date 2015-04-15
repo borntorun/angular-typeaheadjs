@@ -112,6 +112,21 @@ describe('angular-remote-typeaheadjs', function() {
     });
 
     describe('Test container1: on input: ', function() {
+        it('dropdown should only be displayed if minlensugestion is reached on type on input', function(done) {
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('l');
+                yield driver.sleep(500);
+                expect(yield container1.dropdown.isDisplayed()).to.equal(false);
+                yield container1.input.type('i');
+                yield driver.sleep(500);
+                expect(yield container1.dropdown.isDisplayed()).to.equal(false);
+                yield container1.input.type('t');
+                yield driver.sleep(500);
+                expect(yield container1.dropdown.isDisplayed()).to.equal(true);
+                done();
+            });
+        });
         it('dropdown should be displayed on type on input', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
