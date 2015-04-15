@@ -106,6 +106,8 @@ describe('angular-remote-typeaheadjs', function() {
         allPassed = allPassed && (this.currentTest.state === 'passed');
     });
     describe('Test container1: on input: ', function() {
+        var selectors = getContainer('container1');
+
         it('dropdown should only be displayed if minlensugestion is reached on type on input', function(done) {
             driver.run(function*() {
                 yield container1.input.click();
@@ -136,7 +138,7 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
                 expect(yield container1.dropdown.isDisplayed()).to.equal(true);
-                expect(yield container1.dropdown.lastChild.className).to.equal('tt-dataset-categories');
+                //expect(yield container1.dropdown.lastChild.className).to.equal('tt-dataset-categories');
                 done();
             });
         });
@@ -210,6 +212,7 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.click();
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
+                
                 var suggestions = yield this.elementByCssSelector(selectors.suggestions);
                 expect(suggestions).to.have.length('3');
                 expect(yield suggestions[0].text()).to.equal('Literatura');
