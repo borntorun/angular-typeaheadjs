@@ -1,19 +1,19 @@
 language: node_js
 env:
   matrix:
-  - TEST_SUITE=unit
-  - TEST_SUITE=integration BROWSER='chrome'
-  - TEST_SUITE=integration BROWSER='chrome:40'
-  - TEST_SUITE=integration BROWSER='chrome:39'
-  - TEST_SUITE=integration BROWSER='firefox'
-  - TEST_SUITE=integration BROWSER='firefox:35'
-  - TEST_SUITE=integration BROWSER='firefox:36'
-  - TEST_SUITE=integration BROWSER='safari:7'
-  - TEST_SUITE=integration BROWSER='safari:8'
-  - TEST_SUITE=integration BROWSER='internet explorer:9'
-  - TEST_SUITE=integration BROWSER='internet explorer:10'
-  - TEST_SUITE=integration BROWSER='internet explorer:11'
-  - TEST_SUITE=integration BROWSER='opera'
+  #- TEST_SUITE=unit
+  #- TEST_SUITE=integration BROWSER='chrome'
+  #- TEST_SUITE=integration BROWSER='chrome:40'
+  #- TEST_SUITE=integration BROWSER='chrome:39'
+  #- TEST_SUITE=integration BROWSER='firefox'
+  #- TEST_SUITE=integration BROWSER='firefox:35'
+  #- TEST_SUITE=integration BROWSER='firefox:36'
+  #- TEST_SUITE=integration BROWSER='safari:7'
+  #- TEST_SUITE=integration BROWSER='safari:8'
+  #- TEST_SUITE=integration BROWSER='internet explorer:9'
+  #- TEST_SUITE=integration BROWSER='internet explorer:10'
+  #- TEST_SUITE=integration BROWSER='internet explorer:11'
+  - TEST_SUITE=integration BROWSER='opera:28'
   global:
     - secure: cUI29F9xzu0VSJ6lxy+koBVjLDf4aVuvc75GWikZw3gNVJKNEgorxTIdS7u2y0UWKfLYI0++uqaUecbJS2NAQ+TGP97UwsCfrB24XV7u9a9mWhnYqTqnkQXECnGUoQRHPcNQ0K81CZhjP5VlqL1+pVJG8t8/gveCc5o1EZm8jnE=
     - secure: YRtGf9M4KRN8Xr1ScBzQK/yfeMH76mofr9bhMDaro/rVabH/IER8eVSlTIB2JA5xZy1EWCz05wyeHnXMO3Ei1QXkcFaexs4Z5Va+GEMTfhQhwDlCUy5irA/4K1SB5vGKUih9pWazV4Hd/4Eo56WdrwJnXZvWftArKxN35HLYD1g=
