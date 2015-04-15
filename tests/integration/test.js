@@ -136,7 +136,7 @@ describe('angular-remote-typeaheadjs', function() {
                 yield container1.input.type('lit');
                 yield driver.sleep(500);
                 expect(yield container1.dropdown.isDisplayed()).to.equal(true);
-                //expect(yield container1.dropdown.lastChild.className).to.equal('tt-dataset-categories');
+                expect(yield container1.dropdown.elementsByClassName('tt-dataset-categories')).to.not.be.undefined;
                 done();
             });
         });
