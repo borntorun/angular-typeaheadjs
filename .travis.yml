@@ -20,6 +20,10 @@ env:
 node_js:
 - 0.12
 script: tests/run-ci
+branches:
+  only:
+    - master
+    - /^integration-.*$/
 before_script:
 - npm install -g grunt-cli@0.1.13
 - npm install -g node-static@0.7.6
