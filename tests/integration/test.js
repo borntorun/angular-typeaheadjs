@@ -256,6 +256,32 @@ describe('angular-remote-typeaheadjs', function() {
                 done();
             });
         });
+        it('should prefetch suggestions for "lib"', function(done) {
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('lib');
+                yield driver.sleep(500);
+
+                var suggestions = yield container1.dropdown.elementsByClassName('tt-suggestion');
+                expect(suggestions).to.have.length('1');
+                expect(yield suggestions[0].text()).to.equal('Library');
+                done();
+            });
+        });
+        it('should prefetch suggestions for "ens"', function(done) {
+            driver.run(function*() {
+                yield container1.input.click();
+                yield container1.input.type('ens');
+                yield driver.sleep(500);
+
+                var suggestions = yield container1.dropdown.elementsByClassName('tt-suggestion');
+                expect(suggestions).to.have.length('3');
+                expect(yield suggestions[0].text()).to.equal('Ensaio');
+                expect(yield suggestions[1].text()).to.equal('Ensaismo');
+                expect(yield suggestions[2].text()).to.equal('Tubo de Ensaio');
+                done();
+            });
+        });
 
     });
     describe('Test container2: on input: ', function() {
