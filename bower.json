@@ -1,11 +1,6 @@
 {
-<<<<<<< HEAD
-  "name": "angular-remote-typeaheadjs",
-  "version": "0.4.0",
-=======
   "name": "angular-typeaheadjs",
-  "version": "0.3.0",
->>>>>>> 9a2d5a2e85ace5605707d3737cb94b35d7efb47b
+  "version": "0.4.0",
   "authors": [
     "Joao Carvalho <jmmtcarvalho@gmail.com>"
   ],

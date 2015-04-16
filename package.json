@@ -1,15 +1,8 @@
 {
-<<<<<<< HEAD
-  "name": "angular-remote-typeaheadjs",
-  "version": "0.4.0",
-  "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
-  "main": "dist/angular-remote-typeaheadjs.js",
-=======
   "name": "angular-typeaheadjs",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Angularjs directive to facilitate the use of the typeahead.js library.",
   "main": "dist/angular-typeaheadjs.js",
->>>>>>> 9a2d5a2e85ace5605707d3737cb94b35d7efb47b
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
   },
