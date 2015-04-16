@@ -5,7 +5,7 @@
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../../bower_components/angular/angular.min.js"></script>
     <script src="../../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
-    <script src="../../src/angular-remote-typeaheadjs.js"></script>
+    <script src="../../src/angular-typeaheadjs.js"></script>
 
     <style>
         .container1,
@@ -31,14 +31,14 @@
 <body ng-app="myApp">
 
     <div class="container1" ng-controller="FilterCtrl1 as vm">
-        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" prefetch="{{vm.prefetch}}"
+        <angular-typeaheadjs remote="{{vm.urlRemote}}" prefetch="{{vm.prefetch}}"
             placeholder="type lit"
             datasource="categories"
             onselected="vm.onSelected"
             onclosed="vm.onClosed"
             oncursorchanged="vm.onCursorChanged"
             clearvalue="false"
-            limit="3"></angular-remote-typeaheadjs>
+            limit="3"></angular-typeaheadjs>
         <br/>
         <br/>
         Selection: <input id="itemonSelected1" ng-model="vm.itemonSelected"/>
@@ -46,7 +46,7 @@
         On Cursor Changed: <input id="itemonCursorChanged1" ng-model="vm.itemonCursorChanged"/>
     </div>
     <div class="container2" ng-controller="FilterCtrl2 as vm">
-        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="false"></angular-remote-typeaheadjs>
+        <angular-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="false"></angular-typeaheadjs>
         <br/>
         <br/>
         Selection: <input id="itemonSelected2" ng-model="vm.itemonSelected"/>
@@ -54,13 +54,13 @@
         On Cursor Changed: <input id="itemonCursorChanged2" ng-model="vm.itemonCursorChanged"/>
     </div>
     <div class="container3" ng-controller="FilterCtrl3 as vm">
-        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="true"></angular-remote-typeaheadjs>
+        <angular-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="true"></angular-typeaheadjs>
         <br/>
         <br/>
         Selection: <input id="itemonSelected3" ng-model="vm.itemonSelected"/>
     </div>
     <div class="container4" ng-controller="FilterCtrl4 as vm">
-        <angular-remote-typeaheadjs remote="{{vm.urlRemote}}" model="vm.categorie" clearvalue="false"></angular-remote-typeaheadjs>
+        <angular-typeaheadjs remote="{{vm.urlRemote}}" model="vm.categorie" clearvalue="false"></angular-typeaheadjs>
         &nbsp;&nbsp;Model: <input id="inputbound4" ng-model="vm.categorie"/>
     </div>
 <script>
@@ -68,7 +68,7 @@
 (function() {
     'use strict';
 
-    angular.module('myApp', ['angularRemoteTypeaheadjs'])
+    angular.module('myApp', ['angularTypeaheadjs'])
         .controller('FilterCtrl1', [ '$scope', FilterCtrl1 ])
         .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ])
         .controller('FilterCtrl3', [ '$scope', FilterCtrl3 ])

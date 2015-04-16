@@ -1,11 +1,11 @@
-[![Build Status](https://travis-ci.org/borntorun/angular-remote-typeaheadjs.svg?branch=master)](https://travis-ci.org/borntorun/angular-remote-typeaheadjs)
+[![Build Status](https://travis-ci.org/borntorun/angular-typeaheadjs.svg?branch=master)](https://travis-ci.org/borntorun/angular-typeaheadjs)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 
-angular-remote-typeaheadjs
+angular-typeaheadjs
 =======================
 
-This is an AngularJS directive to facilitate the use in angular projects of the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library with [Bloodhound](https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md) integration for remote datasets. 
+This is an AngularJS directive to facilitate the use in angular projects of the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.. 
 
 Requirements
 ---------------
@@ -22,14 +22,14 @@ Get and install the requirements.
 * Install with Bower
 
 ```
-$ bower install angular-remote-typeaheadjs
+$ bower install angular-typeaheadjs
 ```
 
-* or get the javascript in dist folder: angular-remote-typeaheadjs.js
+* or get the javascript in dist folder: angular-typeaheadjs.js
 
 In your html template:
 ```
-<angular-remote-typeaheadjs remote="url_for_dataset" list_of_attributes ></angular-remote-typeaheadjs>
+<angular-typeaheadjs remote="url_for_dataset" list_of_attributes ></angular-typeaheadjs>
 ``` 
 
 * list_of_attributes:
@@ -62,7 +62,7 @@ vm.onSelected = function (item) {
 
 In the html template:
 ```
-<angular-remote-typeaheadjs onselected="vm.onSelected", remote="{{vm.urlRemote}}" cssinput="searchfiltercat", placeholder="search categories"></angular-remote-typeaheadjs>
+<angular-typeaheadjs onselected="vm.onSelected", remote="{{vm.urlRemote}}" cssinput="searchfiltercat", placeholder="search categories"></angular-typeaheadjs>
 ``` 
 
 Notes
