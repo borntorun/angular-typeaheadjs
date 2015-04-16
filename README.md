@@ -46,7 +46,6 @@ In your html template:
   * `minlensugestion` - minimum lenght for trigger dropdown (default=3)
   * `placeholder` - placeholder text
   * `cssinput` - css classes to add for input field
-  * `cssdropdown` - css class for dropdown element (span.tt-dropdown-menu in typeaheadjs structure)
   * `logonwarn` - output warnings messages (default=false)
 
 Example

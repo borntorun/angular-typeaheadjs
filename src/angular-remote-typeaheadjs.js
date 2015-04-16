@@ -24,7 +24,6 @@
  * minlensugestion "minimum lenght for trigger dropdown (default=3)"
  * placeholder     "placeholder text"
  * cssinput        "css classes to add for input field"
- * cssdropdown     "css class for dropdown element (span.tt-dropdown-menu in typeaheadjs structure)"
  * logonwarn       "output warnings messages (default=false)"
  */
 (function () {
@@ -50,7 +49,6 @@
                 limit: '@?',
                 placeholder: '@?',
                 cssinput: '@?',
-                cssdropdown: '@?',
                 model: '=?',
                 logonwarn: '@?'
             },
@@ -77,12 +75,6 @@
 
             //call typeahead and Bloodhound config
             configTypeaheadBloodhound();
-
-            if (scope.cssdropdown) {
-                //var oDrop = $('span:has(input#' + elemId + ') .tt-dropdown-menu');
-                //(oDrop && oDrop.addClass(scope.cssdropdown));
-                element[0].parentNode.lastChild.className += ' ' + scope.cssdropdown;
-            }
 
             //bind local functions to events
             element.on('typeahead:autocompleted', OnSelected);

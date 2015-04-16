@@ -13,6 +13,7 @@
  *
  * Optional:
  * key             "key-for-datasource-model (default=name)",
+ * prefetch        "url data to prefetch",
  * model           "model to bind the input"
  * onselected      "function to call on item selected: event 'typeahead:selected'",
  * onclosed        "function to call on input close dropdown and lost focus: event 'typeahead:closed'"
@@ -23,7 +24,6 @@
  * minlensugestion "minimum lenght for trigger dropdown (default=3)"
  * placeholder     "placeholder text"
  * cssinput        "css classes to add for input field"
- * cssdropdown     "css class for dropdown element (span.tt-dropdown-menu in typeaheadjs structure)"
  * logonwarn       "output warnings messages (default=false)"
  */
 (function () {
@@ -39,6 +39,7 @@
             scope: {
                 remote: '@',
                 key: '@?',
+                prefetch: '@?',
                 datasource: '@?',
                 onselected: '&?',
                 onclosed: '&?',
@@ -48,7 +49,6 @@
                 limit: '@?',
                 placeholder: '@?',
                 cssinput: '@?',
-                cssdropdown: '@?',
                 model: '=?',
                 logonwarn: '@?'
             },
@@ -76,12 +76,6 @@
             //call typeahead and Bloodhound config
             configTypeaheadBloodhound();
 
-            if (scope.cssdropdown) {
-                //var oDrop = $('span:has(input#' + elemId + ') .tt-dropdown-menu');
-                //(oDrop && oDrop.addClass(scope.cssdropdown));
-                element[0].parentNode.lastChild.className += ' ' + scope.cssdropdown;
-            }
-
             //bind local functions to events
             element.on('typeahead:autocompleted', OnSelected);
             element.on('typeahead:selected', OnSelected);
@@ -94,17 +88,27 @@
 
             function OnSelected(jqevent, item, dataset) {
                 callback.onselected(item);
-                ((scope.clearvalue === 'true') && element.typeahead('val', ''));
+                if (scope.clearvalue === 'true') {
+                    element.typeahead('val', '');
+                    scope.model = '';
+                }
+                else {
+                    scope.model = element.typeahead('val');
+                }
+                scope.$apply();
             }
 
             function OnClosed(jqevent) {
                 var o = {};
-                o[scope.key] = element.typeahead('val');
+                scope.model = o[scope.key] = element.typeahead('val');
                 callback.onclosed(o);
+                scope.$apply();
             }
 
             function OnCursorChanged(jqevent, item, dataset) {
                 callback.oncursorchanged(item);
+                scope.model = item[scope.key];
+                scope.$apply();
             }
 
             /**
@@ -124,7 +128,7 @@
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(scope.key),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     limit: scope.limit,
-                    prefetch: undefined,
+                    prefetch: scope.prefetch || undefined,
                     remote: scope.remote
                 });
 

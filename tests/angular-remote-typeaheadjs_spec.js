@@ -57,7 +57,7 @@ describe('angular-remote-typeaheadjs', function () {
         it('Test attributes', function () {
             var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}" prefetch="{{prefetch}}" key="{{key}}" datasource="{{datasource}}"' +
                 ' clearvalue="{{clearvalue}}" minlensugestion="{{minlensugestion}}"' +
-                ' limit="{{limit}}" placeholder="{{placeholder}}" cssinput="{{cssinput}}" cssdropdown="{{cssdropdown}}" />');
+                ' limit="{{limit}}" placeholder="{{placeholder}}" cssinput="{{cssinput}}" />');
             $scope.key = 'name';
             $scope.datasource = 'testitems';
             $scope.clearvalue = 'true';
@@ -65,9 +65,8 @@ describe('angular-remote-typeaheadjs', function () {
             $scope.limit = '3';
             $scope.placeholder = 'insert test';
             $scope.cssinput = 'testcssinput';
-            $scope.cssdropdown = 'testcssdropdown';
             $scope.urlremote = 'some-url/%QUERY';
-            //$scope.prefetch = '/tests/integration/data.json';
+            $scope.prefetch = '/tests/integration/data.json';
 
             $compile(element)($scope);
             $scope.$digest();
@@ -80,10 +79,8 @@ describe('angular-remote-typeaheadjs', function () {
             expect(el.attributes.limit.nodeValue).toBe($scope.limit);
             expect(el.attributes.placeholder.nodeValue).toBe($scope.placeholder);
             expect(el.attributes.cssinput.nodeValue).toBe($scope.cssinput);
-            expect(el.attributes.cssdropdown.nodeValue).toBe($scope.cssdropdown);
-            //expect(el.attributes.prefetch.nodeValue).toBe($scope.prefetch);
+            expect(el.attributes.prefetch.nodeValue).toBe($scope.prefetch);
             expect(el.className).toContain($scope.cssinput);
-            expect(el.parentNode.lastChild.className).toContain($scope.cssdropdown);
         });
     });
 });
