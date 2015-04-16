@@ -17,7 +17,7 @@ module.exports = function (config) {
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/sinonjs/sinon.js',
             'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
-            'src/angular-remote-typeaheadjs.js',
+            'src/angular-typeaheadjs.js',
             'tests/**/*_spec.js'
         ],
         // list of files to exclude

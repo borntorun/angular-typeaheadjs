@@ -1,14 +1,14 @@
 {
-  "name": "angular-remote-typeaheadjs",
+  "name": "angular-typeaheadjs",
   "version": "0.3.0",
-  "description": "Angularjs directive to facilitate the use of the typeahead.js library with Bloodhound integration and remote datasets.",
-  "main": "dist/angular-remote-typeaheadjs.js",
+  "description": "Angularjs directive to facilitate the use of the typeahead.js library.",
+  "main": "dist/angular-typeaheadjs.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/borntorun/angular-remote-typeaheadjs.git"
+    "url": "git://github.com/borntorun/angular-typeaheadjs.git"
   },
   "keywords": [
     "angularjs",
@@ -24,9 +24,9 @@
   "author": "João Carvalho <jmmtcarvalho@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/borntorun/angular-remote-typeaheadjs/issues"
+    "url": "https://github.com/borntorun/angular-typeaheadjs/issues"
   },
-  "homepage": "https://github.com/borntorun/angular-remote-typeaheadjs",
+  "homepage": "https://github.com/borntorun/angular-typeaheadjs",
   "devDependencies": {
     "chai": "^2.2.0",
     "chai-as-promised": "^4.3.0",

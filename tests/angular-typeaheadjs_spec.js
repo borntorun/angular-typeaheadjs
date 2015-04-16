@@ -1,8 +1,8 @@
 /*jshint -W098 */
 'use strict';
-describe('angular-remote-typeaheadjs', function () {
+describe('angular-typeaheadjs', function () {
     var $compile, $scope, $log;
-    beforeEach(module('angularRemoteTypeaheadjs'));
+    beforeEach(module('angularTypeaheadjs'));
     beforeEach(inject([ '$rootScope', '$compile', '$log', function (_rootScope_, _compile_, _log_, _sniffer_) {
         $scope = _rootScope_.$new();
         $compile = _compile_;
@@ -10,7 +10,7 @@ describe('angular-remote-typeaheadjs', function () {
     }]));
     describe('Render element', function () {
         it('should render full typeaheadjs structure', function () {
-            var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}"/>'), el;
+            var element = angular.element('<angular-typeaheadjs remote="{{urlremote}}"/>'), el;
             $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
@@ -27,16 +27,16 @@ describe('angular-remote-typeaheadjs', function () {
     describe('Test "remote" attribute', function () {
         it('Attribute remote not passed so it should be undefined and log.error should been called', function () {
             spyOn($log, 'error');
-            var element = angular.element('<angular-remote-typeaheadjs/>'), el;
+            var element = angular.element('<angular-typeaheadjs/>'), el;
             $compile(element)($scope);
             $scope.$digest();
             el = element[0];
             expect(el.attributes.remote).toBeUndefined();
-            expect($log.error).toHaveBeenCalledWith('Attribute [remote] was not defined.([angular-remote-typeaheadjs]:id:' + el.id + ')');
+            expect($log.error).toHaveBeenCalledWith('Attribute [remote] was not defined.([angular-typeaheadjs]:id:' + el.id + ')');
         });
         it('Attribute remote was passed so it should not be undefined and log.error should not been called', function () {
             spyOn($log, 'error');
-            var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}"/>'), el;
+            var element = angular.element('<angular-typeaheadjs remote="{{urlremote}}"/>'), el;
             $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
@@ -47,7 +47,7 @@ describe('angular-remote-typeaheadjs', function () {
         });
         it('Should call Bloodhound and attribute "remote" passed to it', function () {
             var spy = sinon.spy(window, 'Bloodhound'),
-                element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}"/>');
+                element = angular.element('<angular-typeaheadjs remote="{{urlremote}}"/>');
             $scope.urlremote = 'some-url/%QUERY';
             $compile(element)($scope);
             $scope.$digest();
@@ -55,7 +55,7 @@ describe('angular-remote-typeaheadjs', function () {
             expect(spy.args[0][0].remote).toBe($scope.urlremote);
         });
         it('Test attributes', function () {
-            var element = angular.element('<angular-remote-typeaheadjs remote="{{urlremote}}" prefetch="{{prefetch}}" key="{{key}}" datasource="{{datasource}}"' +
+            var element = angular.element('<angular-typeaheadjs remote="{{urlremote}}" prefetch="{{prefetch}}" key="{{key}}" datasource="{{datasource}}"' +
                 ' clearvalue="{{clearvalue}}" minlensugestion="{{minlensugestion}}"' +
                 ' limit="{{limit}}" placeholder="{{placeholder}}" cssinput="{{cssinput}}" />');
             $scope.key = 'name';

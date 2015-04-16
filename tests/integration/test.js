@@ -10,7 +10,7 @@ var wd = require('yiewd'),
 
 var browser = (process.env.BROWSER || 'chrome').split(':'),
     caps = {
-        name: f('angular-remote-typeaheadjs on [%s]', browser.join(' , ')),
+        name: f('angular-typeaheadjs on [%s]', browser.join(' , ')),
         browserName: browser[0]
     };
 
@@ -24,7 +24,7 @@ function setIf(obj, key, val) {
     val && (obj[key] = val);
 }
 
-describe('angular-remote-typeaheadjs', function() {
+describe('angular-typeaheadjs', function() {
     var driver, body, container1 = {}, container2 = {}, container3 = {}, container4 = {}, allPassed = true;
 
     this.timeout(300000);
