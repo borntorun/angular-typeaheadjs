@@ -75,6 +75,7 @@ For now:
 * If callbacks are not passed the typeahead events are emitted on scope.
 * hint on typeahead is assumed always as true
 
+
 Authors
 -------
 
