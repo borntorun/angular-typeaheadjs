@@ -1,6 +1,6 @@
 /*jshint -W098 */
 /**
- * Directive angular-remote-typeaheadjs
+ * Directive angular-typeaheadjs
  * (João Carvalho, 04/2015)
  *
  * Description: Directive to facilitate the use in angular projects of the typeahead.js autocomplete library with Bloodhound integration for remote datasets.
@@ -28,12 +28,12 @@
  */
 (function () {
     'use strict';
-    angular.module('angularRemoteTypeaheadjs', [])
-        .directive('angularRemoteTypeaheadjs', angularRemoteTypeaheadjs);
+    angular.module('angularTypeaheadjs', [])
+        .directive('angularTypeaheadjs', angularTypeaheadjs);
     /* @ngInject */
-    function angularRemoteTypeaheadjs($log) {
+    function angularTypeaheadjs($log) {
         var directive = {
-            // use as element: <angular-remote-typeaheadjs .../>
+            // use as element: <angular-typeaheadjs .../>
             restrict: 'E',
             replace: true,
             scope: {
@@ -187,12 +187,11 @@
                 return 'artjs-' + str;
             }
             function logwarn(message) {
-                $log.warn(message + '([angular-remote-typeaheadjs]:id:' + elemId + ')');
+                $log.warn(message + '([angular-typeaheadjs]:id:' + elemId + ')');
             }
             function logerror(message) {
-                $log.error(message + '([angular-remote-typeaheadjs]:id:' + elemId + ')');
+                $log.error(message + '([angular-typeaheadjs]:id:' + elemId + ')');
             }
         }
     }
-    angularRemoteTypeaheadjs.$inject = ["$log"];
 }());
