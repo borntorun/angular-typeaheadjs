@@ -13,6 +13,7 @@
  *
  * Optional:
  * key             "key-for-datasource-model (default=name)",
+ * prefetch        "url data to prefetch",
  * model           "model to bind the input"
  * onselected      "function to call on item selected: event 'typeahead:selected'",
  * onclosed        "function to call on input close dropdown and lost focus: event 'typeahead:closed'"
@@ -31,7 +32,7 @@
     angular.module('angularRemoteTypeaheadjs', [])
         .directive('angularRemoteTypeaheadjs', angularRemoteTypeaheadjs);
     /* @ngInject */
-    function angularRemoteTypeaheadjs($log, $rootScope) {
+    function angularRemoteTypeaheadjs($log) {
         var directive = {
             // use as element: <angular-remote-typeaheadjs .../>
             restrict: 'E',
@@ -39,6 +40,7 @@
             scope: {
                 remote: '@',
                 key: '@?',
+                prefetch: '@?',
                 datasource: '@?',
                 onselected: '&?',
                 onclosed: '&?',
@@ -134,7 +136,7 @@
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(scope.key),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     limit: scope.limit,
-                    prefetch: undefined,
+                    prefetch: scope.prefetch || undefined,
                     remote: scope.remote
                 });
 

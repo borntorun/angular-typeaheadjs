@@ -45,6 +45,17 @@ module.exports = function (config) {
         browsers: ['PhantomJS'],
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false
+        singleRun: false/*,
+        customLaunchers: {
+            'PhantomJS_custom': {
+                base: 'PhantomJS',
+                options: {
+                    settings: {
+                        localToRemoteUrlAccessEnabled: true,
+                        webSecurityEnabled: false
+                    }
+                }
+            }
+        }*/
     });
 };
