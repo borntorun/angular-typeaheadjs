@@ -1,0 +1,46 @@
+node_modules
+.tmp
+.idea
+*.sublime-*
+TODO
+npm*.log
+./*.log
+temp
+
+#do not ignore bower_components folder, then ignore its content
+!/bower_components
+/bower_components/*
+
+#do not ignore angular folder, then ignore its content, do not ignore angular.min.js file
+!/bower_components/angular
+/bower_components/angular/*
+!/bower_components/angular/angular.min.js
+
+#do not ignore angular-typeaheadjs folder, then ignore its content,
+#then do not ignore angular-typeaheadjs/dist folder, then ignore its content,
+#then do not ignore angular-typeaheadjs.js
+!/bower_components/angular-typeaheadjs
+/bower_components/angular-typeaheadjs/*
+!/bower_components/angular-typeaheadjs/dist
+/bower_components/angular-typeaheadjs/dist/*
+!/bower_components/angular-typeaheadjs/dist/angular-typeaheadjs.js
+
+#the same login as above
+!/bower_components/jquery
+/bower_components/jquery/*
+!/bower_components/jquery/dist
+/bower_components/jquery/dist/*
+!/bower_components/jquery/dist/jquery.min.js
+
+#the same login as above
+!/bower_components/typeahead.js
+/bower_components/typeahead.js/*
+!/bower_components/typeahead.js/dist
+/bower_components/typeahead.js/dist/*
+!/bower_components/typeahead.js/dist/typeahead.bundle.min.js
+
+#the same login as above
+!/bower_components/handlebars
+/bower_components/handlebars/*
+!/bower_components/handlebars/handlebars.min.js
+

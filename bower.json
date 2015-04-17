@@ -1,0 +1,21 @@
+{
+  "name": "angular-typeaheadjs gh-pages",
+  "version": "0.3.0",
+  "authors": [
+    "Joao Carvalho <jmmtcarvalho@gmail.com>"
+  ],
+  "description": "Demo page for angular-typeaheadjs directive",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular-typeaheadjs": "0.x",
+    "handlebars": "~3.0.0"
+  }
+}
