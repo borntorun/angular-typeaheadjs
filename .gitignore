@@ -24,6 +24,7 @@ temp
 !/bower_components/angular-typeaheadjs/dist
 /bower_components/angular-typeaheadjs/dist/*
 !/bower_components/angular-typeaheadjs/dist/angular-typeaheadjs.js
+!/bower_components/angular-typeaheadjs/dist/angular-typeaheadjs.min.js
 
 #the same login as above
 !/bower_components/jquery
