@@ -15,6 +15,7 @@ temp
 !/bower_components/angular
 /bower_components/angular/*
 !/bower_components/angular/angular.min.js
+!/bower_components/angular/angular.min.js.map
 
 #do not ignore angular-typeaheadjs folder, then ignore its content,
 #then do not ignore angular-typeaheadjs/dist folder, then ignore its content,
