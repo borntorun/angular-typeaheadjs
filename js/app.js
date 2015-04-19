@@ -2,13 +2,13 @@
     'use strict';
 
     angular.module('appdemo', ['angularTypeaheadjs'])
-        .controller('PrefetchCtrl', [ '$scope', PrefetchCtrl ]);
+        .controller('RemotePrefetchCtrl', [ '$scope', RemotePrefetchCtrl ]);
 
-    function PrefetchCtrl() {
+    function RemotePrefetchCtrl() {
         var vm = this;
         vm.itemonSelected = [];
         vm.prefetch = 'data/countries.json'
-        vm.urlRemote = 'data/%QUERY.json';
+        vm.remote = 'data/%QUERY.json';
         vm.onSelected = function (item) {
             for(var i = vm.itemonSelected.length - 1; i >= 0; i--) {
                 if(vm.itemonSelected[i] === item.name) {

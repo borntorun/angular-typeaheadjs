@@ -1,6 +1,14 @@
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-    display: none !important;
-}
+/*
+This is needed because the angular method does not works
+The othe solution was to include the script before the body:
+    var node = window.document.createElement("style");
+    node.appendChild(window.document.createTextNode("@charset \"UTF-8\";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}"));
+    window.document.getElementsByTagName('head')[0].appendChild(node);
+*/
+@charset "UTF-8";
+[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}
+ng\:form{display:block;}
+
 /* custom font! */
 /* ------------ */
 
