@@ -25,7 +25,7 @@ function setIf(obj, key, val) {
 }
 
 describe('angular-typeaheadjs', function() {
-    var driver, body, container1 = {}, container2 = {}, container3 = {}, container4 = {}, allPassed = true;
+    var driver, body, container1 = {}, container2 = {}, container3 = {}, container4 = {}, , container5 = {}, allPassed = true;
 
     this.timeout(300000);
 
