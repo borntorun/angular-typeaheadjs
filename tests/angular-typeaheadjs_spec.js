@@ -2,8 +2,9 @@
 'use strict';
 describe('angular-typeaheadjs', function () {
     var $compile, $scope, $log;
+
     beforeEach(module('angularTypeaheadjs'));
-    beforeEach(inject([ '$rootScope', '$compile', '$log', function (_rootScope_, _compile_, _log_, _sniffer_) {
+    beforeEach(inject([ '$rootScope', '$compile', '$log', function (_rootScope_, _compile_, _log_) {
         $scope = _rootScope_.$new();
         $compile = _compile_;
         $log = _log_;
@@ -24,38 +25,83 @@ describe('angular-typeaheadjs', function () {
             expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
         });
     });
-    describe('Test "remote" attribute', function () {
-        it('Attribute remote not passed so it should be undefined and log.error should been called', function () {
+    describe('Test passing invalid "remote|prefetch" attribute', function () {
+
+        it('should call $log if both attributtes remote|prefetch are not passed', function () {
             spyOn($log, 'error');
             var element = angular.element('<angular-typeaheadjs/>'), el;
             $compile(element)($scope);
             $scope.$digest();
             el = element[0];
             expect(el.attributes.remote).toBeUndefined();
-            expect($log.error).toHaveBeenCalledWith('Attribute [remote] was not defined.([angular-typeaheadjs]:id:' + el.id + ')');
+            expect(el.attributes.prefetch).toBeUndefined();
+            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
         });
-        it('Attribute remote was passed so it should not be undefined and log.error should not been called', function () {
+        it('should call $log if both attributtes remote|prefetch are passed as empty strings', function () {
             spyOn($log, 'error');
-            var element = angular.element('<angular-typeaheadjs remote="{{urlremote}}"/>'), el;
-            $scope.urlremote = 'some-url/%QUERY';
+            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}"/>'), el;
+            $scope.remote = '';
+            $scope.prefetch = '';
             $compile(element)($scope);
             $scope.$digest();
             el = element[0];
-            expect(el.attributes.remote).not.toBeUndefined();
-            expect(el.attributes.remote.nodeValue).toBe($scope.urlremote);
-            expect($log.error).not.toHaveBeenCalled();
+            expect(el.attributes.remote.nodeValue).toBe('');
+            expect(el.attributes.prefetch.nodeValue).toBe('');
+            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
+        });
+        it('should call $log if both attributtes remote|prefetch are passed as undefined', function () {
+            spyOn($log, 'error');
+            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}"/>'), el;
+            $scope.remote = undefined;
+            $scope.prefetch = undefined;
+            $compile(element)($scope);
+            $scope.$digest();
+            el = element[0];
+            expect(el.attributes.remote.nodeValue).toBe('');
+            expect(el.attributes.prefetch.nodeValue).toBe('');
+            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
+        });
+        it('should call $log if both attributtes remote|prefetch are passed as null', function () {
+            spyOn($log, 'error');
+            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}"/>'), el;
+            $scope.remote = null;
+            $scope.prefetch = null;
+            $compile(element)($scope);
+            $scope.$digest();
+            el = element[0];
+            expect(el.attributes.remote.nodeValue).toBe('');
+            expect(el.attributes.prefetch.nodeValue).toBe('');
+            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
+        });
+    });
+
+    describe('Test passing "remote and prefetch" attribute:', function () {
+        afterEach(function(){
+            window.Bloodhound.restore();
+        });
+        it('Should call Bloodhound and attribute "prefetch" passed to it', function () {
+            var spy = sinon.spy(window, 'Bloodhound'),
+                element = angular.element('<angular-typeaheadjs prefetch="{{prefetch}}"/>');
+            $scope.prefetch = '/tests/integration/data.json';
+            $compile(element)($scope);
+            $scope.$digest();
+            //debugger;
+            expect(spy).toHaveBeenCalled();
+            expect(spy.args[0][0].prefetch).toBe($scope.prefetch);
         });
         it('Should call Bloodhound and attribute "remote" passed to it', function () {
             var spy = sinon.spy(window, 'Bloodhound'),
-                element = angular.element('<angular-typeaheadjs remote="{{urlremote}}"/>');
-            $scope.urlremote = 'some-url/%QUERY';
+                element = angular.element('<angular-typeaheadjs remote="{{remote}}"/>');
+            $scope.remote = '/tests/integration/lit.json';
             $compile(element)($scope);
             $scope.$digest();
-            expect(spy).toHaveBeenCalledWith();
-            expect(spy.args[0][0].remote).toBe($scope.urlremote);
+            expect(spy).toHaveBeenCalled();
+            expect(spy.args[0][0].remote).toBe($scope.remote);
         });
-        it('Test attributes', function () {
-            var element = angular.element('<angular-typeaheadjs remote="{{urlremote}}" prefetch="{{prefetch}}" key="{{key}}" datasource="{{datasource}}"' +
+    });
+    describe('Test attributes',function(){
+        it('should have valid attributes', function () {
+            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}" key="{{key}}" datasource="{{datasource}}"' +
                 ' clearvalue="{{clearvalue}}" minlensugestion="{{minlensugestion}}"' +
                 ' limit="{{limit}}" placeholder="{{placeholder}}" cssinput="{{cssinput}}" />');
             $scope.key = 'name';
@@ -65,7 +111,7 @@ describe('angular-typeaheadjs', function () {
             $scope.limit = '3';
             $scope.placeholder = 'insert test';
             $scope.cssinput = 'testcssinput';
-            $scope.urlremote = 'some-url/%QUERY';
+            $scope.remote = 'some-url/%QUERY';
             $scope.prefetch = '/tests/integration/data.json';
 
             $compile(element)($scope);

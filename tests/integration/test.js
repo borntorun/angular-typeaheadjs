@@ -101,6 +101,14 @@ describe('angular-typeaheadjs', function() {
             container4.dropdown = yield this.elementByCssSelector(selectors.dropdown);
             container4.inputbound = yield this.elementByCssSelector(selectors.inputbound);
 
+            selectors = getContainer('5');
+            container5.input = yield this.elementByCssSelector(selectors.input);
+            container5.hint = yield this.elementByCssSelector(selectors.hint);
+            container5.dropdown = yield this.elementByCssSelector(selectors.dropdown);
+            container5.itemonSelected = yield this.elementByCssSelector(selectors.itemonSelected);
+            container5.itemonClosed = yield this.elementByCssSelector(selectors.itemonClosed);
+            container5.itemonCursorChanged = yield this.elementByCssSelector(selectors.itemonCursorChanged);
+
             done();
         });
     });
@@ -275,7 +283,7 @@ describe('angular-typeaheadjs', function() {
                 yield driver.sleep(500);
 
                 var suggestions = yield container1.dropdown.elementsByClassName('tt-suggestion');
-                expect(suggestions).to.have.length('3');
+                expect(suggestions).to.have.length('3');//limit=3
                 expect(yield suggestions[0].text()).to.equal('Ensaio');
                 expect(yield suggestions[1].text()).to.equal('Ensaismo');
                 expect(yield suggestions[2].text()).to.equal('Tubo de Ensaio');
@@ -389,5 +397,34 @@ describe('angular-typeaheadjs', function() {
                 done();
             });
         });
+    });
+    describe('Test container5 (only prefetch): on input: ', function() {
+        it('should prefetch suggestions for "ens"', function(done) {
+            driver.run(function*() {
+                yield container5.input.click();
+                yield container5.input.type('ens');
+                yield driver.sleep(500);
+
+                var suggestions = yield container5.dropdown.elementsByClassName('tt-suggestion');
+                expect(suggestions).to.have.length('4');
+                expect(yield suggestions[0].text()).to.equal('Ensaio');
+                expect(yield suggestions[1].text()).to.equal('Ensaismo');
+                expect(yield suggestions[2].text()).to.equal('Tubo de Ensaio');
+                expect(yield suggestions[3].text()).to.equal('Ensimesmado');
+                done();
+            });
+        });
+        it('should trigger $scope.on:typeahead:selected event on typing "ens" and autocomplete with TAB', function(done) {
+            driver.run(function*() {
+                yield container5.input.click();
+                yield container5.input.type('ens');
+                yield driver.sleep(500);
+                yield container5.input.type(wd.SPECIAL_KEYS['Tab']);
+                yield driver.sleep(500);
+                expect(yield container5.itemonSelected.getValue()).to.equal('selected:Ensaio');
+                done();
+            });
+        });
+
     });
 });

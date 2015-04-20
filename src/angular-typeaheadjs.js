@@ -9,11 +9,11 @@
  *
  * Attributtes:
  * Required:
- * remote="remote url for datasource"
- *
+ * (none)
  * Optional:
+ * remote          "remote url for datasource: must return [*{}]" (1)
+ * prefetch        "data to prefetch: must return [*{}]", (1)
  * key             "key-for-datasource-model (default=name)",
- * prefetch        "url data to prefetch",
  * model           "model to bind the input"
  * onselected      "function to call on item selected: event 'typeahead:selected'",
  * onclosed        "function to call on input close dropdown and lost focus: event 'typeahead:closed'"
@@ -25,6 +25,8 @@
  * placeholder     "placeholder text"
  * cssinput        "css classes to add for input field"
  * logonwarn       "output warnings messages (default=false)"
+ *
+ * (1): one of remote|prefetch must be passed
  */
 (function () {
     'use strict';
@@ -37,7 +39,7 @@
             restrict: 'E',
             replace: true,
             scope: {
-                remote: '@',
+                remote: '@?',
                 key: '@?',
                 prefetch: '@?',
                 datasource: '@?',
@@ -61,12 +63,13 @@
         ////////////////
         function linkfunction(scope, element, attrs, ctrl) {
             var elemId = getId(),
-                callback = {
-                    //set callbacks
-                    onselected: setCallback(scope.onselected, 'onselected', 'typeahead:selected'),
-                    onclosed: setCallback(scope.onclosed, 'onclosed', 'typeahead:closed'),
-                    oncursorchanged: setCallback(scope.oncursorchanged, 'oncursorchanged', 'typeahead:cursorchanged')
-                };
+                callback;
+            callback = {
+                //set callbacks
+                onselected: setCallback(scope.onselected, 'onselected', 'typeahead:selected'),
+                onclosed: setCallback(scope.onclosed, 'onclosed', 'typeahead:closed'),
+                oncursorchanged: setCallback(scope.oncursorchanged, 'oncursorchanged', 'typeahead:cursorchanged')
+            };
             scope.logonwarn = (scope.logonwarn || 'false') === 'true';
             element.attr('id', elemId);
             scope.minlensugestion = scope.minlensugestion || 3;
@@ -115,8 +118,8 @@
              * Config typeahead and Bloodhound config
              */
             function configTypeaheadBloodhound() {
-                if (!scope.remote) {
-                    logerror('Attribute [remote] was not defined.');
+                if (!(scope.prefetch || scope.remote)) {
+                    logerror('One of attributes [remote|prefetch] is required.');
                     return;
                 }
                 if (!scope.datasource) {
@@ -128,7 +131,7 @@
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(scope.key),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     limit: scope.limit,
-                    prefetch: scope.prefetch || undefined,
+                    prefetch: scope.prefetch,
                     remote: scope.remote
                 });
 
