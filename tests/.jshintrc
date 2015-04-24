@@ -27,6 +27,7 @@
     "_": true,
     "moment": true,
     "describe": true,
+    "xdescribe": true,
     "before": true,
     "beforeAll": true,
     "beforeEach": true,
@@ -41,6 +42,9 @@
     "element": true,
     "by": true,
     "sinon": true,
-    "jasmine": true
+    "jasmine": true,
+
+      "Bloodhound": true,
+      "typeahead": true
   }
 }

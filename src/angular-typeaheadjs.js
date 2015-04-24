@@ -53,44 +53,35 @@
         };
         return directive;
         ////////////////
-
-
         function linkFunction(scope, element, attrs, ctrl) {
             var options = scope.$eval(scope.options),
                 attributes = scope.$eval(scope.attroptions);
-
             options = angular.extend({
                 elemId: getId(),
                 logonwarn: false,
                 minlensugestion: 3,
                 key: 'name',
                 limit: 25,
-                callback : {
+                callback: {
                     //set callbacks
                     onselected: setCallback(scope.onselected, 'onselected', 'typeahead:selected'),
                     onclosed: setCallback(scope.onclosed, 'onclosed', 'typeahead:closed'),
                     oncursorchanged: setCallback(scope.oncursorchanged, 'oncursorchanged', 'typeahead:cursorchanged')
                 }
             }, options || {});
-
             element.attr('id', options.elemId);
-
             if (attributes && typeof attributes === 'object') {
                 element.attr(attributes);
             }
-
             //call typeahead and Bloodhound config
             configTypeaheadBloodhound(options, element);
-
             //bind local functions to events
             element.on('typeahead:autocompleted typeahead:selected', options, OnSelected);
             element.on('typeahead:closed', options, OnClosed);
             element.on('typeahead:cursorchanged', options, OnCursorChanged);
-
             scope.$on('$destroy', function () {
                 element.typeahead('destroy');
             });
-
             function OnSelected(jqevent, item, dataset) {
                 var options = jqevent.data;
                 options.callback.onselected(item);
@@ -140,19 +131,33 @@
             }
         }
 
+        function validateRequired(op) {
+            if ((op.prefetch && typeof op.prefetch==='string') || (op.remote && typeof op.remote==='string')) {
+                return true;
+            }
+            return false;
+        }
         /**
          * Config typeahead and Bloodhound config
          */
         function configTypeaheadBloodhound(op, element) {
-            if (!(op.prefetch || op.remote)) {
+
+            if (validateRequired(op)===false) {
                 logerror('One of attributes [remote|prefetch] is required.', op.elemId);
                 return;
             }
+            /*if (!(op.prefetch || op.remote)) {
+                logerror('One of attributes [remote|prefetch] is required.', op.elemId);
+                return;
+            }
+            if (!((op.prefetch && typeof op.prefetch) !== 'string' || (op.remote && typeof op.remote !== 'string'))) {
+                logerror('One of attributes [remote|prefetch] is required.', op.elemId);
+                return;
+            }*/
             if (!op.datasource) {
                 op.datasource = 'datasource';
                 (op.logonwarn && logwarn('Attribute [datasource] was not defined. Using default name:\'datasource\'', op.elemId));
             }
-
             var objectSource = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace(op.key),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -160,7 +165,6 @@
                 prefetch: op.prefetch,
                 remote: op.remote
             });
-
             objectSource.initialize().then(function () {
                 element.typeahead({
                     minLength: op.minlensugestion,
@@ -184,6 +188,7 @@
         function testIsFunction(f) {
             return {}.toString.call(f) === '[object Function]';
         }
+
         function getId() {
             var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split(''), length = Math.floor(Math.random() * 10) + 6;
             var str = '';
@@ -192,13 +197,16 @@
             }
             return 'artjs-' + str;
         }
+
         function logwarn(message, elemId) {
             //$log.warn(message + '([angular-typeaheadjs]:id:' + scope.options.elemId + ')');
             $log.warn(message + '([angular-typeaheadjs]:id:' + elemId + ')');
         }
+
         function logerror(message, elemId) {
             //$log.error(message + '([angular-typeaheadjs]:id:' + scope.options.elemId + ')');
             $log.error(message + '([angular-typeaheadjs]:id:' + elemId + ')');
         }
     }
 }());
+

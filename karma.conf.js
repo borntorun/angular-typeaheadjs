@@ -14,10 +14,11 @@ module.exports = function (config) {
             'bower_components/jquery/jquery.js',
             //'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
             'bower_components/typeahead.js/dist/typeahead.bundle.js',
-            'bower_components/angular/angular.min.js',
+            'bower_components/angular/angular.js',
+            //'bower_components/angular/angular.min.js.map',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/sinonjs/sinon.js',
-            //'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
+            'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
             'src/angular-typeaheadjs.js',
             'tests/*_spec.js'
         ],

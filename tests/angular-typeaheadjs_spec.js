@@ -1,28 +1,69 @@
 /*jshint -W098 */
 'use strict';
 describe('angular-typeaheadjs', function () {
-    var $compile, $scope, $log, timerCallback, options, EL;
-
-    $.each( $.browser, function( i, val ) {
-        console.log(i,':',val);
-    });
-
-
-    options = getOptions();
+    var $compile, $scope, $log, options, EL;
+    //    $.each( $.browser, function( i, val ) {
+    //        console.log(i,':',val);
+    //    });
     EL = getEL();
-
-
     beforeEach(module('angularTypeaheadjs'));
-
     beforeEach(inject([ '$rootScope', '$compile', '$log', function (_rootScope_, _compile_, _log_) {
         $scope = _rootScope_.$new();
         $compile = _compile_;
         $log = _log_;
-
     }]));
-
-    afterEach(function(){
+    afterEach(function () {
     });
+    function injectIt(o, name) {
+        !o && (inject([ name, function (p) {
+            o = p;
+        }]));
+        return o;
+    }
+    function restoreSpies(spies) {
+        spies.forEach(function (it) {
+            it.obj[it.name].restore();
+        });
+    }
+
+    function setElement(item, done) {
+        //console.log(item.spyOnSuite);
+        item.spyOnSuite && item.spyOnSuite.forEach(function (it) {
+            spyOn(injectIt(it.obj, it.name), it.method);
+        });
+        item.sinonSpySuite && item.sinonSpySuite.forEach(function (it) {
+            it.spy = sinon.spy(it.obj, it.name);
+        });
+        var element = angular.element(item.tag);
+        (item.op && ($scope.options = $scope.$eval(item.op)));
+        $compile(element)($scope);
+        (done && waitsForAndRuns(function () {
+            $scope.$digest();
+            return false;
+        }, function () {
+            item.expectations(element[0]);
+            done();
+        }, item.ms || 1));
+    }
+
+    function doIt(item) {
+        //console.log(item);
+        var f = !item.async || item.async === true ? function (done) {
+            setElement(item, done);
+        } : function () {
+            setElement(item);
+        };
+        it(item.caption, f);
+    }
+
+    function doItAll(tests, expectations, spies) {
+        tests.forEach(function (item) {
+            item.expectations = item.expectations || expectations;
+            angular.extend(item, spies || {});
+            //item.spyOnSuite = spies || undefined;
+            doIt(item);
+        });
+    }
 
     describe('Render element', function () {
         function expectations(el) {
@@ -34,167 +75,146 @@ describe('angular-typeaheadjs', function () {
             expect(el.parentNode.lastChild.localName).toBe('span');
             expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
         }
+        doItAll(
+            [
+                {caption: 'should render with just remote options bound to scope', tag: EL.addNew(EL.attr.remote).tag(), op: EL.scope(), async: false},
+                {caption: 'should render with inline remote option', tag: EL.addNew(EL.attr.remote).inline(), async: false},
+                {caption: 'should render with full options bound to scope', tag: EL.addNew(EL.attr.full()).tag(), op: EL.scope()},
+                {caption: 'should render with inline full options', tag: EL.addNew(EL.attr.full()).inline()},
+                {caption: 'should render with just prefetch option bound to scope', tag: EL.addNew(EL.attr.prefetch).tag(), op: EL.scope()},
+                {caption: 'should render with inline prefetch option', tag: EL.addNew(EL.attr.prefetch).inline()}
+            ], expectations);
+    });
 
-        function setElement(el, scopeOptions, done, ms) {
-            var element = angular.element(el);
-            (scopeOptions && ($scope.options = $scope.$eval(scopeOptions)));
-            $compile(element)($scope);
-
-            (done && waitsForAndRuns(function() {
-                $scope.$digest();
-                return false;
-            }, function() {
-                expectations(element[0]);
-                done();
-            }, ms || 10));
+    describe('Test passing in invalid "remote|prefetch" option', function () {
+        function expectations(el) {
+            expect(el.localName).toBe('input');
+            expect(el.className).toContain('typeahead');
+            expect(el.parentNode.localName).toBe(null);
+            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
         }
-        [
-            {caption: 'should render with just remote options bound to scope', el: EL.addNew(options.remote).tag(), op: EL.scope(), async: false},
-            {caption: 'should render with inline remote option', el: EL.addNew(options.remote).inline(), async: false},
-            {caption: 'should render with full options bound to scope', el: EL.addNew(options.full()).tag(), op: EL.scope()},
-            {caption: 'should render with inline full options', el: EL.addNew(options.full()).inline()},
-            {caption:'should render with just prefetch option bound to scope', el:EL.addNew(options.prefetch).tag(), op: EL.scope()},
-            {caption:'should render with inline prefetch option', el:EL.addNew(options.prefetch).inline()}
-        ].forEach(function (item) {
-                var f = !item.async || item.async===true? function (done) {
-                    setElement(item.el, item.op, done, item.timeout);
-                } : function () {
-                    setElement(item.el, item.op);
-                };
-                it(item.caption, f);
-            });
-
-        //        it('teste', function () {
-        //            setElement(Tag.new().add(options.remote).tag, Tag.scope());
-        //            //setElement(theElement.tag.justOptions,options.justRemote);
-        //        });
-        //        it('should render with just remote options bound to scope', function () {
-        //            setElement(theElement.tag.justOptions, options.justRemote);
-        //        });
-        //        it('should render with inline remote option', function () {
-        //            setElement(theElement.inline.justRemote);
-        //        });
-        //        it('should render with just prefetch option bound to scope', function () {
-        //            setElement(theElement.tag.justOptions, options.justPrefetch);
-        //        });
-        //        it('should render with inline prefetch option', function () {
-        //            setElement(theElement.inline.justPrefetch);
-        //        });
+        doItAll(
+            [
+                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed',
+                    tag: EL.addNew().tag(), op: EL.scope(), async: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
+                    tag: EL.addNew().inline(), async: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
+                    tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).tag(), op: EL.scope()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
+                    tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).inline()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
+                    tag: EL.addNew(EL.attr.remoteUndefined).add(EL.attr.prefetchUndefined).tag(), op: EL.scope()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
+                    tag: EL.addNew(EL.attr.remoteUndefined).add(EL.attr.prefetchUndefined).inline()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as null',
+                    tag: EL.addNew(EL.attr.remoteNull).add(EL.attr.prefetchNull).tag(), op: EL.scope()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as null',
+                    tag: EL.addNew(EL.attr.remoteNull).add(EL.attr.prefetchNull).inline()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as not string',
+                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).tag(), op: EL.scope()},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as not string',
+                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).inline()}
+            ], expectations, { spyOnSuite: [
+                {obj: $log, name: '$log', method: 'error'}
+            ]}
+        );
     });
-    /*describe('Test passing invalid "remote|prefetch" attribute', function () {
 
-        it('should call $log if both attributtes remote|prefetch are not passed', function () {
-            spyOn($log, 'error');
-            var element = angular.element('<angular-typeaheadjs/>'), el;
-            $compile(element)($scope);
-            $scope.$digest();
-            el = element[0];
-            expect(el.attributes.remote).toBeUndefined();
-            expect(el.attributes.prefetch).toBeUndefined();
-            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
+    describe('Test call to Bloodhound', function () {
+        var sinonSpies = [
+            {obj: window, name: 'Bloodhound'},
+            {obj: Bloodhound.prototype, name: 'initialize'}
+        ];
+        afterEach(function () {
+            restoreSpies(sinonSpies);//window.Bloodhound.restore();
         });
-        it('should call $log if both attributtes remote|prefetch are passed as empty strings', function () {
-            spyOn($log, 'error');
-            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}"/>'), el;
-            $scope.remote = '';
-            $scope.prefetch = '';
-            $compile(element)($scope);
-            $scope.$digest();
-            el = element[0];
-            expect(el.attributes.remote.nodeValue).toBe('');
-            expect(el.attributes.prefetch.nodeValue).toBe('');
-            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
-        });
-        it('should call $log if both attributtes remote|prefetch are passed as undefined', function () {
-            spyOn($log, 'error');
-            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}"/>'), el;
-            $scope.remote = undefined;
-            $scope.prefetch = undefined;
-            $compile(element)($scope);
-            $scope.$digest();
-            el = element[0];
-            expect(el.attributes.remote.nodeValue).toBe('');
-            expect(el.attributes.prefetch.nodeValue).toBe('');
-            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
-        });
-        it('should call $log if both attributtes remote|prefetch are passed as null', function () {
-            spyOn($log, 'error');
-            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}"/>'), el;
-            $scope.remote = null;
-            $scope.prefetch = null;
-            $compile(element)($scope);
-            $scope.$digest();
-            el = element[0];
-            expect(el.attributes.remote.nodeValue).toBe('');
-            expect(el.attributes.prefetch.nodeValue).toBe('');
-            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
-        });
+        doItAll(
+            [
+                {caption: 'Should call Bloodhound with default values',
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.prefetch).tag(), op: EL.scope()}
+            ], expectations, { sinonSpySuite: sinonSpies}
+        );
+
+        function expectations(el) {
+            /*jshint validthis:true */
+            var bloodhound = this.sinonSpySuite[0].spy,
+                bloodhoundargs = bloodhound.args[0][0],
+                bloodhoundInitialize = this.sinonSpySuite[1].spy;
+            expect(bloodhound).toHaveBeenCalled();
+            expect(bloodhoundargs.prefetch).toBe(EL.attr.prefetch.prefetch);
+            expect(bloodhoundargs.remote).toBe(EL.attr.remote.remote);
+            expect(bloodhoundargs.limit).toBe(25);
+            expect(bloodhoundInitialize).toHaveBeenCalled();
+        }
+
     });
-    describe('Test passing "remote and prefetch" attribute:', function () {
-        afterEach(function(){
-            window.Bloodhound.restore();
+
+    describe('Test call to typeahead', function () {
+        var sinonSpies = [
+            {obj: $.fn, name: 'typeahead'}
+        ];
+        afterEach(function () {
+            restoreSpies(sinonSpies);//window.Bloodhound.restore();
         });
-        it('Should call Bloodhound and attribute "prefetch" passed to it', function () {
-            var spy = sinon.spy(window, 'Bloodhound'),
-                element = angular.element('<angular-typeaheadjs prefetch="{{prefetch}}"/>');
-            $scope.prefetch = '/tests/integration/data.json';
-            $compile(element)($scope);
-            $scope.$digest();
-            //debugger;
-            expect(spy).toHaveBeenCalled();
-            expect(spy.args[0][0].prefetch).toBe($scope.prefetch);
-        });
-        it('Should call Bloodhound and attribute "remote" passed to it', function () {
-            var spy = sinon.spy(window, 'Bloodhound'),
-                element = angular.element('<angular-typeaheadjs remote="{{remote}}"/>');
-            $scope.remote = '/tests/integration/lit.json';
-            $compile(element)($scope);
-            $scope.$digest();
-            expect(spy).toHaveBeenCalled();
-            expect(spy.args[0][0].remote).toBe($scope.remote);
-        });
+
+        var expectPassedValues = function (el) {
+            /*jshint validthis:true */
+            var typeahead = this.sinonSpySuite[0].spy,
+                typeaheadargs = typeahead.args[0];
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].minLength).toBe(9);
+            expect(typeaheadargs[1].name).toBe('countries');
+            expect(typeaheadargs[1].displayKey).toBe('value');
+        };
+
+        doItAll(
+            [
+                {caption: 'Should call typeahead with default values',
+                    tag: EL.addNew(EL.attr.remote).tag(), op: EL.scope()},
+                {caption: 'Should call typeahead with default values inline',
+                    tag: EL.addNew(EL.attr.remote).inline()},
+                {caption: 'Should call typeahead with passed values',
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries).add(EL.attr.keyValue).add(EL.attr.minlensugestion9).tag(), op: EL.scope(),
+                    expectations: expectPassedValues},
+                {caption: 'Should call typeahead with passed values inline',
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries).add(EL.attr.keyValue).add(EL.attr.minlensugestion9).inline(),
+                    expectations: expectPassedValues}
+            ], expectations, { sinonSpySuite: sinonSpies}
+        );
+
+        function expectations(el) {
+            /*jshint validthis:true */
+            var typeahead = this.sinonSpySuite[0].spy,
+                typeaheadargs = typeahead.args[0];
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].minLength).toBe(3);
+            expect(typeaheadargs[0].highlight).toBe(true);
+            expect(typeaheadargs[1].name).toBe('datasource');
+            expect(typeaheadargs[1].displayKey).toBe('name');
+        }
     });
-    describe('Test attributes',function(){
-        it('should have valid attributes', function () {
-            var element = angular.element('<angular-typeaheadjs remote="{{remote}}" prefetch="{{prefetch}}" key="{{key}}" datasource="{{datasource}}"' +
-                ' clearvalue="{{clearvalue}}" minlensugestion="{{minlensugestion}}"' +
-                ' limit="{{limit}}" placeholder="{{placeholder}}" cssinput="{{cssinput}}" />');
-            $scope.key = 'name';
-            $scope.datasource = 'testitems';
-            $scope.clearvalue = 'true';
-            $scope.minlensugestion = '2';
-            $scope.limit = '3';
-            $scope.placeholder = 'insert test';
-            $scope.cssinput = 'testcssinput';
-            $scope.remote = 'some-url/%QUERY';
-            $scope.prefetch = '/tests/integration/data.json';
 
-            $compile(element)($scope);
-            $scope.$digest();
-            var el = element[0];
 
-            expect(el.attributes.key.nodeValue).toBe($scope.key);
-            expect(el.attributes.datasource.nodeValue).toBe($scope.datasource);
-            expect(el.attributes.clearvalue.nodeValue).toBe($scope.clearvalue);
-            expect(el.attributes.minlensugestion.nodeValue).toBe($scope.minlensugestion);
-            expect(el.attributes.limit.nodeValue).toBe($scope.limit);
-            expect(el.attributes.placeholder.nodeValue).toBe($scope.placeholder);
-            expect(el.attributes.cssinput.nodeValue).toBe($scope.cssinput);
-            expect(el.attributes.prefetch.nodeValue).toBe($scope.prefetch);
-            expect(el.className).toContain($scope.cssinput);
-        });
-    });*/
-    function getOptions() {
-        return {
+    function getEL() {
+        var OPT = {
             remote: {remote: '/tests/integration/%QUERY.json'},
-            //prefetch: {prefetch:'/tests/integration/data.json'},
             prefetch: {prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json'},
+            remoteEmpty: {remote: ''},
+            prefetchEmpty: {prefetch: ''},
+            remoteUndefined: {remote: undefined},
+            prefetchUndefined: {prefetch: undefined},
+            remoteNull: {remote: null},
+            prefetchNull: {prefetch: null},
+            remoteInvalid: {remote: 1},
+            prefetchInvalid: {prefetch: 1},
             key: {key: 'name'},
-            datasource: {datasource: 'categories'},
+            keyValue: {key: 'value'},
+            datasourceCountries: {datasource: 'countries'},
             limit: {limit: 2},
             clearvalueFalse: {clearvalue: false},
             clearvalueTrue: {clearvalue: false},
-            minlensugestionTwo: {minlensugestion: 3},
+            minlensugestion9: {minlensugestion: 9},
             logonwarnFalse: {logonwarn: true},
             logonwarnTrue: {logonwarn: false},
             full: function () {
@@ -211,9 +231,6 @@ describe('angular-typeaheadjs', function () {
                     this.logonwarnTrue);
             }
         };
-    }
-
-    function getEL() {
         return {
             options: {},
             TAG: '<angular-typeaheadjs options=\'{{options}}\'/>',
@@ -233,30 +250,30 @@ describe('angular-typeaheadjs', function () {
             },
             scope: function () {
                 return angular.toJson(this.options);
-            }
+            },
+            attr: OPT
         };
     }
 
     // This is the equivalent of the old waitsFor/runs syntax
     // which was removed from Jasmine 2
-    var waitsForAndRuns = function(escapeFunction, runFunction, escapeTime) {
+    // Credits: https://gist.github.com/abreckner/110e28897d42126a3bb9
+    var waitsForAndRuns = function (escapeFunction, runFunction, escapeTime) {
         // check the escapeFunction every millisecond so as soon as it is met we can escape the function
-        var interval = setInterval(function() {
+        var interval = setInterval(function () {
             if (escapeFunction()) {
                 clearMe();
                 runFunction();
             }
         }, 1);
-
         // in case we never reach the escapeFunction, we will time out
         // at the escapeTime
-        var timeOut = setTimeout(function() {
+        var timeOut = setTimeout(function () {
             clearMe();
             runFunction();
         }, escapeTime);
-
         // clear the interval and the timeout
-        function clearMe(){
+        function clearMe() {
             clearInterval(interval);
             clearTimeout(timeOut);
         }
