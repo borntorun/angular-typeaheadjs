@@ -190,12 +190,13 @@ module.exports = function (grunt) {
                 cmd: function (m) {
                     return format('git commit -m "%s"', m);
                 }
-            }
+            },
+            karma: './node_modules/karma/bin/karma start'
         },
         karma: {
             unit: {
                 configFile: 'karma.conf.js',
-                singleRun: true
+                singleRun: false
             }
         }
     });

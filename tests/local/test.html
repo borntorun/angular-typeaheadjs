@@ -10,20 +10,10 @@
     <style>
         .container1,
         .container2,
-        .container3 {
+        .container3,
+        .container4,
+        .container5{
             margin: 75px auto;
-        }
-        .typeahead-wrapper {
-            display: block;
-            margin: 50px 0;
-        }
-        .tt-dropdown-menu {
-            background-color: #ccc;
-            border: 1px solid #000;
-        }
-        .tt-suggestion.tt-cursor {
-            background-color: #fff;
-            color: #000;
         }
     </style>
 </head>
@@ -31,44 +21,41 @@
 <body ng-app="myApp">
 
     <div class="container1" ng-controller="FilterCtrl1 as vm">
-        <angular-typeaheadjs remote="{{vm.urlRemote}}" prefetch="{{vm.prefetch}}"
-            placeholder="type lit"
-            datasource="categories"
+        <angular-typeaheadjs
+            options="{{vm.options}}"
             onselected="vm.onSelected"
             onclosed="vm.onClosed"
             oncursorchanged="vm.onCursorChanged"
-            clearvalue="false"
-            limit="3"></angular-typeaheadjs>
-        <br/>
-        <br/>
+            attr-options='{{vm.moreattrs}}'></angular-typeaheadjs>
         Selection: <input id="itemonSelected1" ng-model="vm.itemonSelected"/>
         On Close: <input id="itemonClosed1" ng-model="vm.itemonClosed"/>
         On Cursor Changed: <input id="itemonCursorChanged1" ng-model="vm.itemonCursorChanged"/>
     </div>
+
     <div class="container2" ng-controller="FilterCtrl2 as vm">
-        <angular-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="false"></angular-typeaheadjs>
-        <br/>
-        <br/>
+        <angular-typeaheadjs
+            options='{remote: "/tests/integration/%QUERY.json", clearvalue: false}'
+            attr-options='{placeholder: "type lit"}'></angular-typeaheadjs>
+
+        <!--<angular-typeaheadjs ng-repeat="item in vm.obj"-->
+         <!--attr-options='{placeholder: "{{item.place}}"}' options="{{item.op}}"></angular-typeaheadjs>-->
         Selection: <input id="itemonSelected2" ng-model="vm.itemonSelected"/>
         On Close: <input id="itemonClosed2" ng-model="vm.itemonClosed"/>
         On Cursor Changed: <input id="itemonCursorChanged2" ng-model="vm.itemonCursorChanged"/>
     </div>
+
     <div class="container3" ng-controller="FilterCtrl3 as vm">
-        <angular-typeaheadjs remote="{{vm.urlRemote}}" clearvalue="true"></angular-typeaheadjs>
-        <br/>
-        <br/>
+        <angular-typeaheadjs options="{{vm.options}}"></angular-typeaheadjs>
         Selection: <input id="itemonSelected3" ng-model="vm.itemonSelected"/>
     </div>
+
     <div class="container4" ng-controller="FilterCtrl4 as vm">
-        <angular-typeaheadjs remote="{{vm.urlRemote}}" model="vm.categorie" clearvalue="false"></angular-typeaheadjs>
-        &nbsp;&nbsp;Model: <input id="inputbound4" ng-model="vm.categorie"/>
-        <br/>
-        <br/>
+        <angular-typeaheadjs options="{{vm.options}}" model="vm.category"></angular-typeaheadjs>
+        Model: <input id="inputbound4" ng-model="vm.category"/>
     </div>
+
     <div class="container5" ng-controller="FilterCtrl5 as vm">
-        <angular-typeaheadjs prefetch="{{vm.prefetch}}"></angular-typeaheadjs>
-        <br/>
-        <br/>
+        <angular-typeaheadjs options="{{vm.options}}"></angular-typeaheadjs>
         Selection: <input id="itemonSelected5" ng-model="vm.itemonSelected"/>
         On Close: <input id="itemonClosed5" ng-model="vm.itemonClosed"/>
         On Cursor Changed: <input id="itemonCursorChanged5" ng-model="vm.itemonCursorChanged"/>
@@ -90,70 +77,96 @@
         vm.itemonSelected = '';
         vm.itemonClosed = '';
         vm.itemonCursorChanged = '';
-        vm.prefetch = '/tests/integration/data.json'
-        vm.urlRemote = '/tests/integration/%QUERY.json';
+        vm.options = {
+            prefetch: '/tests/integration/data.json',
+            remote: '/tests/integration/%QUERY.json',
+            datasource: 'categories',
+            clearvalue: false,
+            limit: 3
+        };
+        vm.moreattrs = {
+            placeholder: 'type lit...'
+        }
+
         vm.onSelected = function (item) {
             vm.itemonSelected = 'selected:' + item.name;
-            //$scope.$apply();
         };
         vm.onClosed = function(item) {
             vm.itemonClosed = 'closed:' + item.name;
-            //$scope.$apply();
         };
         vm.onCursorChanged = function(item) {
             vm.itemonCursorChanged = 'cursorchanged:' + item.name;
-            //$scope.$apply();
         };
     }
     function FilterCtrl2($scope) {
         var vm = this;
+//        vm.obj = [
+//            {
+//                op: {
+//                    remote: '/tests/integration/%QUERY.json',
+//                    clearvalue: false},
+//                place: 'lit1'},
+//            {
+//                op: {
+//                    remote: '/tests/integration/%QUERY.json',
+//                    clearvalue: true
+//                },
+//                place:'lit2'
+//            }
+//        ];
         vm.itemonSelected = '';
         vm.itemonClosed = '';
         vm.itemonCursorChanged = '';
-        vm.prefetch = '/tests/integration/data.json'
-        vm.urlRemote = '/tests/integration/%QUERY.json';
-
+        vm.options = {
+            remote: '/tests/integration/%QUERY.json',
+            clearvalue: false
+        };
         $scope.$on('typeahead:selected', function(event, data) {
             vm.itemonSelected = 'selected:' + data.name;
-            //$scope.$apply();
         });
         $scope.$on('typeahead:autocompleted', function(event, data) {
             vm.itemonSelected = 'autocompleted:' + data.name;
-            //$scope.$apply();
         });
         $scope.$on('typeahead:closed', function(event, data) {
             vm.itemonClosed = 'closed:' + data.name;
-            //$scope.$apply();
         });
         $scope.$on('typeahead:cursorchanged', function(event, data) {
             vm.itemonCursorChanged = 'cursorchanged:' + data.name;
-            //$scope.$apply();
         });
 
     }
     function FilterCtrl3($scope) {
         var vm = this;
         vm.itemonSelected = '';
-        vm.prefetch = '/tests/integration/data.json'
-        vm.urlRemote = '/tests/integration/%QUERY.json';
+
+        vm.options = {
+            remote: '/tests/integration/%QUERY.json',
+            clearvalue: true
+        };
 
         $scope.$on('typeahead:selected', function(event, data) {
             vm.itemonSelected = 'selected:' + data.name;
-            //$scope.$apply();
         });
     }
     function FilterCtrl4($scope) {
         var vm = this;
-        vm.categorie = '';
-        vm.prefetch = '/tests/integration/data.json'
-        vm.urlRemote = '/tests/integration/%QUERY.json';
+        vm.category = '';
+
+        vm.options = {
+            remote: '/tests/integration/%QUERY.json',
+            prefetch: '/tests/integration/data.json',
+            clearvalue: false
+        };
     }
     function FilterCtrl5($scope) {
         var vm = this;
         vm.itemonSelected = '';
         vm.itemonClosed = '';
         vm.itemonCursorChanged = '';
-        vm.prefetch = '/tests/integration/data.json'
+
+        vm.options = {
+            prefetch: '/tests/integration/data.json'
+        };
 
         $scope.$on('typeahead:selected', function(event, data) {
             vm.itemonSelected = 'selected:' + data.name;
