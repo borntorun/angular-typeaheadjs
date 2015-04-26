@@ -194,10 +194,24 @@ module.exports = function (grunt) {
             karma: './node_modules/karma/bin/karma start'
         },
         karma: {
-            unit: {
-                configFile: 'karma.conf.js',
+            mochasingle: {
+                configFile: 'karma.mocha.conf.js',
+                singleRun: true
+            },
+            jasminesingle: {
+                configFile: 'karma.jasmine.conf.js',
+                singleRun: true
+            },
+            mocha: {
+                configFile: 'karma.mocha.conf.js',
+                singleRun: false
+            },
+            jasmine: {
+                configFile: 'karma.jasmine.conf.js',
                 singleRun: false
             }
+
+
         }
     });
 
@@ -283,7 +297,9 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('test', ['jshint', 'karma']);
+    grunt.registerTask('test', ['jshint', 'karma:mochasingle', 'karma:jasminesingle']);
+    grunt.registerTask('test:mocha', ['jshint', 'karma:mocha']);
+    grunt.registerTask('test:jasmine', ['jshint', 'karma:jasmine']);
     grunt.registerTask('build', ['jshint', 'concat', 'ngAnnotate', 'uglify', 'sed:version']);
 
 };

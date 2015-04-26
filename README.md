@@ -40,8 +40,6 @@ In your html template:
   * `limit` - max-items-to-show-on-dropdown (default=25)
   * `clearvalue` - specifies if value on input must be cleared on selection (default=false)
   * `minlensugestion` - minimum lenght for trigger dropdown (default=3)
-  * `placeholder` - placeholder text
-  * `cssinput` - css classes to add for input field
   * `logonwarn` - output warnings messages (default=false)
     
 * list_of_attributes:
@@ -74,9 +72,11 @@ vm.onSelected = function (item) {
 Notes
 ---------------
 
-For now:
+* This is a work in progress.
 
-* Only Bloodhound suggestions engine integration with remote and prefetch urls is supported (no hardcoded data).
+For now:
+* Only supports [typeahead.js v0.10.5](https://github.com/twitter/typeahead.js/releases/tag/v0.10.5). Work is being done to support new versions. 
+* Only Bloodhound suggestions engine integration with remote and prefetch urls is supported (no local dataset).
 * Only one dataset is supported and no templates for datasets are supported.
 * The typeahead:autocomplete event is assumed as a sugestion selection, so it will trigger the onselected callback. (dont know if this is the best but for now I think this is good)
 * If callbacks are not passed the typeahead events are emitted on scope.
