@@ -26,6 +26,7 @@
     "$": true,
     "_": true,
     "moment": true,
+    "async": true,
     "describe": true,
     "xdescribe": true,
     "before": true,

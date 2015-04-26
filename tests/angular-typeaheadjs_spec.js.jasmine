@@ -2,18 +2,18 @@
 'use strict';
 describe('angular-typeaheadjs', function () {
     var $compile, $scope, $log, options, EL;
-
     //    $.each( $.browser, function( i, val ) {
     //        console.log(i,':',val);
     //    });
     EL = getEL();
     beforeEach(module('angularTypeaheadjs'));
-    beforeEach(inject(/*[ '$rootScope', '$compile', '$log',*/ function (_$rootScope_, _$compile_, _$log_) {
-        $scope = _$rootScope_.$new();
-        $compile = _$compile_;
-        $log = _$log_;
-        console.log('beforeEach', new Date().getTime(), $log);
-    }/*]*/));
+    beforeEach(inject([ '$rootScope', '$compile', '$log', function (_rootScope_, _compile_, _log_) {
+        $scope = _rootScope_.$new();
+        $compile = _compile_;
+        $log = _log_;
+    }]));
+    afterEach(function () {
+    });
     function injectIt(o, name) {
         !o && (inject([ name, function (p) {
             o = p;
@@ -55,30 +55,19 @@ describe('angular-typeaheadjs', function () {
         });
     }
 
-    function setSpies(item) {
-        item.sinonSpySuite && item.sinonSpySuite.forEach(function (it) {
-            if (!it.obj) {
-                it.obj = injectIt(it.obj, it.name);
-                it.name = it.method;
-            }
-            it.spy = sinon.spy(it.obj, it.name);
-        });
-    }
-
     function setElement(item, done) {
         //console.log(item.spyOnSuite);
-//        item.spyOnSuite && item.spyOnSuite.forEach(function (it) {
-//            spyOn(injectIt(it.obj, it.name), it.method);
-//        });
-//        item.sinonSpySuite && item.sinonSpySuite.forEach(function (it) {
-//            it.spy = sinon.spy(it.obj, it.name);
-//        });
+        item.spyOnSuite && item.spyOnSuite.forEach(function (it) {
+            spyOn(injectIt(it.obj, it.name), it.method);
+        });
+        item.sinonSpySuite && item.sinonSpySuite.forEach(function (it) {
+            it.spy = sinon.spy(it.obj, it.name);
+        });
         var element = angular.element(item.tag);
-
-        setSpies(item);
-
         (item.op && ($scope.options = $scope.$eval(item.op)));
+
         //console.log($scope.options);
+
         $compile(element)($scope);
         $scope.$digest();
         /**
@@ -96,14 +85,13 @@ describe('angular-typeaheadjs', function () {
         var f = item.wait === undefined || item.wait === true ? function (done) {
             setElement(item, done);
         } : function () {
-            //console.log('it', new Date().getTime(),$log);
-
             setElement(item);
         };
         it(item.caption, f);
     }
 
     function doItAll(tests, expectations, spies) {
+
         tests.forEach(function (item) {
             //console.log(item.op);
             item.expectations = item.expectations || expectations;
@@ -112,15 +100,15 @@ describe('angular-typeaheadjs', function () {
         });
     }
 
-    describe('Render element', function () {
+    xdescribe('Render element', function () {
         function expectations(el) {
-            expect(el.localName).to.equal('input');
-            expect(el.className).to.contain('typeahead');
-            expect(el.parentNode.localName).to.equal('span');
-            expect(el.parentNode.className).to.contain('twitter-typeahead');
-            expect(el.parentNode.childNodes.length).to.equal(4);
-            expect(el.parentNode.lastChild.localName).to.equal('span');
-            expect(el.parentNode.lastChild.className).to.contain('tt-dropdown-menu');
+            expect(el.localName).toBe('input');
+            expect(el.className).toContain('typeahead');
+            expect(el.parentNode.localName).toBe('span');
+            expect(el.parentNode.className).toContain('twitter-typeahead');
+            expect(el.parentNode.childNodes.length).toBe(4);
+            expect(el.parentNode.lastChild.localName).toBe('span');
+            expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
         }
 
         doItAll(
@@ -133,29 +121,19 @@ describe('angular-typeaheadjs', function () {
                 {caption: 'should render with inline prefetch option', tag: EL.addNew(EL.attr.prefetch).inline()}
             ], expectations);
     });
-    describe('Test passing in invalid "remote|prefetch" option', function () {
-        console.log('describe', new Date().getTime(),$log);
-        var sinonSpies = [
-            {name: '$log', method: 'error'}
-        ];
-        afterEach(function () {
-            restoreSpies(sinonSpies);
-        });
+    xdescribe('Test passing in invalid "remote|prefetch" option', function () {
         function expectations(el) {
-            /*jshint validthis:true */
-            var log = this.sinonSpySuite[0].spy;
-            expect(el.localName).to.equal('input');
-            expect(el.className).to.contain('typeahead');
-            expect(el.parentNode.localName).to.equal(null);
-            expect(log.called).to.equal(true);
-            expect($log.error.calledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')')).to.equal(true);
+            expect(el.localName).toBe('input');
+            expect(el.className).toContain('typeahead');
+            expect(el.parentNode.localName).toBe(null);
+            expect($log.error).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
         }
 
         doItAll(
             [
                 {caption: 'should call $log.error if both attributtes remote|prefetch are not passed',
                     tag: EL.addNew().tag(), op: EL.scope(), wait: false},
-                /*{caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
+                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
                     tag: EL.addNew().inline(), wait: false},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
                     tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).tag(), op: EL.scope(), wait: false},
@@ -172,17 +150,19 @@ describe('angular-typeaheadjs', function () {
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as not string',
                     tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).tag(), op: EL.scope(), wait: false},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as not string',
-                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).inline(), wait: false}*/
-            ], expectations, { sinonSpySuite: sinonSpies}/*{ spyOnSuite: [{obj: $log, name: '$log', method: 'error'}]}*/
+                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).inline(), wait: false}
+            ], expectations, { spyOnSuite: [
+                {obj: $log, name: '$log', method: 'error'}
+            ]}
         );
     });
-    describe('Test call to Bloodhound', function () {
+    xdescribe('Test call to Bloodhound', function () {
         var sinonSpies = [
             {obj: window, name: 'Bloodhound'},
             {obj: Bloodhound.prototype, name: 'initialize'}
         ];
         afterEach(function () {
-            restoreSpies(sinonSpies);
+            restoreSpies(sinonSpies);//window.Bloodhound.restore();
         });
         doItAll(
             [
@@ -195,39 +175,36 @@ describe('angular-typeaheadjs', function () {
             var bloodhound = this.sinonSpySuite[0].spy,
                 bloodhoundargs = bloodhound.args[0][0],
                 bloodhoundInitialize = this.sinonSpySuite[1].spy;
-            expect(bloodhound.called).to.equal(true);
-            expect(bloodhoundargs.prefetch).to.equal(EL.attr.prefetch.prefetch);
-            expect(bloodhoundargs.remote).to.equal(EL.attr.remote.remote);
-            expect(bloodhoundargs.limit).to.equal(25);
-            expect(bloodhoundInitialize.called).to.equal(true);
+            expect(bloodhound).toHaveBeenCalled();
+            expect(bloodhoundargs.prefetch).toBe(EL.attr.prefetch.prefetch);
+            expect(bloodhoundargs.remote).toBe(EL.attr.remote.remote);
+            expect(bloodhoundargs.limit).toBe(25);
+            expect(bloodhoundInitialize).toHaveBeenCalled();
         }
     });
-    describe('Test call to typeahead', function () {
+    xdescribe('Test call to typeahead', function () {
         var sinonSpies = [
             {obj: $.fn, name: 'typeahead'}
         ];
         afterEach(function () {
-            restoreSpies(sinonSpies);
+            restoreSpies(sinonSpies);//window.Bloodhound.restore();
         });
         var expectPassedValues = function (el) {
             /*jshint validthis:true */
             var typeahead = this.sinonSpySuite[0].spy,
                 typeaheadargs = typeahead.args[0];
-            expect(typeahead.called).to.equal(true);
-            expect(typeaheadargs[0].minLength).to.equal(9);
-            expect(typeaheadargs[1].name).to.equal('countries');
-            expect(typeaheadargs[1].displayKey).to.equal('value');
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].minLength).toBe(9);
+            expect(typeaheadargs[1].name).toBe('countries');
+            expect(typeaheadargs[1].displayKey).toBe('value');
         };
         doItAll(
             [
                 {caption: 'Should call typeahead with default values', tag: EL.addNew(EL.attr.remote).tag(), op: EL.scope(), wait: false},
                 {caption: 'Should call typeahead with default values inline', tag: EL.addNew(EL.attr.remote).inline(), wait: false},
                 {caption: 'Should call typeahead with passed values',
-                    tag: EL
-                        .addNew(EL.attr.remote)
-                        .add(EL.attr.datasourceCountries)
-                        .add(EL.attr.keyValue)
-                        .add(EL.attr.minlensugestion9).tag(), op: EL.scope(),
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries)
+                        .add(EL.attr.keyValue).add(EL.attr.minlensugestion9).tag(), op: EL.scope(),
                     expectations: expectPassedValues, wait: false},
                 {caption: 'Should call typeahead with passed values inline',
                     tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries).add(EL.attr.keyValue).add(EL.attr.minlensugestion9).inline(),
@@ -238,31 +215,33 @@ describe('angular-typeaheadjs', function () {
             /*jshint validthis:true */
             var typeahead = this.sinonSpySuite[0].spy,
                 typeaheadargs = typeahead.args[0];
-            expect(typeahead.called).to.equal(true);
-            expect(typeaheadargs[0].minLength).to.equal(3);
-            expect(typeaheadargs[0].highlight).to.equal(true);
-            expect(typeaheadargs[1].name).to.equal('datasource');
-            expect(typeaheadargs[1].displayKey).to.equal('name');
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].minLength).toBe(3);
+            expect(typeaheadargs[0].highlight).toBe(true);
+            expect(typeaheadargs[1].name).toBe('datasource');
+            expect(typeaheadargs[1].displayKey).toBe('name');
         }
     });
     describe('Test to model databinding', function () {
+
         var tag = '<div><input ng-model=\'options.model\'/>$$$</div>';
+
         doItAll(
             [
                 {caption: 'Should update model',
-                    tag: tag.replace('$$$', EL.addNew(EL.attr.remote).add(EL.attr.modelWordteste).tag()), op: EL.scope(), wait: false}
+                    tag: tag.replace('$$$',EL.addNew(EL.attr.remote).add(EL.attr.modelWordteste).tag()), op: EL.scope(), wait:false}
             ], expectations
         );
         function expectations(el) {
-            expect(el.localName).to.equal('div');
-            expect(el.children[0].localName).to.equal('input');
-            expect(el.children[1].localName).to.equal('span');
-            expect(el.children[1].className).to.contain('twitter-typeahead');
-            expect(el.children[0].value).to.equal('teste');
-            $scope.$apply(function () {
+            expect(el.localName).toBe('div');
+            expect(el.children[0].localName).toBe('input');
+            expect(el.children[1].localName).toBe('span');
+            expect(el.children[1].className).toContain('twitter-typeahead');
+            expect(el.children[0].value).toBe('teste');
+            $scope.$apply(function() {
                 $scope.options.model = 'ok';
             });
-            expect(el.children[0].value).to.equal('ok');
+            expect(el.children[0].value).toBe('ok');
         }
     });
     function getEL() {
@@ -296,7 +275,7 @@ describe('angular-typeaheadjs', function () {
                     this.limit,
                     this.clearvalueFalse,
                     this.clearvalueTrue,
-                    this.minlensugestion9,
+                    this.minlensugestionTwo,
                     this.logonwarnFalse,
                     this.logonwarnTrue);
             }

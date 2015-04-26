@@ -7,7 +7,10 @@ module.exports = function (config) {
         basePath: '',
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine'],
+        //jasmine
+        //frameworks: ['jasmine'],
+        //mocha
+        frameworks: ['mocha', 'sinon-chai'],
         // list of files / patterns to load in the browser
         files: [
             'bower_components/jquery/dist/jquery.js',
@@ -15,10 +18,10 @@ module.exports = function (config) {
             //'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
             'bower_components/typeahead.js/dist/typeahead.bundle.js',
             'bower_components/angular/angular.js',
-            //'bower_components/angular/angular.min.js.map',
             'bower_components/angular-mocks/angular-mocks.js',
-            'bower_components/sinonjs/sinon.js',
-            'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
+            //jasmine
+//            'bower_components/sinonjs/sinon.js',
+//            'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
             'src/angular-typeaheadjs.js',
             'tests/*_spec.js'
         ],
@@ -28,11 +31,18 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
+            'src/*.js': ['coverage']
+        },
+
+        coverageReporter: {
+            type : 'html',
+            //type : 'text-summary',
+            dir : 'coverage/'
         },
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: ['progress', 'coverage'],
         // web server port
         hostname: '192.168.40.20',
         port: 8080,
@@ -40,7 +50,7 @@ module.exports = function (config) {
         colors: true,
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_DISABLE,
+        logLevel: config.LOG_INFO,
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
         // start these browsers
@@ -49,7 +59,7 @@ module.exports = function (config) {
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false
-        ,customLaunchers: {
+        /*,customLaunchers: {
             'PhantomJS_custom': {
                 base: 'PhantomJS',
                 options: {
@@ -59,7 +69,7 @@ module.exports = function (config) {
                     }
                 }
             }
-        }
+        }*/
 //        ,transports : ['flashsocket', 'xhr-polling', 'jsonp-polling']
     });
 };

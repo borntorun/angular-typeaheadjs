@@ -39,6 +39,7 @@
         var directive = {
             // use as element: <angular-typeaheadjs .../>
             restrict: 'E',
+            //require: 'ngModel',
             replace: true,
             scope: {
                 options: '@?',
