@@ -15,6 +15,18 @@
         .container5{
             margin: 75px auto;
         }
+        .typeahead-wrapper {
+            display: block;
+            margin: 50px 0;
+        }
+        .tt-dropdown-menu {
+            background-color: #ccc;
+            border: 1px solid #000;
+        }
+        .tt-suggestion.tt-cursor {
+            background-color: #fff;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -26,7 +38,7 @@
             onselected="vm.onSelected"
             onclosed="vm.onClosed"
             oncursorchanged="vm.onCursorChanged"
-            attr-options='{{vm.moreattrs}}'></angular-typeaheadjs>
+            more-attrs='{{vm.moreattrs}}'></angular-typeaheadjs>
         Selection: <input id="itemonSelected1" ng-model="vm.itemonSelected"/>
         On Close: <input id="itemonClosed1" ng-model="vm.itemonClosed"/>
         On Cursor Changed: <input id="itemonCursorChanged1" ng-model="vm.itemonCursorChanged"/>
@@ -35,7 +47,7 @@
     <div class="container2" ng-controller="FilterCtrl2 as vm">
         <angular-typeaheadjs
             options='{remote: "/tests/integration/%QUERY.json", clearvalue: false}'
-            attr-options='{placeholder: "type lit"}'></angular-typeaheadjs>
+            more-attrs='{placeholder: "type lit inline"}'></angular-typeaheadjs>
 
         <!--<angular-typeaheadjs ng-repeat="item in vm.obj"-->
          <!--attr-options='{placeholder: "{{item.place}}"}' options="{{item.op}}"></angular-typeaheadjs>-->

@@ -1,13 +1,9 @@
 /*jshint -W098 */
 'use strict';
-
 describe('angular-typeaheadjs', function () {
     var $compile, $scope, $log, EL, options, oInjectedForSpies = {};
-
     console.log('JASMINE');
-
     EL = getEL();
-
     /**
      * Get the directive module before each test
      */
@@ -20,25 +16,20 @@ describe('angular-typeaheadjs', function () {
         $compile = _$compile_;
         oInjectedForSpies.$log = _$log_;
     }));
-
     /**
      * Run the set: compiles the angular element for the test and do assertions
      * @param item
      * @param done
      */
     function runSet(item, done) {
-
         setSpies(item);
-
         /**
          * Definitions for element ar set on describes suites bellow
          */
         var element = angular.element(item.tag);
-
         (item.op && ($scope.options = $scope.$eval(item.op)));
-
+        (item.more && ($scope.moreattrs = $scope.$eval(item.more)));
         $compile(element)($scope);
-
         $scope.$digest();
         /**
          * if need to wait before expects...wait
@@ -53,6 +44,7 @@ describe('angular-typeaheadjs', function () {
             done && done();
         }, item.waitms || 10);
     }
+
     /**
      * Run test (wrapper for it(..)
      * @param item
@@ -65,6 +57,7 @@ describe('angular-typeaheadjs', function () {
         };
         it(item.caption, f);
     }
+
     /**
      * Run each suite
      * @param tests
@@ -78,10 +71,20 @@ describe('angular-typeaheadjs', function () {
             doIt(item);
         });
     }
+
     /**
      * Test Suites
      */
     describe('Render element', function () {
+        doItAll(
+            [
+                {caption: 'should render with just remote options bound to scope', tag: EL.addNew(EL.attr.remote).tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'should render with inline remote option', tag: EL.addNew(EL.attr.remote).inline(), wait: false},
+                {caption: 'should render with full options bound to scope', tag: EL.addNew(EL.attr.full()).tag(), op: EL.scopeOptions()},
+                {caption: 'should render with inline full options', tag: EL.addNew(EL.attr.full()).inline()},
+                {caption: 'should render with just prefetch option bound to scope', tag: EL.addNew(EL.attr.prefetch).tag(), op: EL.scopeOptions()},
+                {caption: 'should render with inline prefetch option', tag: EL.addNew(EL.attr.prefetch).inline()}
+            ], expectations);
         function expectations(el) {
             expect(el.localName).toBe('input');
             expect(el.className).toContain('typeahead');
@@ -91,18 +94,6 @@ describe('angular-typeaheadjs', function () {
             expect(el.parentNode.lastChild.localName).toBe('span');
             expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
         }
-
-        //defTestsObject('describe', expectations, sinonsspies);
-
-        doItAll(
-            [
-                {caption: 'should render with just remote options bound to scope', tag: EL.addNew(EL.attr().remote).tag(), op: EL.scope(), wait: false},
-                {caption: 'should render with inline remote option', tag: EL.addNew(EL.attr().remote).inline(), wait: false},
-                {caption: 'should render with full options bound to scope', tag: EL.addNew(EL.attr().full()).tag(), op: EL.scope()},
-                {caption: 'should render with inline full options', tag: EL.addNew(EL.attr().full()).inline()},
-                {caption: 'should render with just prefetch option bound to scope', tag: EL.addNew(EL.attr().prefetch).tag(), op: EL.scope()},
-                {caption: 'should render with inline prefetch option', tag: EL.addNew(EL.attr().prefetch).inline()}
-            ], expectations);
     });
     describe('Test passing in invalid "remote|prefetch" option', function () {
         var sinonSpies = [
@@ -112,6 +103,30 @@ describe('angular-typeaheadjs', function () {
         afterEach(function () {
             restoreSpies(sinonSpies);
         });
+        doItAll(
+            [
+                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed',
+                    tag: EL.addNew().tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
+                    tag: EL.addNew().inline(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
+                    tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
+                    tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).inline(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
+                    tag: EL.addNew(EL.attr.remoteUndefined).add(EL.attr.prefetchUndefined).tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
+                    tag: EL.addNew(EL.attr.remoteUndefined).add(EL.attr.prefetchUndefined).inline(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as null',
+                    tag: EL.addNew(EL.attr.remoteNull).add(EL.attr.prefetchNull).tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as null',
+                    tag: EL.addNew(EL.attr.remoteNull).add(EL.attr.prefetchNull).inline(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as not string',
+                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as not string',
+                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).inline(), wait: false}
+            ], expectations, { sinonSpySuite: sinonSpies}
+        );
         function expectations(el) {
             /*jshint validthis:true */
             var log = this.sinonSpySuite[0].spy;
@@ -121,31 +136,6 @@ describe('angular-typeaheadjs', function () {
             expect(log).toHaveBeenCalled();
             expect(log).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
         }
-
-        doItAll(
-            [
-                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed',
-                    tag: EL.addNew().tag(), op: EL.scope(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
-                    tag: EL.addNew().inline(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
-                    tag: EL.addNew(EL.attr().remoteEmpty).add(EL.attr().prefetchEmpty).tag(), op: EL.scope(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
-                    tag: EL.addNew(EL.attr().remoteEmpty).add(EL.attr().prefetchEmpty).inline(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
-                    tag: EL.addNew(EL.attr().remoteUndefined).add(EL.attr().prefetchUndefined).tag(), op: EL.scope(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
-                    tag: EL.addNew(EL.attr().remoteUndefined).add(EL.attr().prefetchUndefined).inline(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as null',
-                    tag: EL.addNew(EL.attr().remoteNull).add(EL.attr().prefetchNull).tag(), op: EL.scope(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as null',
-                    tag: EL.addNew(EL.attr().remoteNull).add(EL.attr().prefetchNull).inline(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed as not string',
-                    tag: EL.addNew(EL.attr().remoteInvalid).add(EL.attr().prefetchInvalid).tag(), op: EL.scope(), wait: false},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as not string',
-                    tag: EL.addNew(EL.attr().remoteInvalid).add(EL.attr().prefetchInvalid).inline(), wait: false}
-            ], expectations, { sinonSpySuite: sinonSpies}
-        );
     });
     describe('Test call to Bloodhound', function () {
         var sinonSpies = [
@@ -158,9 +148,9 @@ describe('angular-typeaheadjs', function () {
         doItAll(
             [
                 {caption: 'Should call Bloodhound with default values',
-                    tag: EL.addNew(EL.attr().remote).add(EL.attr().prefetch).tag(), op: EL.scope()},
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.prefetch).tag(), op: EL.scopeOptions()},
                 {caption: 'Should call Bloodhound with default values inline',
-                    tag: EL.addNew(EL.attr().remote).add(EL.attr().prefetch).inline(), op: EL.scope()}
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.prefetch).inline(), op: EL.scopeOptions()}
             ], expectations, { sinonSpySuite: sinonSpies}
         );
         function expectations(el) {
@@ -169,8 +159,8 @@ describe('angular-typeaheadjs', function () {
                 bloodhoundargs = bloodhound.args[0][0],
                 bloodhoundInitialize = this.sinonSpySuite[1].spy;
             expect(bloodhound).toHaveBeenCalled();
-            expect(bloodhoundargs.prefetch).toBe(EL.attr().prefetch.prefetch);
-            expect(bloodhoundargs.remote).toBe(EL.attr().remote.remote);
+            expect(bloodhoundargs.prefetch).toBe(EL.attr.prefetch.prefetch);
+            expect(bloodhoundargs.remote).toBe(EL.attr.remote.remote);
             expect(bloodhoundargs.limit).toBe(25);
             expect(bloodhoundInitialize).toHaveBeenCalled();
         }
@@ -187,20 +177,20 @@ describe('angular-typeaheadjs', function () {
             var typeahead = this.sinonSpySuite[0].spy,
                 typeaheadargs = typeahead.args[0];
             expect(typeahead).toHaveBeenCalled();
-            expect(typeaheadargs[0].minLength).toBe(9);
-            expect(typeaheadargs[1].name).toBe('countries');
-            expect(typeaheadargs[1].displayKey).toBe('value');
+            expect(typeaheadargs[0].minLength).toBe(EL.attr.minlensugestion9.minlensugestion);
+            expect(typeaheadargs[1].name).toBe(EL.attr.datasourceCountries.datasource);
+            expect(typeaheadargs[1].displayKey).toBe(EL.attr.keyValue.key);
         };
         doItAll(
             [
-                {caption: 'Should call typeahead with default values', tag: EL.addNew(EL.attr().remote).tag(), op: EL.scope(), wait: false},
-                {caption: 'Should call typeahead with default values inline', tag: EL.addNew(EL.attr().remote).inline(), wait: false},
+                {caption: 'Should call typeahead with default values', tag: EL.addNew(EL.attr.remote).tag(), op: EL.scopeOptions(), wait: false},
+                {caption: 'Should call typeahead with default values inline', tag: EL.addNew(EL.attr.remote).inline(), wait: false},
                 {caption: 'Should call typeahead with passed values',
-                    tag: EL.addNew(EL.attr().remote).add(EL.attr().datasourceCountries)
-                        .add(EL.attr().keyValue).add(EL.attr().minlensugestion9).tag(), op: EL.scope(),
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries)
+                        .add(EL.attr.keyValue).add(EL.attr.minlensugestion9).tag(), op: EL.scopeOptions(),
                     expectations: expectPassedValues, wait: false},
                 {caption: 'Should call typeahead with passed values inline',
-                    tag: EL.addNew(EL.attr().remote).add(EL.attr().datasourceCountries).add(EL.attr().keyValue).add(EL.attr().minlensugestion9).inline(),
+                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries).add(EL.attr.keyValue).add(EL.attr.minlensugestion9).inline(),
                     expectations: expectPassedValues, wait: false}
             ], expectations, { sinonSpySuite: sinonSpies}
         );
@@ -220,7 +210,7 @@ describe('angular-typeaheadjs', function () {
         doItAll(
             [
                 {caption: 'Should update model',
-                    tag: tag.replace('$$$',EL.addNew(EL.attr().remote).add(EL.attr().modelWordteste).tag()), op: EL.scope(), wait:false}
+                    tag: tag.replace('$$$', EL.addNew(EL.attr.remote).add(EL.attr.modelWordteste).tag()), op: EL.scopeOptions(), wait: false}
             ], expectations
         );
         function expectations(el) {
@@ -229,76 +219,108 @@ describe('angular-typeaheadjs', function () {
             expect(el.children[1].localName).toBe('span');
             expect(el.children[1].className).toContain('twitter-typeahead');
             expect(el.children[0].value).toBe('teste');
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 $scope.options.model = 'ok';
             });
             expect(el.children[0].value).toBe('ok');
+        }
+    });
+    describe('Render additional attributes', function () {
+        doItAll(
+            [
+                {caption: 'should render with additional attributes bound to scope',
+                    tag: EL.addNew(EL.attr.remote).addAttr(EL.attr.placeholder).addAttr(EL.attr.anotherattribute).tag(),
+                    op: EL.scopeOptions(),
+                    more: EL.scopeMoreattrs(),
+                    wait: false},
+                {caption: 'should render with inline additional attributes',
+                    tag: EL.addNew(EL.attr.remote).addAttr(EL.attr.placeholder).addAttr(EL.attr.anotherattribute).inline(), wait: false}
+            ], expectations);
+        function expectations(el) {
+            expect(el.localName).toBe('input');
+            expect(el.className).toContain('typeahead');
+            expect(el.parentNode.localName).toBe('span');
+            expect(el.parentNode.className).toContain('twitter-typeahead');
+            expect(el.parentNode.childNodes.length).toBe(4);
+            expect(el.parentNode.lastChild.localName).toBe('span');
+            expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
+            expect(el.attributes.placeholder.value).toBe(EL.attr.placeholder.placeholder);
+            expect(el.attributes.anotherattribute.value).toBe(EL.attr.anotherattribute.anotherattribute);
         }
     });
     /**
      * Maker for tag element
      * @returns {{options: {}, TAG: string, tag: tag, add: add, addNew: addNew, inline: inline, scope: scope, attr: attr}}
      */
+
     function getEL() {
         var OPT = {
-            remote: {remote: '/tests/integration/%QUERY.json'},
-            prefetch: {prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json'},
-            remoteEmpty: {remote: ''},
-            prefetchEmpty: {prefetch: ''},
-            remoteUndefined: {remote: undefined},
-            prefetchUndefined: {prefetch: undefined},
-            remoteNull: {remote: null},
-            prefetchNull: {prefetch: null},
-            remoteInvalid: {remote: 1},
-            prefetchInvalid: {prefetch: 1},
-            key: {key: 'name'},
-            keyValue: {key: 'value'},
-            datasourceCountries: {datasource: 'countries'},
-            limit: {limit: 2},
-            clearvalueFalse: {clearvalue: false},
-            clearvalueTrue: {clearvalue: false},
-            minlensugestion9: {minlensugestion: 9},
-            logonwarnFalse: {logonwarn: true},
-            logonwarnTrue: {logonwarn: false},
-            modelWordteste: {'model': 'teste'},
-            full: function () {
-                return angular.extend({},
-                    this.remote,
-                    this.prefetch,
-                    this.key,
-                    this.datasource,
-                    this.limit,
-                    this.clearvalueFalse,
-                    this.clearvalueTrue,
-                    this.minlensugestion9,
-                    this.logonwarnFalse,
-                    this.logonwarnTrue);
-            }
-        };
-        return {
-            options: {},
-            TAG: '<angular-typeaheadjs options=\'{{options}}\'/>',
-            tag: function () {
-                return this.TAG;
+                remote: {remote: '/tests/integration/%QUERY.json'},
+                prefetch: {prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json'},
+                remoteEmpty: {remote: ''},
+                prefetchEmpty: {prefetch: ''},
+                remoteUndefined: {remote: undefined},
+                prefetchUndefined: {prefetch: undefined},
+                remoteNull: {remote: null},
+                prefetchNull: {prefetch: null},
+                remoteInvalid: {remote: 1},
+                prefetchInvalid: {prefetch: 1},
+                key: {key: 'name'},
+                keyValue: {key: 'value'},
+                datasourceCountries: {datasource: 'countries'},
+                limit: {limit: 2},
+                clearvalueFalse: {clearvalue: false},
+                clearvalueTrue: {clearvalue: false},
+                minlensugestion9: {minlensugestion: 9},
+                logonwarnFalse: {logonwarn: true},
+                logonwarnTrue: {logonwarn: false},
+                modelWordteste: {'model': 'teste'},
+                placeholder: {'placeholder': 'text placeholder'},
+                anotherattribute: {'anotherattribute': 'i am another attribute'},
+                full: function () {
+                    return angular.extend({},
+                        this.remote,
+                        this.prefetch,
+                        this.key,
+                        this.datasource,
+                        this.limit,
+                        this.clearvalueFalse,
+                        this.minlensugestion9,
+                        this.logonwarnFalse);
+                }
             },
-            add: function (op) {
-                this.options = angular.extend(this.options, op || {});
-                return this;
-            },
-            addNew: function (op) {
-                this.options = {};
-                return this.add(op);
-            },
-            inline: function () {
-                return this.TAG.replace('{{options}}', this.scope());
-            },
-            scope: function () {
-                return angular.toJson(this.options);
-            },
-            attr: function() {
-                return OPT;
-            }
-        };
+            MORE = ' more-attrs=\'{{moreattrs}}\'',
+            TAG = '<angular-typeaheadjs options=\'{{options}}\'$$$/>';
+            return {
+                options: undefined,
+                moreattrs: undefined,
+                tag: function () {
+                    return TAG.replace('$$$', this.moreattrs ? MORE : '');
+                },
+                inline: function () {
+                    return TAG.replace('{{options}}', this.scopeOptions())
+                        .replace('$$$', this.moreattrs ? MORE.replace('{{moreattrs}}', this.scopeMoreattrs()) : '');
+                },
+                add: function (op) {
+                    this.options = angular.extend(this.options || {}, op || {});
+                    return this;
+                },
+                addNew: function (op) {
+                    this.options = this.moreattrs = undefined;
+                    return this.add(op);
+                },
+                scopeOptions: function () {
+                    return angular.toJson(this.options);
+                },
+                scopeMoreattrs: function () {
+                    return angular.toJson(this.moreattrs);
+                },
+                attr: OPT,
+                addAttr: function (attr) {
+                    this.moreattrs = angular.extend(this.moreattrs || {}, attr || {});
+                    return this;
+                }
+            };
     }
 
     /**
@@ -323,6 +345,7 @@ describe('angular-typeaheadjs', function () {
             }
         });
     }
+
     // This is the equivalent of the old waitsFor/runs syntax
     // which was removed from Jasmine 2
     // Credits: https://gist.github.com/abreckner/110e28897d42126a3bb9

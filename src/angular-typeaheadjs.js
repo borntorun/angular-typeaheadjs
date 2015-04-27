@@ -26,7 +26,7 @@
  *  onselected      - function to call on item selected: event 'typeahead:selected',
  *  onclosed        - function to call on input close dropdown and lost focus: event 'typeahead:closed'
  *  oncursorchanged - function to call on cursor changed: event 'typeahead:cursorchanged'
- *  attr-options    - object with additional attributes to apply to autocomplete input
+ *  more-attrs      - object with additional attributes to apply to autocomplete input
  *
  * (1): one of remote|prefetch must be passed
  */
@@ -43,7 +43,7 @@
             replace: true,
             scope: {
                 options: '@?',
-                attroptions: '@?attrOptions',
+                moreattrs: '@?moreAttrs',
                 onselected: '&?',
                 onclosed: '&?',
                 oncursorchanged: '&?',
@@ -56,7 +56,7 @@
         ////////////////
         function linkFunction(scope, element, attrs, ctrl) {
             var options = scope.$eval(scope.options),
-                attributes = scope.$eval(scope.attroptions);
+                attributes = scope.$eval(scope.moreattrs);
             options = angular.extend({
                 elemId: getId(),
                 logonwarn: false,
