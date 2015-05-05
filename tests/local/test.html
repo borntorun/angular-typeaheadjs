@@ -95,37 +95,38 @@
 <body ng-app="myApp">
 
 
-<!--<div class="container1" ng-controller="FilterCtrl1 as vm">
+<div class="container1" ng-controller="FilterCtrl1 as vm">
     Default use case:<br/>
     <angular-typeaheadjs
             angty-options="{{vm.options}}"
             angty-ttoptions="{{vm.ttOptions}}">
         <input class="typeahead" type="text" placeholder="escreva..." id="idtest1"/>
     </angular-typeaheadjs>
-</div>-->
-<!--<div class="container2" ng-controller="FilterCtrl2 as vm">
+</div>
+<div class="container2" ng-controller="FilterCtrl2 as vm">
     Passing in Datasets:<br/>
     <angular-typeaheadjs
             angty-options="{{vm.options}}"
+            angty-ttoptions="{{vm.ttOptions}}"
             angty-ttdatasets="vm.ttDatasets">
         <input class="typeahead" type="text" placeholder="escreva..." id="idtest2"/>
     </angular-typeaheadjs>
-</div>-->
+</div>
 <div class="container3" ng-controller="FilterCtrl3 as vm">
-    Passing in angty-tt-enginemng:<br/>
+    Test events:<br/>
     <angular-typeaheadjs id="xxx"
             angty-options="{{vm.options}}"
             angty-ttoptions="{{vm.ttOptions}}"
-            angty-ttenginemng="vm.engineManager"
-            xangty-oncursorchange
-            xangty-onselect
-            xangty-onautocomplete
+            angty-oncursorchange
+            angty-onselect
+            angty-onautocomplete
             angty-onasyncrequest
             angty-onasyncreceive
             >
         <input class="typeahead" type="text" placeholder="escreva..." id="idtest3"/>
     </angular-typeaheadjs>
 </div>
+
 <script>
 
     (function () {
@@ -147,38 +148,40 @@
         function FilterCtrl2($scope) {
             var vm = this;
             vm.options = {
-                useOwnDefaults: false
+                useOwnDefaults: false,
+                clear:false
             };
-            /*vm.ttOptions = {
-                prefetch:'/tests/integration/data.json'
-            };*/
+
             var nbaTeams = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
-                prefetch: '/tests/integration/nba.json'
+                local: [{ "team": "Boston Celtics" },{ "team": "Dallas Mavericks" },{ "team": "Brooklyn Nets" },{ "team": "Houston Rockets" },{ "team": "New York Knicks" },{ "team": "Memphis Grizzlies" },{ "team": "Philadelphia 76ers" },{ "team": "New Orleans Hornets" },{ "team": "Toronto Raptors" },{ "team": "San Antonio Spurs" },{ "team": "Chicago Bulls" },{ "team": "Denver Nuggets" },{ "team": "Cleveland Cavaliers" },{ "team": "Minnesota Timberwolves" },{ "team": "Detroit Pistons" },{ "team": "Portland Trail Blazers" },{ "team": "Indiana Pacers" },{ "team": "Oklahoma City Thunder" },{ "team": "Milwaukee Bucks" },{ "team": "Utah Jazz" },{ "team": "Atlanta Hawks" },{ "team": "Golden State Warriors" },{ "team": "Charlotte Bobcats" },{ "team": "Los Angeles Clippers" },{ "team": "Miami Heat" },{ "team": "Los Angeles Lakers" },{ "team": "Orlando Magic" },{ "team": "Phoenix Suns" },{ "team": "Washington Wizards" },{ "team": "Sacramento Kings" }]
+                //prefetch: '/temp/nba.json'
             });
 
             var nhlTeams = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
-                prefetch: '/tests/integration/nhl.json'
+                local: [{ "team": "New Jersey Devils" },{ "team": "New York Islanders" },{ "team": "New York Rangers" },{ "team": "Philadelphia Flyers" },{ "team": "Pittsburgh Penguins" },{ "team": "Chicago Blackhawks" },{ "team": "Columbus Blue Jackets" },{ "team": "Detroit Red Wings" },{ "team": "Nashville Predators" },{ "team": "St. Louis Blues" },{ "team": "Boston Bruins" },{ "team": "Buffalo Sabres" },{ "team": "Montreal Canadiens" },{ "team": "Ottawa Senators" },{ "team": "Toronto Maple Leafs" },{ "team": "Calgary Flames" },{ "team": "Colorado Avalanche" },{ "team": "Edmonton Oilers" },{ "team": "Minnesota Wild" },{ "team": "Vancouver Canucks" },{ "team": "Carolina Hurricanes" },{ "team": "Florida Panthers" },{ "team": "Tampa Bay Lightning" },{ "team": "Washington Capitals" },{ "team": "Winnipeg Jets" },{ "team": "Anaheim Ducks" },{ "team": "Dallas Stars" },{ "team": "Los Angeles Kings" },{ "team": "Phoenix Coyotes" },{ "team": "San Jose Sharks" }]
+                //prefetch: '/temp/nhl.json'
             });
+            vm.ttOptions = {
+                minLength: 1,
+                highlight: true,
+                hint: true
+            };
             vm.ttDatasets = [
                 {
                     name: 'nba-teams',
                     display: 'team',
                     source: nbaTeams,
-                    templates: {
-                        header: '<h3 class="league-name">NBA Teams</h3>'
-                    }
+                    templates: {header: '<h3 class="league-name">NBA Teams</h3>'}
                 },
                 {
                     name: 'nhl-teams',
                     display: 'team',
                     source: nhlTeams,
-                    templates: {
-                        header: '<h3 class="league-name">NHL Teams</h3>'
-                    }
+                    templates: {header: '<h3 class="league-name">NHL Teams</h3>'}
                 }
             ];
         }
@@ -187,6 +190,7 @@
 
 
             vm.options = {
+                useOwnDefaults: true,
                 emitOnlyIfPresent: true,
                 selectOnAutocomplete: false,
                 showLog: true
@@ -194,16 +198,8 @@
             vm.ttOptions = {
                 minLength: 2,
                 prefetch: '/tests/integration/countries.json',
-                //prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json',
-                //remote:'http://borntorun.github.io/angular-typeaheadjs/data/%QUERY.json',
-                //remote: null,
-//                remote: { url:'/tests/integration/%$$$.json', wildcard: '%$$$'},
-//                remote: { x:'/tests/integration/%$$$.json', wildcard: '%$$$'},
-//                remote: { url:'/tests/integration/%QUERY.json'},
-                //remote: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json',
-
+                remote:'/temp/%QUERY.json',
                 limit:10
-
             };
 
 

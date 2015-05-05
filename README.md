@@ -7,14 +7,14 @@ angular-typeaheadjs
 This is an AngularJS directive to facilitate the use in angular projects of the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
 
 Requirements
----------------
+------------
 
 [angular.js] (https://angularjs.org/)
 
-[typeahead.js](https://github.com/twitter/typeahead.js)
+[typeahead.js](https://github.com/twitter/typeahead.js) version: ~0.11.0
 
 How to use
----------------
+----------
 
 Get and install the requirements.
 
@@ -26,88 +26,176 @@ $ bower install angular-typeaheadjs
 
 * or get the javascript in dist folder: angular-typeaheadjs.js
 
+[See the demo page](http://borntorun.github.io/angular-typeaheadjs/)
 
 ## Default use case
 
 In your html template (default and minimal use case):
-```
-<angular-typeaheadjs options='{remote:"url_for_remote_dataset"}'></angular-typeaheadjs>
+```html
+<angular-typeaheadjs angty-ttoptions='{remote:"url_for_remote_data"}'>
+    <input class="typeahead" type="text" ... />
+</angular-typeaheadjs>
 ```
 or
+```html
+<angular-typeaheadjs angty-ttoptions='{prefetch:"url_for_prefetch_data"}'>
+  <input class="typeahead" type="text" ... />
+</angular-typeaheadjs>
 ```
-<angular-typeaheadjs options='{prefetch:"url_for_prefetch_dataset"}'></angular-typeaheadjs>
+
+So, for the default use case the directive component will apply autocomplete search functionality for the `input.typeahead`. A dataset with a Bloddhound engine as source will be created retrieving data from a remote and/or prefecth urls.
+
+### Attributes
+
+#### for options configuration
+```html
+<angular-typeaheadjs angty-ttoptions="..." angty-ttdatasets="..." angty-options="...">
+  <input class="typeahead" type="text" ... />
+</angular-typeaheadjs>
 ```
 
-So, for the default use case the directive component will create an typeahead autocomplete input with an associate Bloddhound source as a dataset from a remote or prefecth url. (see [options](#foroptions)) 
+* `angty-ttoptions` - optional - options hash - mimic the typeaheadjs options - used to configure options when NOT using attribute `angty-ttdatasets`
+  * For typeahead options (Group I)
+    * `highlight` - `optional`, `default=true`
+    * `hint` - `optional`, `default=true`
+    * `minLength` - `optional`, `default=3`
+    * `classNames` - `optional`
+  * For typeahead dataset options (Group II)
+    * `name` - `optional`
+    * `display` - `optional`, `default='name'`
+    * `limit` - `optional`, `default=10`
+  * For Bloodhound options (Group III)
+    * `sufficient` - `optional`, `default=10`
+    * `prefetch` - `optional`. A URL string for prefecth data.
+    * `remote` - `optional`. Can be a URL string for remote suggestions or an options hash. Only `remote.url` and `remote.wildcard` (`default=%QUERY`) are supported.        
+      * In the default use case (`angty-ttdatasets` is not passed) one of `remote|prefetch` must be passed in
 
-## attributes
+* `angty-ttdatasets` - optional - [*{}] - An array of datasets to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with `angty-ttoptions` (or defaults) applied.
+      * No validation is made on content of the datasets apart the type validation (is-an-array)
 
-#### for options
-* `?t-options` - options hash - Mimic the typeaheadjs options (when not passed the single options passed in will be used) (1)
-* `?t-datasets` - [*{}] - Mimic the typeaheadjs datasets (when not passed the b-engine option will be used for source) (1)
-* `?b-engine` - Bloodhound instance to use as source for the dataset (when not passed in a Bloodhound for remote and/or prefecth will be create with single options passed in - default use case) (1) 
-        * (1) no validation is made on content of the datasets apart the type validation (is an array)
-* `?options` - options hash (will be used if typeaheadOptions is not passed in)
-      * `?highlight` - (default=true) - the typeaheadjs highlight option
-      * `?hint` - (default=true) - the typeaheadjs hint option
-      * `?minLength` - (default=3) - the typeaheadjs minLength option
-      * `?classNames` - the typeaheadjs classNames option
-      * `?datasetName` - typeaheadjs dataset.name for the default use case  
-      * `?display` - (default='name') - typeaheadjs dataset.display for the default use case
-      * `?limit` - (default=5) - typeaheadjs dataset.limit for the default use case
-      * `?sufficient` - (default=5) - Bloodhound sufficient option for the default use case
-      * `?prefetch` - Bloodhound prefetch option for the default use case (2)
-      * `?remote` - Bloodhound remote option for the default use case (2)
-        * (2) in the default use case one of remote|prefetch must be passed
-      * `?selectOnAutocomplete` - (default=false) - Indicates that the select event is triggered when autocomplete occurs
-      * `?clear:new` - (default:true) - clear the value on input on suggestion selection
-      * `?log:new` - (default:false) - show console log warnings and errors       
-* `?model` - Property on scope to bind the input
-* `?more-attrs` - object with additional attributes to apply to the input
+* `angty-options` - optional - options hash for other options for the component
+    * `useOwnDefaults` - `optional`, `default=true`. Indicates that the components default values will be used instead of typeaheadjs default ones. 
+    * `selectOnAutocomplete` - `optional`, `default=false`. Indicates that the `select` event is triggered when `autocomplete` event occurs.
+    * `clear` - `optional`, `default=true`. Clear the value on input on suggestion selection.
+    * `emitOnlyIfPresent` - `optional`, `default=true`. Only scope emit the typeahead events that were explicity included in the html tag.
+    * `showLog` - `optional`, `default=false`. Show console log warnings and errors.       
 
-
-#### for events
-* `?event-onactive` - funtion to call on the typeahead:active event
-* `?event-onidle` - funtion to call on the typeahead:idle
-* `?event-onopen` - funtion to call on the typeahead:open
-* `?event-onclose` - funtion to call on the typeahead:close
-* `?event-onchange` - funtion to call on the typeahead:change
-* `?event-onrender` - funtion to call on the typeahead:render
-* `?event-onselect` - funtion to call on the typeahead:select
-* `?event-onautocomplete` - funtion to call on the typeahead:autocomplete
-* `?event-oncursorchange` - funtion to call on the typeahead:cursorchange
-* `?event-onasyncrequest` - funtion to call on the typeahead:asyncrequest
-* `?event-onasynccancel` - funtion to call on the typeahead:asynccancel
-* `?event-onasyncreceive` - funtion to call on the typeahead:asyncreceive
-  * if callbacks are not passed the typeahead events are emitted on scope and must be catched like:
- ```
-  $scope.$on('typeahead:select', function(event, data) {
-     //do something 
-  });
- ```
- 
-Examples
----------------
-
-Default use case + binding some events and set some attributes
-
-In html
-```
-<angular-typeaheadjs options="{{vm.options}}" event-onselect="vm.onSelected" event-onclose="vm.onClosed" more-attrs='{{vm.moreattrs}}'></angular-typeaheadjs>
+Example 1: set an autocomplete search from prefetch and remote data and overriding some options
+```html
+<angular-typeaheadjs angty-options="{{vm.options}}" angty-ttoptions="{{vm.ttOptions}}">
+  <input class="typeahead" type="text"/>
+</angular-typeaheadjs>
 ``` 
 
-In the associated controller:
-```
+```javascript
+//on the controller
 var vm = this;
+
 vm.options = {
-  remote: '/some/url/for/data/%QUERY'
+    useOwnDefaults: true,
+    showLog: true
+};
+vm.ttOptions = {
+  minLength: 2,
+  limit: 10,
+  prefetch: '/url/for/prefetch/data',
+  remote: '/url/for/remote/data'
+};
+```
+
+Example 2: sending multiple datasets with typeaheadjs defaults
+```html
+<angular-typeaheadjs angty-datasets="vm.datasets">
+  <input class="typeahead" type="text"/>
+</angular-typeaheadjs>
+``` 
+
+```javascript
+//on the controller
+var vm = this;
+
+vm.options = {useOwnDefaults: false, clear:false};
+
+var nbaTeams = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  local: [{ "team": "Boston Celtics" },{ "team": "Dallas Mavericks" },...,{ "team": "Sacramento Kings" }]
+});
+
+var nhlTeams = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  local: [{ "team": "New Jersey Devils" },{ "team": "New York Islanders" },...,{ "team": "San Jose Sharks" }]
+});
+
+vm.ttDatasets = [{
+    name: 'nba-teams',
+    display: 'team',
+    source: nbaTeams,
+    templates: {header: '<h3 class="league-name">NBA Teams</h3>'}
+},
+{
+    name: 'nhl-teams',
+    display: 'team',
+    source: nhlTeams,
+    templates: {header: '<h3 class="league-name">NHL Teams</h3>'}
+}];
+```
+
+
+#### for events configuration
+```html
+<angular-typeaheadjs angty-onactive="..." angty-onidle="..." angty-onopen="..." ... >
+  <input class="typeahead" type="text" ... />
+</angular-typeaheadjs>
+```
+* `angty-onactive` - funtion to call on the `typeahead:active` event
+* `angty-onidle` - funtion to call on the `typeahead:idle` event
+* `angty-onopen` - funtion to call on the `typeahead:open` event
+* `angty-onclose` - funtion to call on the `typeahead:close` event
+* `angty-onchange` - funtion to call on the `typeahead:change` event
+* `angty-onrender` - funtion to call on the `typeahead:render` event
+* `angty-onselect` - funtion to call on the `typeahead:select` event
+* `angty-onautocomplete` - funtion to call on the `typeahead:autocomplete` event
+* `angty-oncursorchange` - funtion to call on the `typeahead:cursorchange` event
+* `angty-onasyncrequest` - funtion to call on the `typeahead:asyncreques`t event
+* `angty-onasynccancel` - funtion to call on the `typeahead:asynccancel` event
+* `angty-onasyncreceive` - funtion to call on the `typeahead:asyncreceive` event
+
+Example:
+```html
+<angular-typeaheadjs angty-onselect="vm.onselect" ...>
+  <input class="typeahead" type="text" ... />
+</angular-typeaheadjs>
+``` 
+
+```javascript
+//on the controller
+vm.onselect = function() {
+  //do something 
 }
-vm.onSelected = function (event, item) {
-  //do something with item selected
-}
-vm.moreattrs = {
-  placeholder: 'the placeholder text'
-}
+```
+    
+* if callbacks are not passed and `emitOnlyIfPresent=false` all the typeahead events are emitted on scope. Can be catch as:
+
+```javascript
+$scope.$on('typeahead:select', function() {
+  //do something 
+});
+```
+
+* if `emitOnlyPresent=true` only the ones that were explicity included as an attribute are emitted
+
+```html
+<angular-typeaheadjs angty-onselect ...>
+  <input class="typeahead" type="text" ... />
+</angular-typeaheadjs>
+```
+
+```javascript
+$scope.$on('typeahead:select', function() {
+  //do something 
+});
 ```
 
 Notes
