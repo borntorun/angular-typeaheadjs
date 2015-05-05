@@ -1,193 +1,260 @@
 /*jshint -W098 */
 /**
  * Directive angular-typeaheadjs
- * (João Carvalho, 04/2015)
  *
- * Description: Directive to facilitate the use in angular projects of the typeahead.js autocomplete library with Bloodhound integration for remote datasets.
+ * This is an AngularJS directive to facilitate the use in angular projects of the typeahead.js autocomplete library.
  * - typeahead.js (https://twitter.github.io/typeahead.js/)
  * - Bloodhound (https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md)
  *
- * Attributtes:
- * Required (functional requirement):
  *
- *  options
- *      remote          - remote url for datasource: must return [*{}] (1)
- *      prefetch        - data to prefetch: must return [*{}], (1)
- *      key             - key-for-datasource-model (default=name),
- *      datasource      - name-for-css (default=datasource)
- *      limit           - max-items-to-show-on-dropdown (default=25)
- *      clearvalue      - specifies if value on input must be cleared on selection (default=false)
- *      minlensugestion - minimum lenght for trigger dropdown (default=3)
- *      logonwarn       - output warnings messages (default=false)
- *
- * Optional:
- *
- *  model           - model to bind the input
- *  onselected      - function to call on item selected: event 'typeahead:selected',
- *  onclosed        - function to call on input close dropdown and lost focus: event 'typeahead:closed'
- *  oncursorchanged - function to call on cursor changed: event 'typeahead:cursorchanged'
- *  more-attrs      - object with additional attributes to apply to autocomplete input
- *
- * (1): one of remote|prefetch must be passed
+ * Author: * (João Carvalho, 04/2015)
  */
 (function () {
     'use strict';
     angular.module('angularTypeaheadjs', [])
         .directive('angularTypeaheadjs', angularTypeaheadjs);
     /* @ngInject */
-    function angularTypeaheadjs($log) {
-        var directive = {
-            // use as element: <angular-typeaheadjs .../>
-            restrict: 'E',
-            //require: 'ngModel',
-            replace: true,
-            scope: {
-                options: '@?',
-                moreattrs: '@?moreAttrs',
-                onselected: '&?',
-                onclosed: '&?',
-                oncursorchanged: '&?',
-                model: '=?'
+    function angularTypeaheadjs($log, $q) {
+        var _aEvents = [
+                {event: '$active'},
+                {event: '$idle'},
+                {event: '$open'},
+                {event: '$close'},
+                {event: '$change'},
+                {event: '$render'},
+                {event: '$autocomplete'},
+                {event: '$cursorchange'},
+                {event: '$asyncrequest'},
+                {event: '$asynccancel'},
+                {event: '$asyncreceive'}
+            ],
+            _defaultOptions = {
+                useOwnDefaults: true,
+                selectOnAutocomplete: false,
+                clear: true,
+                emitOnlyIfPresent: true,
+                showLog: false
             },
-            template: '<input type="text" ng-model="model" class="typeahead"/>',
-            link: linkFunction
-        };
+            _defaultTTOptions = {
+                highlight: true,
+                hint: true,
+                minLength: 3,
+                display: 'name',
+                limit: 10,
+                sufficient: 10
+            },
+            directive = {
+                // use as attribute: <input angular-typeaheadjs .../>
+                restrict: 'E',
+                scope: {
+                    angtyOptions: '@?',
+                    angtyTtoptions: '@?',
+                    angtyTtdatasets: '&?',
+                    angtyOnactive: '&?',
+                    angtyOnidle: '&?',
+                    angtyOnopen: '&?',
+                    angtyOnclose: '&?',
+                    angtyOnchange: '&?',
+                    angtyOnrender: '&?',
+                    angtyOnselect: '&?',
+                    angtyOnautocomplete: '&?',
+                    angtyOncursorchange: '&?',
+                    angtyOnasyncrequest: '&?',
+                    angtyOnasynccancel: '&?',
+                    angtyOnasyncreceive: '&?'
+
+                },
+                link: linkFunction
+            };
         return directive;
         ////////////////
         function linkFunction(scope, element, attrs, ctrl) {
-            var options = scope.$eval(scope.options),
-                attributes = scope.$eval(scope.moreattrs);
-            options = angular.extend({
-                elemId: getId(),
-                logonwarn: false,
-                minlensugestion: 3,
-                key: 'name',
-                limit: 25,
-                callback: {
-                    //set callbacks
-                    onselected: setCallback(scope.onselected, 'onselected', 'typeahead:selected'),
-                    onclosed: setCallback(scope.onclosed, 'onclosed', 'typeahead:closed'),
-                    oncursorchanged: setCallback(scope.oncursorchanged, 'oncursorchanged', 'typeahead:cursorchanged')
-                }
-            }, options || {});
-            element.attr('id', options.elemId);
-            if (attributes && typeof attributes === 'object') {
-                element.attr(attributes);
+            var ttOptions, ttDatasets, typeaheadOptions, options, elinput;
+
+            //read attr passed in
+            options = scope.$eval(scope.angtyOptions);
+            ttOptions = scope.$eval(scope.angtyTtoptions);
+            ttDatasets = scope.$eval(scope.angtyTtdatasets);
+
+            //set default component options and extend
+            options = angular.extend(_defaultOptions, options || {});
+
+            //set default typeahead options and extend
+            typeaheadOptions = angular.extend(options.useOwnDefaults ? _defaultTTOptions : {}, ttOptions || {});
+
+            //verify input field exists
+            if ((elinput = element.find('.typeahead')).length === 0) {
+                options.showLog && (logerror('No element with ".typeahead" found to apply.', attrs.id));
+                return;
             }
-            //call typeahead and Bloodhound config
-            configTypeaheadBloodhound(options, element);
-            //bind local functions to events
-            element.on('typeahead:autocompleted typeahead:selected', options, OnSelected);
-            element.on('typeahead:closed', options, OnClosed);
-            element.on('typeahead:cursorchanged', options, OnCursorChanged);
-            scope.$on('$destroy', function () {
-                element.typeahead('destroy');
-            });
-            function OnSelected(jqevent, item, dataset) {
-                var options = jqevent.data;
-                options.callback.onselected(item);
-                if (options.clearvalue) {
-                    element.typeahead('val', '');
-                    scope.model = '';
+
+            //set typeahead (get a promise)
+            var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets);
+
+            plugTypeaheadPromise.then(function (el) {
+                if (options.clear === true) {
+                    _aEvents.push({event: '$select', trigger: function () {
+                        //console.log([].slice.call(arguments));
+                        el.typeahead('val', '');
+                    }});
+                }
+                if (options.selectOnAutocomplete === true) {
+                    _aEvents.push({event: '$autocomplete $select', trigger: 'select'});
                 }
                 else {
-                    scope.model = element.typeahead('val');
+                    _aEvents.push({event: '$select'});
                 }
-                scope.$apply();
+                bindEvents(el, _aEvents);
+            }, function (el) {
+                //console.log('rejected:', el);
+            });
+
+            function bindEvents(el, aEvents) {
+                aEvents.forEach(function (item) {
+                    var f = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
+                    f !== angular.noop && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, f));
+                });
             }
 
-            function OnClosed(jqevent) {
-                var o = {}, options = jqevent.data;
-                scope.model = o[options.key] = element.typeahead('val');
-                options.callback.onclosed(o);
-                scope.$apply();
-            }
-
-            function OnCursorChanged(jqevent, item, dataset) {
-                var options = jqevent.data;
-                options.callback.oncursorchanged(item);
-                scope.model = item[options.key];
-                scope.$apply();
-            }
-
-            /**
-             * setCallback
-             * @param fEvent Callback passed in to the directive
-             * @param name Name of attribute
-             * @param tag typeaheadjs tag for event
-             * @returns {Function} to call on event; This function will call the callback or scope.$emit the typeaheadjs event
-             */
-            function setCallback(fEvent, name, tag) {
-                if (!(!fEvent ? false : (!testIsFunction(fEvent) ? false : testIsFunction(fEvent())))) {
-                    (options.logonwarn && logwarn('\'' + name + '\' is not defined or is not a function.', options.elemId));
-                    return function (item) {
-                        //if callback was not passed emit typeahead event on scope
-                        scope.$emit(tag, item);
+            function getEventCallback(tag) {
+                var fcallback = scope.$eval(scope['angtyOn' + tag]);
+                if (isFunction(fcallback)) {
+                    return function () {
+                        fcallback.apply(null, [].slice.call(arguments));
                     };
                 }
-                return function (item) {
-                    //call function callback
-                    fEvent()(item);
-                };
+                if (options.emitOnlyIfPresent === false || attrs.$attr.hasOwnProperty('angtyOn' + tag)) {
+                    return function () {
+                        scope.$emit('typeahead:' + tag, [].slice.call(arguments));
+                    };
+                }
+                return angular.noop;
             }
-        }
 
-        function validateRequired(op) {
-            if ((op.prefetch && typeof op.prefetch==='string') || (op.remote && typeof op.remote==='string')) {
-                return true;
-            }
-            return false;
-        }
-        /**
-         * Config typeahead and Bloodhound config
-         */
-        function configTypeaheadBloodhound(op, element) {
+            function plugTypeahead(element, ttopt, datasets) {
+                var plugDefer = $q.defer(), datasetbh, optionsbh, optionstt, engine;
+                setTimeout(function () {
+                    plugIt();
+                }, 0);
+                return plugDefer.promise;
 
-            if (validateRequired(op)===false) {
-                logerror('One of attributes [remote|prefetch] is required.', op.elemId);
-                return;
+                function plugIt() {
+                    //prepare typeahead options to pass
+                    optionstt = extractKeys({highlight: null, hint: null, minLength: null, classNames: null}, ttopt);
+
+                    //datasets were passed: set element and go out
+                    if (isArray(datasets) === true) {
+                        plugDefer.resolve(callTypeahead(element, optionstt, datasets));
+                        return;
+                    }
+
+                    //Set internal bloodhound with prefect/remote
+                    //validate options required
+                    if (validateRequired(ttopt) === false) {
+                        options.showLog && (logerror('One of attributes [remote|prefetch] is required.', element[0].id));
+                        plugDefer.reject();
+                        return;
+                    }
+
+                    //Prepare Bloodhound options to pass
+                    optionsbh = extractKeys({sufficient: null, remote: null, prefetch: null}, ttopt);
+                    if (optionsbh.remote) {
+                        if (isString(optionsbh.remote)) {
+                            optionsbh.remote = {
+                                url: optionsbh.remote
+                            };
+                        }
+                        optionsbh.remote.wildcard = optionsbh.remote.wildcard || '%QUERY';
+                    }
+                    optionsbh = angular.extend(optionsbh, {
+                        initialize: false,
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace(ttopt.display),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace
+                    });
+
+                    //Set dataset for local Bloodhound
+                    datasetbh = extractKeys({name: null, limit: null, display: null}, ttopt);
+
+                    //Create Bloodhound
+                    datasetbh.source = engine = new Bloodhound(optionsbh);
+
+                    //Initialize and done
+                    engine.initialize().done(function () {
+                        plugDefer.resolve(callTypeahead(element, optionstt, datasetbh));
+                    }).fail(function () {
+                        plugDefer.reject();
+                    });
+                }
+
+                /////////
+                function callTypeahead(element, options, datasets) {
+                    //console.log(options, datasets);
+                    return element.typeahead(options, datasets);
+                }
+
+                function validateRequired(op) {
+
+                    //se foi passado remote
+                        //string not empty OU hash com url
+
+                    //se foi passado prefetch
+                        //string not empty
+
+                    var okRemote = isDefined(op.remote) && (isStringNotEmpty(op.remote) || (isHashObject(op.remote) && isStringNotEmpty(op.remote.url))),
+                        okPrefetch = isDefined(op.prefetch) && isStringNotEmpty(op.prefetch);
+
+                    //console.log('R=', okRemote, 'P=', okPrefetch);
+
+                    return okPrefetch || okRemote;
+                }
             }
-            /*if (!(op.prefetch || op.remote)) {
-                logerror('One of attributes [remote|prefetch] is required.', op.elemId);
-                return;
-            }
-            if (!((op.prefetch && typeof op.prefetch) !== 'string' || (op.remote && typeof op.remote !== 'string'))) {
-                logerror('One of attributes [remote|prefetch] is required.', op.elemId);
-                return;
-            }*/
-            if (!op.datasource) {
-                op.datasource = 'datasource';
-                (op.logonwarn && logwarn('Attribute [datasource] was not defined. Using default name:\'datasource\'', op.elemId));
-            }
-            var objectSource = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace(op.key),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                limit: op.limit,
-                prefetch: op.prefetch,
-                remote: op.remote
-            });
-            objectSource.initialize().then(function () {
-                element.typeahead({
-                    minLength: op.minlensugestion,
-                    highlight: true
-                }, {
-                    name: op.datasource,
-                    displayKey: op.key,
-                    source: objectSource.ttAdapter()
-                    /*,templates: {
-                      empty: '',
-                      footer: '',
-                      header: ''
-                    }*/
-                });
-            });
         }
 
         /**
          * Util functions
          */
-        function testIsFunction(f) {
-            return {}.toString.call(f) === '[object Function]';
+        function extractKeys(keys, from) {
+            var obj = {};
+            for (var key in keys) {
+                isUndefined(from[key]) || (obj[key] = from[key]);
+            }
+            return obj;
+        }
+
+        function isStringNotEmpty(s) {
+            return isString(s) && !isEmptyString(s);
+        }
+
+        function isEmptyString(s) {
+            return /^\s*$/.test(s);
+        }
+
+        function isUndefined(obj) {
+            return typeof obj === 'undefined';
+        }
+
+        function isDefined(obj) {
+            return typeof obj !== 'undefined';
+        }
+
+        function isFunction(obj) {
+            return {}.toString.call(obj) === '[object Function]';
+        }
+
+        function isHashObject(obj) {
+            return typeof obj === 'object' && obj !== null;
+        }
+
+        function isArray(obj) {
+            return Object.prototype.toString.call(obj) === '[object Array]';
+        }
+
+        function isString(obj) {
+            return typeof obj === 'string';
+        }
+
+        function isInstanceOf(o, obj) {
+            return o instanceof obj;
         }
 
         function getId() {
@@ -200,14 +267,15 @@
         }
 
         function logwarn(message, elemId) {
-            //$log.warn(message + '([angular-typeaheadjs]:id:' + scope.options.elemId + ')');
             $log.warn(message + '([angular-typeaheadjs]:id:' + elemId + ')');
         }
 
         function logerror(message, elemId) {
-            //$log.error(message + '([angular-typeaheadjs]:id:' + scope.options.elemId + ')');
             $log.error(message + '([angular-typeaheadjs]:id:' + elemId + ')');
         }
     }
-}());
+}
+()
+    )
+;
 

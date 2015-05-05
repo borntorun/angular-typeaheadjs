@@ -26,9 +26,11 @@ describe('angular-typeaheadjs', function () {
         /**
          * Definitions for element ar set on describes suites bellow
          */
+        //console.log(item.tag);
         var element = angular.element(item.tag);
-        (item.op && ($scope.options = $scope.$eval(item.op)));
-        (item.more && ($scope.moreattrs = $scope.$eval(item.more)));
+        (item.options && ($scope.options = $scope.$eval(item.options)));
+        (item.ttoptions && ($scope.ttoptions = $scope.$eval(item.ttoptions)));
+        (item.ttdatasets && ($scope.ttdatasets = $scope.$eval(item.ttdatasets)));
         $compile(element)($scope);
         $scope.$digest();
         /**
@@ -40,9 +42,9 @@ describe('angular-typeaheadjs', function () {
             /**
              * call expects
              */
-            item.expectations(element[0]);
+            item.expectations(element);
             done && done();
-        }, item.waitms || 10);
+        }, item.waitms || 0);
     }
 
     /**
@@ -78,21 +80,24 @@ describe('angular-typeaheadjs', function () {
     describe('Render element', function () {
         doItAll(
             [
-                {caption: 'should render with just remote options bound to scope', tag: EL.addNew(EL.attr.remote).tag(), op: EL.scopeOptions(), wait: false},
-                {caption: 'should render with inline remote option', tag: EL.addNew(EL.attr.remote).inline(), wait: false},
-                {caption: 'should render with full options bound to scope', tag: EL.addNew(EL.attr.full()).tag(), op: EL.scopeOptions()},
-                {caption: 'should render with inline full options', tag: EL.addNew(EL.attr.full()).inline()},
-                {caption: 'should render with just prefetch option bound to scope', tag: EL.addNew(EL.attr.prefetch).tag(), op: EL.scopeOptions()},
-                {caption: 'should render with inline prefetch option', tag: EL.addNew(EL.attr.prefetch).inline()}
+                {caption: 'should render with just remote option bound to scope',
+                    tag: EL.addNewTTOpt(EL.opt.remote).tag(), ttoptions: EL.scopeTTOptions()},
+                {caption: 'should render with inline remote option',
+                    tag: EL.addNewTTOpt(EL.opt.remote).inline()},
+                {caption: 'should render with just prefetch option bound to scope',
+                    tag: EL.addNewTTOpt(EL.opt.prefetch).tag(), ttoptions: EL.scopeTTOptions()},
+                {caption: 'should render with inline prefetch option',
+                    tag: EL.addNewTTOpt(EL.opt.prefetch).inline()}
             ], expectations);
         function expectations(el) {
-            expect(el.localName).toBe('input');
-            expect(el.className).toContain('typeahead');
-            expect(el.parentNode.localName).toBe('span');
-            expect(el.parentNode.className).toContain('twitter-typeahead');
-            expect(el.parentNode.childNodes.length).toBe(4);
-            expect(el.parentNode.lastChild.localName).toBe('span');
-            expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
+            //debugger;
+            //console.log(el);
+            expect(el.find('span.twitter-typeahead').length).toBe(1);
+            expect(el.find('span.twitter-typeahead > input.typeahead.tt-hint').length).toBe(1);
+            expect(el.find('span.twitter-typeahead > input.typeahead.tt-input').length).toBe(1);
+            expect(el.find('span.twitter-typeahead')[0].childNodes.length).toBe(4);
+            expect(el.find('span.twitter-typeahead')[0].lastChild.localName).toBe('div');
+            expect(el.find('span.twitter-typeahead')[0].lastChild.className).toContain('tt-menu');
         }
     });
     describe('Test passing in invalid "remote|prefetch" option', function () {
@@ -106,35 +111,42 @@ describe('angular-typeaheadjs', function () {
         doItAll(
             [
                 {caption: 'should call $log.error if both attributtes remote|prefetch are not passed',
-                    tag: EL.addNew().tag(), op: EL.scopeOptions(), wait: false},
+                    tag: EL.addNewTTOpt().addOpt(EL.opt.showLogTrue)
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
-                    tag: EL.addNew().inline(), wait: false},
+                    tag: EL.addNewTTOpt().addOpt(EL.opt.showLogTrue)
+                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
-                    tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).tag(), op: EL.scopeOptions(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteEmpty).addTTOpt(EL.opt.prefetchEmpty).addOpt(EL.opt.showLogTrue)
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
-                    tag: EL.addNew(EL.attr.remoteEmpty).add(EL.attr.prefetchEmpty).inline(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteEmpty).addTTOpt(EL.opt.prefetchEmpty).addOpt(EL.opt.showLogTrue)
+                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
-                    tag: EL.addNew(EL.attr.remoteUndefined).add(EL.attr.prefetchUndefined).tag(), op: EL.scopeOptions(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteUndefined).addTTOpt(EL.opt.prefetchUndefined).addOpt(EL.opt.showLogTrue)
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
-                    tag: EL.addNew(EL.attr.remoteUndefined).add(EL.attr.prefetchUndefined).inline(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteUndefined).addTTOpt(EL.opt.prefetchUndefined).addOpt(EL.opt.showLogTrue)
+                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as null',
-                    tag: EL.addNew(EL.attr.remoteNull).add(EL.attr.prefetchNull).tag(), op: EL.scopeOptions(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteNull).addTTOpt(EL.opt.prefetchNull).addOpt(EL.opt.showLogTrue)
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as null',
-                    tag: EL.addNew(EL.attr.remoteNull).add(EL.attr.prefetchNull).inline(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteNull).addTTOpt(EL.opt.prefetchNull).addOpt(EL.opt.showLogTrue)
+                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as not string',
-                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).tag(), op: EL.scopeOptions(), wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remoteInvalid).addTTOpt(EL.opt.prefetchInvalid).addOpt(EL.opt.showLogTrue)
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as not string',
-                    tag: EL.addNew(EL.attr.remoteInvalid).add(EL.attr.prefetchInvalid).inline(), wait: false}
+                    tag: EL.addNewTTOpt(EL.opt.remoteInvalid).addTTOpt(EL.opt.prefetchInvalid).addOpt(EL.opt.showLogTrue)
+                        .inline()}
             ], expectations, { sinonSpySuite: sinonSpies}
         );
         function expectations(el) {
-            /*jshint validthis:true */
+            /* jshint validthis:true */
             var log = this.sinonSpySuite[0].spy;
-            expect(el.localName).toBe('input');
-            expect(el.className).toContain('typeahead');
-            expect(el.parentNode.localName).toBe(null);
             expect(log).toHaveBeenCalled();
-            expect(log).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + el.id + ')');
+            expect(log).toHaveBeenCalledWith('One of attributes [remote|prefetch] is required.([angular-typeaheadjs]:id:' + EL.id + ')');
         }
     });
     describe('Test call to Bloodhound', function () {
@@ -145,23 +157,62 @@ describe('angular-typeaheadjs', function () {
         afterEach(function () {
             restoreSpies(sinonSpies);
         });
+        var expectPassedValues = function (el) {
+                /*jshint validthis:true*/
+                var bloodhound = this.sinonSpySuite[0].spy,
+                    bloodhoundargs = bloodhound.args[0][0],
+                    bloodhoundInitialize = this.sinonSpySuite[1].spy;
+                expect(bloodhound).toHaveBeenCalled();
+                expect(bloodhoundargs.prefetch).toBe(EL.opt.prefetch.prefetch);
+                expect(bloodhoundargs.remote).toEqual(EL.opt.remoteObj);
+                expect(bloodhoundargs.sufficient).toBe(EL.opt.sufficientFive.sufficient);
+                expect(bloodhoundInitialize).toHaveBeenCalled();
+            },
+            expectBHDefaultValues = function (el) {
+                /*jshint validthis:true*/
+                var bloodhound = this.sinonSpySuite[0].spy,
+                    bloodhoundargs = bloodhound.args[0][0],
+                    bloodhoundInitialize = this.sinonSpySuite[1].spy;
+                expect(bloodhound).toHaveBeenCalled();
+                expect(bloodhoundargs.prefetch).toBe(EL.opt.prefetch.prefetch);
+                expect(bloodhoundargs.remote).toEqual(EL.opt.remoteObj);
+                expect(bloodhoundargs.sufficient).toBeUndefined();
+                expect(bloodhoundInitialize).toHaveBeenCalled();
+            };
         doItAll(
             [
                 {caption: 'Should call Bloodhound with default values',
-                    tag: EL.addNew(EL.attr.remote).add(EL.attr.prefetch).tag(), op: EL.scopeOptions()},
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch)
+                        .tag(), ttoptions: EL.scopeTTOptions()},
                 {caption: 'Should call Bloodhound with default values inline',
-                    tag: EL.addNew(EL.attr.remote).add(EL.attr.prefetch).inline(), op: EL.scopeOptions()}
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch)
+                        .inline()},
+                {caption: 'Should call Bloodhound with arg sufficient=5',
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addTTOpt(EL.opt.sufficientFive)
+                        .inline(),
+                    expectations: expectPassedValues},
+                {caption: 'Should call Bloodhound with arg sufficient=5',
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addTTOpt(EL.opt.sufficientFive)
+                        .tag(),
+                    ttoptions: EL.scopeTTOptions(), expectations: expectPassedValues},
+                {caption: 'Should call Bloodhound with Bloodhound default values',
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addOpt(EL.opt.useOwnDefaultsFalse)
+                        .tag(),
+                    ttoptions: EL.scopeTTOptions(),
+                    options: EL.scopeOptions(),
+                    expectations: expectBHDefaultValues
+                },
             ], expectations, { sinonSpySuite: sinonSpies}
         );
         function expectations(el) {
-            /*jshint validthis:true */
+            /*jshint validthis:true*/
             var bloodhound = this.sinonSpySuite[0].spy,
                 bloodhoundargs = bloodhound.args[0][0],
                 bloodhoundInitialize = this.sinonSpySuite[1].spy;
             expect(bloodhound).toHaveBeenCalled();
-            expect(bloodhoundargs.prefetch).toBe(EL.attr.prefetch.prefetch);
-            expect(bloodhoundargs.remote).toBe(EL.attr.remote.remote);
-            expect(bloodhoundargs.limit).toBe(25);
+            expect(bloodhoundargs.prefetch).toBe(EL.opt.prefetch.prefetch);
+            expect(bloodhoundargs.remote).toEqual(EL.opt.remoteObj);
+            expect(bloodhoundargs.sufficient).toBe(10);
             expect(bloodhoundInitialize).toHaveBeenCalled();
         }
     });
@@ -173,90 +224,170 @@ describe('angular-typeaheadjs', function () {
             restoreSpies(sinonSpies);//window.Bloodhound.restore();
         });
         var expectPassedValues = function (el) {
-            /*jshint validthis:true */
-            var typeahead = this.sinonSpySuite[0].spy,
-                typeaheadargs = typeahead.args[0];
-            expect(typeahead).toHaveBeenCalled();
-            expect(typeaheadargs[0].minLength).toBe(EL.attr.minlensugestion9.minlensugestion);
-            expect(typeaheadargs[1].name).toBe(EL.attr.datasourceCountries.datasource);
-            expect(typeaheadargs[1].displayKey).toBe(EL.attr.keyValue.key);
-        };
+                /*jshint validthis:true*/
+                var typeahead = this.sinonSpySuite[0].spy,
+                    typeaheadargs = typeahead.args[0];
+                expect(typeahead).toHaveBeenCalled();
+                expect(typeaheadargs[0].hint).toBe(EL.opt.hintFalse.hint);
+                expect(typeaheadargs[0].highlight).toBe(EL.opt.highlightFalse.highlight);
+                expect(typeaheadargs[0].minLength).toBe(EL.opt.minLengthZero.minLength);
+                expect(typeaheadargs[0].classNames).toEqual(EL.opt.classNamesMy.classNames);
+                expect(typeaheadargs[1].display).toBe(EL.opt.displayValue.display);
+                expect(typeaheadargs[1].name).toBe(EL.opt.nameCountries.name);
+            },
+            expectTTDefaultValues = function (el) {
+                /*jshint validthis:true*/
+                var typeahead = this.sinonSpySuite[0].spy,
+                    typeaheadargs = typeahead.args[0];
+                expect(typeahead).toHaveBeenCalled();
+                expect(typeaheadargs[0].hint).toBeUndefined();
+                expect(typeaheadargs[0].highlight).toBeUndefined();
+                expect(typeaheadargs[0].minLength).toBeUndefined();
+                expect(typeaheadargs[0].classNames).toBeUndefined();
+                expect(typeaheadargs[0]).toEqual({});
+                expect(typeaheadargs[1].display).toBeUndefined();
+                expect(typeaheadargs[1].name).toBeUndefined();
+            };
         doItAll(
             [
-                {caption: 'Should call typeahead with default values', tag: EL.addNew(EL.attr.remote).tag(), op: EL.scopeOptions(), wait: false},
-                {caption: 'Should call typeahead with default values inline', tag: EL.addNew(EL.attr.remote).inline(), wait: false},
+                {caption: 'Should call typeahead with default values',
+                    tag: EL.addNewTTOpt(EL.opt.remote)
+                        .tag(), ttoptions: EL.scopeTTOptions()},
+                {caption: 'Should call typeahead with default values inline',
+                    tag: EL.addNewTTOpt(EL.opt.remote)
+                        .inline()},
                 {caption: 'Should call typeahead with passed values',
-                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries)
-                        .add(EL.attr.keyValue).add(EL.attr.minlensugestion9).tag(), op: EL.scopeOptions(),
-                    expectations: expectPassedValues, wait: false},
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.hintFalse).addTTOpt(EL.opt.highlightFalse)
+                        .addTTOpt(EL.opt.minLengthZero).addTTOpt(EL.opt.classNamesMy).addTTOpt(EL.opt.displayValue)
+                        .addTTOpt(EL.opt.nameCountries)
+                        .tag(),
+                    ttoptions: EL.scopeTTOptions(),
+                    expectations: expectPassedValues},
                 {caption: 'Should call typeahead with passed values inline',
-                    tag: EL.addNew(EL.attr.remote).add(EL.attr.datasourceCountries).add(EL.attr.keyValue).add(EL.attr.minlensugestion9).inline(),
-                    expectations: expectPassedValues, wait: false}
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.hintFalse).addTTOpt(EL.opt.highlightFalse)
+                        .addTTOpt(EL.opt.minLengthZero).addTTOpt(EL.opt.classNamesMy).addTTOpt(EL.opt.displayValue)
+                        .addTTOpt(EL.opt.nameCountries)
+                        .inline(),
+                    expectations: expectPassedValues},
+                {caption: 'Should call typeahead with typeahead default values',
+                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addOpt(EL.opt.useOwnDefaultsFalse)
+                        .tag(),
+                    ttoptions: EL.scopeTTOptions(),
+                    options: EL.scopeOptions(),
+                    expectations: expectTTDefaultValues
+                }
             ], expectations, { sinonSpySuite: sinonSpies}
         );
         function expectations(el) {
-            /*jshint validthis:true */
+            /*jshint validthis:true*/
             var typeahead = this.sinonSpySuite[0].spy,
                 typeaheadargs = typeahead.args[0];
             expect(typeahead).toHaveBeenCalled();
-            expect(typeaheadargs[0].minLength).toBe(3);
-            expect(typeaheadargs[0].highlight).toBe(true);
-            expect(typeaheadargs[1].name).toBe('datasource');
-            expect(typeaheadargs[1].displayKey).toBe('name');
+            expect(typeaheadargs[0].hint).toBe(EL.opt.hint.hint);
+            expect(typeaheadargs[0].highlight).toBe(EL.opt.highlight.highlight);
+            expect(typeaheadargs[0].minLength).toBe(EL.opt.minLength.minLength);
+            expect(typeaheadargs[0].classNames).toBe(EL.opt.classNames.classNames);
+            expect(typeaheadargs[1].display).toBe(EL.opt.display.display);
+            expect(typeaheadargs[1].name).toBeUndefined();
         }
     });
-    describe('Test to model databinding', function () {
-        var tag = '<div><input ng-model=\'options.model\'/>$$$</div>';
+    describe('Test sending multiple datasets', function () {
+        var sinonSpies = [
+            {obj: $.fn, methodname: 'typeahead'}
+        ];
+        afterEach(function () {
+            restoreSpies(sinonSpies);
+        });
+        function expectTTDefaultValues(el) {
+            /*jshint validthis:true*/
+            var typeahead = this.sinonSpySuite[0].spy,
+                typeaheadargs = typeahead.args[0];
+            //console.log(typeaheadargs[1][0]);
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].hint).toBeUndefined();
+            expect(typeaheadargs[0].highlight).toBeUndefined();
+            expect(typeaheadargs[0].minLength).toBeUndefined();
+            expect(typeaheadargs[0].classNames).toBeUndefined();
+            expect(typeaheadargs[0]).toEqual({});
+            expect(typeaheadargs[1][0].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][0].name).toBe(EL.opt.nameNBATeams.name);
+            expect(typeaheadargs[1][0].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][0].name).toBe(EL.opt.nameNBATeams.name);
+            expect(typeaheadargs[1][1].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
+            expect(typeaheadargs[1][1].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
+        }
+
+        function expectTTPassedValues(el) {
+            /*jshint validthis:true*/
+            var typeahead = this.sinonSpySuite[0].spy,
+                typeaheadargs = typeahead.args[0];
+            //console.log(typeaheadargs[1][0]);
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].hint).toBe(EL.opt.hintFalse.hint);
+            expect(typeaheadargs[0].highlight).toBe(EL.opt.highlightTrue.highlight);
+            expect(typeaheadargs[0].minLength).toBe(EL.opt.minLengthZero.minLength);
+            expect(typeaheadargs[0].classNames).toEqual(EL.opt.classNamesMy.classNames);
+            expect(typeaheadargs[1][0].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][0].name).toBe(EL.opt.nameNBATeams.name);
+            expect(typeaheadargs[1][0].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][0].name).toBe(EL.opt.nameNBATeams.name);
+            expect(typeaheadargs[1][1].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
+            expect(typeaheadargs[1][1].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
+        }
+
         doItAll(
             [
-                {caption: 'Should update model',
-                    tag: tag.replace('$$$', EL.addNew(EL.attr.remote).add(EL.attr.modelWordteste).tag()), op: EL.scopeOptions(), wait: false}
-            ], expectations
+                {caption: 'Should call typeahead with default values',
+                    tag: EL.addNewTTOpt().useDatasets().tag(),
+                    ttdatasets: EL.scopeTTdatasets()},
+                {caption: 'Should call typeahead with values passed in',
+                    tag: EL.addNewTTOpt(EL.opt.hintFalse).addTTOpt(EL.opt.highlightTrue).addTTOpt(EL.opt.minLengthZero)
+                        .addTTOpt(EL.opt.classNamesMy)
+                        .useDatasets()
+                        .tag(),
+                    ttoptions: EL.scopeTTOptions(),
+                    ttdatasets: EL.scopeTTdatasets(), expectations: expectTTPassedValues},
+                {caption: 'Should call typeahead with typeahead default values',
+                    tag: EL.addNewOpt(EL.opt.useOwnDefaultsFalse)
+                        .useDatasets()
+                        .tag(),
+                    options: EL.scopeOptions(),
+                    ttdatasets: EL.scopeTTdatasets(), expectations: expectTTDefaultValues}
+            ], expectations, { sinonSpySuite: sinonSpies}
         );
         function expectations(el) {
-            expect(el.localName).toBe('div');
-            expect(el.children[0].localName).toBe('input');
-            expect(el.children[1].localName).toBe('span');
-            expect(el.children[1].className).toContain('twitter-typeahead');
-            expect(el.children[0].value).toBe('teste');
-            $scope.$apply(function () {
-                $scope.options.model = 'ok';
-            });
-            expect(el.children[0].value).toBe('ok');
-        }
-    });
-    describe('Render additional attributes', function () {
-        doItAll(
-            [
-                {caption: 'should render with additional attributes bound to scope',
-                    tag: EL.addNew(EL.attr.remote).addAttr(EL.attr.placeholder).addAttr(EL.attr.anotherattribute).tag(),
-                    op: EL.scopeOptions(),
-                    more: EL.scopeMoreattrs(),
-                    wait: false},
-                {caption: 'should render with inline additional attributes',
-                    tag: EL.addNew(EL.attr.remote).addAttr(EL.attr.placeholder).addAttr(EL.attr.anotherattribute).inline(), wait: false}
-            ], expectations);
-        function expectations(el) {
-            expect(el.localName).toBe('input');
-            expect(el.className).toContain('typeahead');
-            expect(el.parentNode.localName).toBe('span');
-            expect(el.parentNode.className).toContain('twitter-typeahead');
-            expect(el.parentNode.childNodes.length).toBe(4);
-            expect(el.parentNode.lastChild.localName).toBe('span');
-            expect(el.parentNode.lastChild.className).toContain('tt-dropdown-menu');
-            expect(el.attributes.placeholder.value).toBe(EL.attr.placeholder.placeholder);
-            expect(el.attributes.anotherattribute.value).toBe(EL.attr.anotherattribute.anotherattribute);
+            /*jshint validthis:true*/
+            var typeahead = this.sinonSpySuite[0].spy,
+                typeaheadargs = typeahead.args[0];
+            expect(typeahead).toHaveBeenCalled();
+            expect(typeaheadargs[0].hint).toBe(EL.opt.hint.hint);
+            expect(typeaheadargs[0].highlight).toBe(EL.opt.highlight.highlight);
+            expect(typeaheadargs[0].minLength).toBe(EL.opt.minLength.minLength);
+            expect(typeaheadargs[0].classNames).toBeUndefined();
+            expect(typeaheadargs[1][0].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][0].name).toBe(EL.opt.nameNBATeams.name);
+            expect(typeaheadargs[1][0].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][0].name).toBe(EL.opt.nameNBATeams.name);
+            expect(typeaheadargs[1][1].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
+            expect(typeaheadargs[1][1].display).toBe(EL.opt.displayTeam.display);
+            expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
         }
     });
     /**
      * Maker for tag element
-     * @returns {{options: {}, TAG: string, tag: tag, add: add, addNew: addNew, inline: inline, scope: scope, attr: attr}}
+     * @returns {{options: undefined, ttoptions: undefined, ttdatasets: undefined, tag: tag, inline: inline, scopeOptions: scopeOptions, scopeTTOptions: scopeTTOptions, addOptNew: addOptNew, addOpt: addOpt, addTTOptNew: addTTOptNew, addTTOpt: addTTOpt, attr: {remote: {remote: string}, prefetch: {prefetch: string}, remoteEmpty: {remote: string}, prefetchEmpty: {prefetch: string}, remoteUndefined: {remote: undefined}, prefetchUndefined: {prefetch: undefined}, remoteNull: {remote: null}, prefetchNull: {prefetch: null}, remoteInvalid: {remote: number}, prefetchInvalid: {prefetch: number}, sufficientFive: {sufficient: number}, datasetName: {datasetName: string}, limitFive: {limit: number}, displayValue: {display: string}, displayName: {display: string}, highlightFalse: {highlight: boolean}, highlightTrue: {highlight: boolean}, hintFalse: {hint: boolean}, hintTrue: {hint: *}, minLengthZero: {minLength: number}, minLengthTwo: {minLength: number}, classNames: {wrapper: string, input: string, hint: string, menu: string, dataset: string, suggestion: string, selectable: string, empty: string, open: string, cursor: string, highlight: string}, useOwnDefaultsFalse: {useOwnDefaults: boolean}, useOwnDefaultsTrue: {useOwnDefaults: boolean}, selectOnAutocompleteFalse: {selectOnAutocomplete: boolean}, selectOnAutocompleteTrue: {selectOnAutocomplete: boolean}, clearFalse: {clear: boolean}, clearTrue: {clear: boolean}, emitOnlyIfPresentFalse: {emitOnlyIfPresent: boolean}, emitOnlyIfPresentTrue: {emitOnlyIfPresent: boolean}, showLogFalse: {showLog: boolean}, showLogTrue: {showLog: boolean}}}}
      */
-
     function getEL() {
         var OPT = {
+                remoteObj: { url: '/tests/integration/%QUERY.json', wildcard: '%QUERY' },
                 remote: {remote: '/tests/integration/%QUERY.json'},
                 prefetch: {prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json'},
+                prefetchData: {prefetch: '/tests/integration/data.json'},
                 remoteEmpty: {remote: ''},
                 prefetchEmpty: {prefetch: ''},
                 remoteUndefined: {remote: undefined},
@@ -265,62 +396,145 @@ describe('angular-typeaheadjs', function () {
                 prefetchNull: {prefetch: null},
                 remoteInvalid: {remote: 1},
                 prefetchInvalid: {prefetch: 1},
-                key: {key: 'name'},
-                keyValue: {key: 'value'},
-                datasourceCountries: {datasource: 'countries'},
-                limit: {limit: 2},
-                clearvalueFalse: {clearvalue: false},
-                clearvalueTrue: {clearvalue: false},
-                minlensugestion9: {minlensugestion: 9},
-                logonwarnFalse: {logonwarn: true},
-                logonwarnTrue: {logonwarn: false},
-                modelWordteste: {'model': 'teste'},
-                placeholder: {'placeholder': 'text placeholder'},
-                anotherattribute: {'anotherattribute': 'i am another attribute'},
-                full: function () {
-                    return angular.extend({},
-                        this.remote,
-                        this.prefetch,
-                        this.key,
-                        this.datasource,
-                        this.limit,
-                        this.clearvalueFalse,
-                        this.minlensugestion9,
-                        this.logonwarnFalse);
-                }
+                sufficientFive: {sufficient: 5},
+                name: {name: 'datasource'},
+                nameCountries: {name: 'countries'},
+                nameNBATeams: {name: 'nba-teams'},
+                nameNHLTeams: {name: 'nhl-teams'},
+                limitFive: {limit: 5},
+                displayValue: {display: 'value'},
+                display: {display: 'name'},
+                displayTeam: {display: 'team'},
+                highlight: {highlight: true},
+                hint: {hint: true},
+                minLength: {minLength: 3},
+                classNames: {classNames: undefined},
+                highlightFalse: {highlight: false},
+                highlightTrue: {highlight: true},
+                hintFalse: {hint: false},
+                hintTrue: {hint: true},
+                minLengthZero: {minLength: 0},
+                minLengthTwo: {minLength: 2},
+                classNamesMy: {
+                    classNames: {
+                        wrapper: 'my-twitter-typeahead',
+                        input: 'my-tt-input',
+                        hint: 'my-tt-hint',
+                        menu: 'my-tt-menu',
+                        dataset: 'my-tt-dataset',
+                        suggestion: 'my-tt-suggestion',
+                        selectable: 'my-tt-selectable',
+                        empty: 'my-tt-empty',
+                        open: 'my-tt-open',
+                        cursor: 'my-tt-cursor',
+                        highlight: 'my-tt-highlight'
+                    }
+
+                },
+                useOwnDefaultsFalse: {useOwnDefaults: false},
+                useOwnDefaultsTrue: {useOwnDefaults: true},
+                selectOnAutocompleteFalse: {selectOnAutocomplete: false},
+                selectOnAutocompleteTrue: {selectOnAutocomplete: true},
+                clearFalse: {clear: false},
+                clearTrue: {clear: false},
+                emitOnlyIfPresentFalse: {emitOnlyIfPresent: true},
+                emitOnlyIfPresentTrue: {emitOnlyIfPresent: false},
+                showLogFalse: {showLog: false},
+                showLogTrue: {showLog: true}
             },
-            MORE = ' more-attrs=\'{{moreattrs}}\'',
-            TAG = '<angular-typeaheadjs options=\'{{options}}\'$$$/>';
-            return {
-                options: undefined,
-                moreattrs: undefined,
-                tag: function () {
-                    return TAG.replace('$$$', this.moreattrs ? MORE : '');
+            IDTEST = 'idtest',
+            OPTIONS = ' angty-options=\'{{options}}\'',
+            TTOPTIONS = ' angty-ttoptions=\'{{ttoptions}}\'',
+            TTDATASETS = ' angty-ttdatasets=\'ttdatasets\'',
+            TAG = '<angular-typeaheadjs $options$$ttoptions$$ttdatasets$/>' +
+                '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
+                '</angular-typeaheadjs>';
+
+        function setDatasets() {
+            var ods = [
+                {
+                    name: 'nba-teams',
+                    display: 'team',
+                    source: new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        prefetch: '/tests/integration/nba.json'
+                    }),
+                    templates: {
+                        header: '<h3 class="league-name">NBA Teams</h3>'
+                    }
                 },
-                inline: function () {
-                    return TAG.replace('{{options}}', this.scopeOptions())
-                        .replace('$$$', this.moreattrs ? MORE.replace('{{moreattrs}}', this.scopeMoreattrs()) : '');
-                },
-                add: function (op) {
-                    this.options = angular.extend(this.options || {}, op || {});
-                    return this;
-                },
-                addNew: function (op) {
-                    this.options = this.moreattrs = undefined;
-                    return this.add(op);
-                },
-                scopeOptions: function () {
-                    return angular.toJson(this.options);
-                },
-                scopeMoreattrs: function () {
-                    return angular.toJson(this.moreattrs);
-                },
-                attr: OPT,
-                addAttr: function (attr) {
-                    this.moreattrs = angular.extend(this.moreattrs || {}, attr || {});
-                    return this;
+                {
+                    name: 'nhl-teams',
+                    display: 'team',
+                    source: new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        prefetch: '/tests/integration/nhl.json'
+                    }),
+                    templates: {
+                        header: '<h3 class="league-name">NHL Teams</h3>'
+                    }
                 }
-            };
+            ];
+            return ods;
+        }
+
+        function add(options, op) {
+            return angular.extend(options || {}, op || {});
+        }
+
+        return {
+            opt: OPT,
+            id: IDTEST,
+            options: undefined,
+            ttoptions: undefined,
+            ttdatasets: undefined,
+            clear: function () {
+                this.options = this.ttoptions = this.ttdatasets = undefined;
+            },
+            tag: function () {
+                return TAG.replace('$options$', this.options ? OPTIONS : '')
+                    .replace('$ttoptions$', this.ttoptions ? TTOPTIONS : '')
+                    .replace('$ttdatasets$', this.ttdatasets ? TTDATASETS : '')
+                    .replace('$IDTEST$', IDTEST);
+            },
+            inline: function () {
+                return this.tag()
+                    .replace('{{options}}', this.scopeOptions())
+                    .replace('{{ttoptions}}', this.scopeTTOptions());
+            },
+            scopeOptions: function () {
+                return angular.toJson(this.options);
+            },
+            scopeTTOptions: function () {
+                return angular.toJson(this.ttoptions);
+            },
+            scopeTTdatasets: function () {
+                return angular.toJson(this.ttdatasets);
+            },
+            addNewOpt: function (op) {
+                this.clear();
+                return this.addOpt(op);
+            },
+            addOpt: function (op) {
+                this.options = add(this.options, op);
+                return this;
+            },
+            addNewTTOpt: function (op) {
+                this.clear();
+                return this.addTTOpt(op);
+            },
+            addTTOpt: function (op) {
+                this.ttoptions = add(this.ttoptions, op);
+                return this;
+            },
+            useDatasets: function () {
+                this.ttdatasets = setDatasets();
+                return this;
+            }
+
+        };
     }
 
     /**
@@ -374,3 +588,4 @@ describe('angular-typeaheadjs', function () {
         }
     };
 });
+

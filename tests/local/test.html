@@ -2,9 +2,9 @@
 <html>
 <head>
     <title></title>
-    <script src="../../bower_components/jquery/jquery.min.js"></script>
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../../bower_components/angular/angular.min.js"></script>
-    <script src="../../bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+    <script src="../../bower_components/typeahead.js-v0.11.0/dist/typeahead.bundle.js"></script>
     <script src="../../src/angular-typeaheadjs.js"></script>
 
     <style>
@@ -12,191 +12,300 @@
         .container2,
         .container3,
         .container4,
-        .container5{
+        .container5 {
             margin: 75px auto;
         }
-        .typeahead-wrapper {
-            display: block;
-            margin: 50px 0;
+
+
+        /* typeahead.js styles*/
+
+        .typeahead,
+        .tt-query,
+        .tt-hint {
+            width: 396px;
+            height: 30px;
+            padding: 8px 12px;
+            font-size: 24px;
+            line-height: 30px;
+            border: 2px solid #ccc;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            outline: none;
         }
-        .tt-dropdown-menu {
-            background-color: #ccc;
-            border: 1px solid #000;
-        }
-        .tt-suggestion.tt-cursor {
+
+        .typeahead {
             background-color: #fff;
-            color: #000;
         }
+
+        .typeahead:focus {
+            border: 2px solid #0097cf;
+        }
+
+        .tt-query {
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+
+        .tt-hint {
+            color: #999
+        }
+
+        .tt-menu {
+            width: 422px;
+            margin: 12px 0;
+            padding: 8px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            box-shadow: 0 5px 10px rgba(0,0,0,.2);
+        }
+
+        .tt-suggestion {
+            padding: 3px 20px;
+            font-size: 18px;
+            line-height: 24px;
+        }
+
+        .tt-suggestion:hover {
+            cursor: pointer;
+            color: #fff;
+            background-color: #0097cf;
+        }
+
+        .tt-suggestion.tt-cursor {
+            color: #fff;
+            background-color: #0097cf;
+
+        }
+
+        .tt-suggestion p {
+            margin: 0;
+        }
+
     </style>
 </head>
 
 <body ng-app="myApp">
 
-    <div class="container1" ng-controller="FilterCtrl1 as vm">
-        <angular-typeaheadjs
-            options="{{vm.options}}"
-            onselected="vm.onSelected"
-            onclosed="vm.onClosed"
-            oncursorchanged="vm.onCursorChanged"
-            more-attrs='{{vm.moreattrs}}'></angular-typeaheadjs>
-        Selection: <input id="itemonSelected1" ng-model="vm.itemonSelected"/>
-        On Close: <input id="itemonClosed1" ng-model="vm.itemonClosed"/>
-        On Cursor Changed: <input id="itemonCursorChanged1" ng-model="vm.itemonCursorChanged"/>
-    </div>
 
-    <div class="container2" ng-controller="FilterCtrl2 as vm">
-        <angular-typeaheadjs
-            options='{remote: "/tests/integration/%QUERY.json", clearvalue: false}'
-            more-attrs='{placeholder: "type lit inline"}'></angular-typeaheadjs>
-
-        <!--<angular-typeaheadjs ng-repeat="item in vm.obj"-->
-         <!--attr-options='{placeholder: "{{item.place}}"}' options="{{item.op}}"></angular-typeaheadjs>-->
-        Selection: <input id="itemonSelected2" ng-model="vm.itemonSelected"/>
-        On Close: <input id="itemonClosed2" ng-model="vm.itemonClosed"/>
-        On Cursor Changed: <input id="itemonCursorChanged2" ng-model="vm.itemonCursorChanged"/>
-    </div>
-
-    <div class="container3" ng-controller="FilterCtrl3 as vm">
-        <angular-typeaheadjs options="{{vm.options}}"></angular-typeaheadjs>
-        Selection: <input id="itemonSelected3" ng-model="vm.itemonSelected"/>
-    </div>
-
-    <div class="container4" ng-controller="FilterCtrl4 as vm">
-        <angular-typeaheadjs options="{{vm.options}}" model="vm.category"></angular-typeaheadjs>
-        Model: <input id="inputbound4" ng-model="vm.category"/>
-    </div>
-
-    <div class="container5" ng-controller="FilterCtrl5 as vm">
-        <angular-typeaheadjs options="{{vm.options}}"></angular-typeaheadjs>
-        Selection: <input id="itemonSelected5" ng-model="vm.itemonSelected"/>
-        On Close: <input id="itemonClosed5" ng-model="vm.itemonClosed"/>
-        On Cursor Changed: <input id="itemonCursorChanged5" ng-model="vm.itemonCursorChanged"/>
-    </div>
+<!--<div class="container1" ng-controller="FilterCtrl1 as vm">
+    Default use case:<br/>
+    <angular-typeaheadjs
+            angty-options="{{vm.options}}"
+            angty-ttoptions="{{vm.ttOptions}}">
+        <input class="typeahead" type="text" placeholder="escreva..." id="idtest1"/>
+    </angular-typeaheadjs>
+</div>-->
+<!--<div class="container2" ng-controller="FilterCtrl2 as vm">
+    Passing in Datasets:<br/>
+    <angular-typeaheadjs
+            angty-options="{{vm.options}}"
+            angty-ttdatasets="vm.ttDatasets">
+        <input class="typeahead" type="text" placeholder="escreva..." id="idtest2"/>
+    </angular-typeaheadjs>
+</div>-->
+<div class="container3" ng-controller="FilterCtrl3 as vm">
+    Passing in angty-tt-enginemng:<br/>
+    <angular-typeaheadjs id="xxx"
+            angty-options="{{vm.options}}"
+            angty-ttoptions="{{vm.ttOptions}}"
+            angty-ttenginemng="vm.engineManager"
+            xangty-oncursorchange
+            xangty-onselect
+            xangty-onautocomplete
+            angty-onasyncrequest
+            angty-onasyncreceive
+            >
+        <input class="typeahead" type="text" placeholder="escreva..." id="idtest3"/>
+    </angular-typeaheadjs>
+</div>
 <script>
 
-(function() {
-    'use strict';
+    (function () {
+        'use strict';
+        angular.module('myApp', ['angularTypeaheadjs'])
+                .controller('FilterCtrl1', [ '$scope', FilterCtrl1 ])
+                .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ])
+                .controller('FilterCtrl3', [ '$scope', FilterCtrl3 ]);
 
-    angular.module('myApp', ['angularTypeaheadjs'])
-        .controller('FilterCtrl1', [ '$scope', FilterCtrl1 ])
-        .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ])
-        .controller('FilterCtrl3', [ '$scope', FilterCtrl3 ])
-        .controller('FilterCtrl4', [ '$scope', FilterCtrl4 ])
-        .controller('FilterCtrl5', [ '$scope', FilterCtrl5 ]);
-
-    function FilterCtrl1() {
-        var vm = this;
-        vm.itemonSelected = '';
-        vm.itemonClosed = '';
-        vm.itemonCursorChanged = '';
-        vm.options = {
-            prefetch: '/tests/integration/data.json',
-            remote: '/tests/integration/%QUERY.json',
-            datasource: 'categories',
-            clearvalue: false,
-            limit: 3
-        };
-        vm.moreattrs = {
-            placeholder: 'type lit...'
+        function FilterCtrl1($scope) {
+            var vm = this;
+            vm.options = {
+                useOwnDefaults: false
+            };
+            vm.ttOptions = {
+                prefetch:'/tests/integration/data.json'
+            };
         }
+        function FilterCtrl2($scope) {
+            var vm = this;
+            vm.options = {
+                useOwnDefaults: false
+            };
+            /*vm.ttOptions = {
+                prefetch:'/tests/integration/data.json'
+            };*/
+            var nbaTeams = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                prefetch: '/tests/integration/nba.json'
+            });
 
-        vm.onSelected = function (item) {
-            vm.itemonSelected = 'selected:' + item.name;
-        };
-        vm.onClosed = function(item) {
-            vm.itemonClosed = 'closed:' + item.name;
-        };
-        vm.onCursorChanged = function(item) {
-            vm.itemonCursorChanged = 'cursorchanged:' + item.name;
-        };
-    }
-    function FilterCtrl2($scope) {
-        var vm = this;
-// use as data for ng-repeat example
-//        vm.obj = [
-//            {
-//                op: {
-//                    remote: '/tests/integration/%QUERY.json',
-//                    clearvalue: false},
-//                place: 'lit1'},
-//            {
-//                op: {
-//                    remote: '/tests/integration/%QUERY.json',
-//                    clearvalue: true
-//                },
-//                place:'lit2'
-//            }
-//        ];
-        vm.itemonSelected = '';
-        vm.itemonClosed = '';
-        vm.itemonCursorChanged = '';
-        vm.options = {
-            remote: '/tests/integration/%QUERY.json',
-            clearvalue: false
-        };
-        $scope.$on('typeahead:selected', function(event, data) {
-            vm.itemonSelected = 'selected:' + data.name;
-        });
-        $scope.$on('typeahead:autocompleted', function(event, data) {
-            vm.itemonSelected = 'autocompleted:' + data.name;
-        });
-        $scope.$on('typeahead:closed', function(event, data) {
-            vm.itemonClosed = 'closed:' + data.name;
-        });
-        $scope.$on('typeahead:cursorchanged', function(event, data) {
-            vm.itemonCursorChanged = 'cursorchanged:' + data.name;
-        });
+            var nhlTeams = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                prefetch: '/tests/integration/nhl.json'
+            });
+            vm.ttDatasets = [
+                {
+                    name: 'nba-teams',
+                    display: 'team',
+                    source: nbaTeams,
+                    templates: {
+                        header: '<h3 class="league-name">NBA Teams</h3>'
+                    }
+                },
+                {
+                    name: 'nhl-teams',
+                    display: 'team',
+                    source: nhlTeams,
+                    templates: {
+                        header: '<h3 class="league-name">NHL Teams</h3>'
+                    }
+                }
+            ];
+        }
+        function FilterCtrl3($scope) {
+            var vm = this;
 
-    }
-    function FilterCtrl3($scope) {
-        var vm = this;
-        vm.itemonSelected = '';
 
-        vm.options = {
-            remote: '/tests/integration/%QUERY.json',
-            clearvalue: true
-        };
+            vm.options = {
+                emitOnlyIfPresent: true,
+                selectOnAutocomplete: false,
+                showLog: true
+            };
+            vm.ttOptions = {
+                minLength: 2,
+                prefetch: '/tests/integration/countries.json',
+                //prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json',
+                //remote:'http://borntorun.github.io/angular-typeaheadjs/data/%QUERY.json',
+                //remote: null,
+//                remote: { url:'/tests/integration/%$$$.json', wildcard: '%$$$'},
+//                remote: { x:'/tests/integration/%$$$.json', wildcard: '%$$$'},
+//                remote: { url:'/tests/integration/%QUERY.json'},
+                //remote: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json',
 
-        $scope.$on('typeahead:selected', function(event, data) {
-            vm.itemonSelected = 'selected:' + data.name;
-        });
-    }
-    function FilterCtrl4($scope) {
-        var vm = this;
-        vm.category = '';
+                limit:10
 
-        vm.options = {
-            remote: '/tests/integration/%QUERY.json',
-            prefetch: '/tests/integration/data.json',
-            clearvalue: false
-        };
-    }
-    function FilterCtrl5($scope) {
-        var vm = this;
-        vm.itemonSelected = '';
-        vm.itemonClosed = '';
-        vm.itemonCursorChanged = '';
+            };
 
-        vm.options = {
-            prefetch: '/tests/integration/data.json'
-        };
 
-        $scope.$on('typeahead:selected', function(event, data) {
-            vm.itemonSelected = 'selected:' + data.name;
-        });
-        $scope.$on('typeahead:autocompleted', function(event, data) {
-            vm.itemonSelected = 'autocompleted:' + data.name;
-        });
-        $scope.$on('typeahead:closed', function(event, data) {
-            vm.itemonClosed = 'closed:' + data.name;
-        });
-        $scope.$on('typeahead:cursorchanged', function(event, data) {
-            vm.itemonCursorChanged = 'cursorchanged:' + data.name;
-        });
+            $scope.$on('typeahead:active', function(){
+                console.log('active',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:idle', function(){
+                console.log('idle',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:open', function(){
+                console.log('open',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:close', function(){
+                console.log('close',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:change', function(){
+                console.log('change',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:render', function(){
+                console.log('render',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:select', function(){
+                console.log('select',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:autocomplete', function(){
+                console.log('autocomplete',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:cursorchange', function(){
+                console.log('cursorchange',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:asyncrequest', function(){
+                console.log('asyncrequest',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:asynccancel', function(){
+                console.log('asynccancel',[].slice.call(arguments));
+            });
+            $scope.$on('typeahead:asyncreceive', function(){
+                console.log('asyncreceive',[].slice.call(arguments));
+            });
 
-    }
-}());
+
+
+
+            vm.oncursorchanged = function() {
+                console.log([].slice.call(arguments));
+            }
+
+        }
+    }());
 
 </script>
 </body>
 </html>
+
+
+
+
+
+<!--
+//            var substringMatcher = function (strs) {
+//                return function findMatches(q, cb) {
+//                    var matches, substrRegex;
+//                    // an array that will be populated with substring matches
+//                    matches = [];
+//                    // regex used to determine if a string contains the substring `q`
+//                    substrRegex = new RegExp(q, 'i');
+//                    // iterate through the pool of strings and for any string that
+//                    // contains the substring `q`, add it to the `matches` array
+//                    $.each(strs, function (i, str) {
+//                        if (substrRegex.test(str)) {
+//                            matches.push(str);
+//                        }
+//                    });
+//                    cb(matches);
+//                };
+//            };
+//            var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+//                'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+//                'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+//                'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+//                'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+//                'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+//                'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+//                'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+//                'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+//            ];
+//            var paises = ['ala teste','palavra ala teste', 's ala teste', 'oooooo'];
+//            vm.ttDatasets = [
+//                {
+//                    source: new Bloodhound({
+//                        initialize: true,
+//                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+//                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+//                        local: states
+//                    }),
+//                    display: '',
+//                    limit: 1
+//                },
+//                {
+//                    source: substringMatcher(paises),
+//                    display: '',
+//                    limit: 1
+//                }
+//            ];
+-->
