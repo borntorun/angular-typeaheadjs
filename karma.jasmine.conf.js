@@ -21,7 +21,8 @@ module.exports = function (config) {
             'bower_components/sinonjs/sinon.js',
             'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
             'src/angular-typeaheadjs.js',
-            'tests/*jasmine_spec.js'
+            'tests/*jasmine_spec.js',
+            'tests/assets/*.json'
         ],
         // list of files to exclude
         exclude: [
@@ -68,5 +69,6 @@ module.exports = function (config) {
             }
         }*/
 //        ,transports : ['flashsocket', 'xhr-polling', 'jsonp-polling']
+
     });
 };

@@ -31,7 +31,7 @@
             _defaultOptions = {
                 useOwnDefaults: true,
                 selectOnAutocomplete: false,
-                clear: true,
+                clear: false,
                 emitOnlyIfPresent: true,
                 showLog: false
             },
@@ -61,8 +61,8 @@
                     angtyOncursorchange: '&?',
                     angtyOnasyncrequest: '&?',
                     angtyOnasynccancel: '&?',
-                    angtyOnasyncreceive: '&?'
-
+                    angtyOnasyncreceive: '&?',
+                    ngModel: '=?'
                 },
                 link: linkFunction
             };
@@ -77,10 +77,10 @@
             ttDatasets = scope.$eval(scope.angtyTtdatasets);
 
             //set default component options and extend
-            options = angular.extend(_defaultOptions, options || {});
+            options = angular.extend( angular.copy(_defaultOptions), options || {});
 
             //set default typeahead options and extend
-            typeaheadOptions = angular.extend(options.useOwnDefaults ? _defaultTTOptions : {}, ttOptions || {});
+            typeaheadOptions = angular.extend(options.useOwnDefaults ? angular.copy(_defaultTTOptions) : {}, ttOptions || {});
 
             //verify input field exists
             if ((elinput = element.find('.typeahead')).length === 0) {
@@ -92,19 +92,28 @@
             var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets);
 
             plugTypeaheadPromise.then(function (el) {
-                if (options.clear === true) {
-                    _aEvents.push({event: '$select', trigger: function () {
-                        //console.log([].slice.call(arguments));
-                        el.typeahead('val', '');
-                    }});
+                var aEv = angular.copy(_aEvents);
+
+                function clearVal() {
+                    el.typeahead('val', '');
                 }
+
+                /*if (options.clear === true) {
+                    aEv.push({event: '$select', trigger: clearVal});
+                }*/
                 if (options.selectOnAutocomplete === true) {
-                    _aEvents.push({event: '$autocomplete $select', trigger: 'select'});
+                    aEv.push({event: '$autocomplete $select', trigger: 'select'});
+                    if (options.clear === true) {
+                        aEv.push({event: '$autocomplete $select', trigger: clearVal});
+                    }
                 }
                 else {
-                    _aEvents.push({event: '$select'});
+                    aEv.push({event: '$select'});
+                    if (options.clear === true) {
+                        aEv.push({event: '$select', trigger: clearVal});
+                    }
                 }
-                bindEvents(el, _aEvents);
+                bindEvents(el, aEv);
             }, function (el) {
                 //console.log('rejected:', el);
             });
@@ -112,7 +121,13 @@
             function bindEvents(el, aEvents) {
                 aEvents.forEach(function (item) {
                     var f = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
-                    f !== angular.noop && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, f));
+
+                    if (f !== angular.noop) {
+                        console.log(item);
+                        el.on(item.event.replace(/\$/g, 'typeahead:'), options, f);
+                    }
+
+                    //f !== angular.noop && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, f));
                 });
             }
 

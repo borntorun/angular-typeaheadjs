@@ -44,7 +44,7 @@ describe('angular-typeaheadjs', function () {
              */
             item.expectations(element);
             done && done();
-        }, item.waitms || 0);
+        }, item.waitms || 100);
     }
 
     /**
@@ -384,10 +384,10 @@ describe('angular-typeaheadjs', function () {
      */
     function getEL() {
         var OPT = {
-                remoteObj: { url: '/tests/integration/%QUERY.json', wildcard: '%QUERY' },
-                remote: {remote: '/tests/integration/%QUERY.json'},
-                prefetch: {prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json'},
-                prefetchData: {prefetch: '/tests/integration/data.json'},
+                remoteObj: { url: '/tests/assets/%QUERY.json', wildcard: '%QUERY' },
+                remote: {remote: '/tests/assets/%QUERY.json'},
+                prefetchData: {prefetch: 'http://borntorun.github.io/angular-typeaheadjs/data/countries.json'},
+                prefetch: {prefetch: '/base/tests/assets/data.json'},
                 remoteEmpty: {remote: ''},
                 prefetchEmpty: {prefetch: ''},
                 remoteUndefined: {remote: undefined},
@@ -458,7 +458,7 @@ describe('angular-typeaheadjs', function () {
                     source: new Bloodhound({
                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        prefetch: '/tests/integration/nba.json'
+                        prefetch: '/base/tests/assets/nba.json'
                     }),
                     templates: {
                         header: '<h3 class="league-name">NBA Teams</h3>'
@@ -470,7 +470,7 @@ describe('angular-typeaheadjs', function () {
                     source: new Bloodhound({
                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        prefetch: '/tests/integration/nhl.json'
+                        prefetch: '/base/tests/assets/nhl.json'
                     }),
                     templates: {
                         header: '<h3 class="league-name">NHL Teams</h3>'

@@ -1,7 +1,6 @@
 /**
  * Created by Joao Carvalho on 31-03-2015.
  */
-    //gruntfile.js
 module.exports = function (grunt) {
     var semver = require('semver'),
         child_process = require('child_process'),
@@ -92,21 +91,28 @@ module.exports = function (grunt) {
                 stdout: true,
                 stderr: true
             },
+
             /**
              * Get remote repos on git and set grunt.option('remote');
              * If more than one user is able to choose which
              */
             remote: {
                 command: function (ok) {
-                    return (ok && 'gruntlistremotes=$(git remote);printf "$gruntlistremotes"') || '$(exit 1)';
+
+                    //return (ok && 'gruntlistremotes=$(git remote);printf "$gruntlistremotes"') || '$(exit 1)';
+                    return ok === 'true'?
+                            'gruntlistremotes=$(git remote);printf "$gruntlistremotes"'
+                            :
+                            '$(echo "Task shell:remote not running" >&2 ; exit 1)';
                 },
                 options: {
+                    async: false,
                     stdout: false,
                     stderr: true,
                     stdin: false,
                     callback: function (error, stdout, stderr, cb) {
-                        if (error !== null) {
-                            grunt.log.write(stderr);
+                        if (error !== 0) {
+                            grunt.log.write('Error:',error,'\n');
                             cb(false);
                         }
                         else {
@@ -128,6 +134,7 @@ module.exports = function (grunt) {
                                 resp = parseInt(resp);
                             }
                             grunt.option('remote',stdout.split('\n')[resp-1]);//using original array
+                            //grunt.log.write(grunt.option('remote'));
                             cb();
                         }
 
@@ -140,15 +147,19 @@ module.exports = function (grunt) {
              */
             tag: {
                 command: function (ok) {
-                    return (ok && 'git tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\'') || '$(exit 1)';
+                    return ok === 'true'?
+                        'git tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\''
+                        :
+                        '$(echo "Task shell:tag not running" >&2 ; exit 1)';
+                    //return ok? 'xxxgit tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\'' : '$(exit 1)';
                 },
                 options: {
                     stdout: false,
                     stderr: true,
                     stdin: false,
                     callback: function(error, stdout, stderr, cb) {
-                        if (error !== null) {
-                            grunt.log.write(stderr);
+                        if (error !== 0) {
+                            grunt.log.write('Error:',error,'\n');
                             cb(false);
                         }
                         cb();
@@ -161,15 +172,18 @@ module.exports = function (grunt) {
              */
             push: {
                 command: function (ok) {
-                    return (ok && 'git push <%= grunt.option("remote") %> master --tags') || '$(exit 1)';
+                    return ok === 'true'?
+                        'git push <%= grunt.option("remote") %> master --tags'
+                        :
+                        '$(echo "Task shell:push not running" >&2 ; exit 1)';
                 },
                 options: {
                     stdout: false,
                     stderr: true,
                     stdin: false,
                     callback: function(error, stdout, stderr, cb) {
-                        if (error !== null) {
-                            grunt.log.write(stderr);
+                        if (error !== 0) {
+                            grunt.log.write('Error:',error,'\n');
                             cb(false);
                         }
                         cb();
@@ -212,6 +226,64 @@ module.exports = function (grunt) {
             }
 
 
+        },
+        protractor_webdriver: {
+            update: {
+                options: {
+                    path: './node_modules/.bin/',
+                    command: 'webdriver-manager update --standalone'
+                }
+            },
+            continuous: {
+                options: {
+                    keepAlive : true,
+                    path: './node_modules/.bin/',
+                    command: 'webdriver-manager start --seleniumPort 4444'
+                }
+            }
+        },
+        protractor: {
+            options: {
+                configFile: "tests/e2e/protractor.js",
+                noColor: false,
+                debug: false,
+                args: { }
+            },
+            single: {
+                options: {
+                    keepAlive: false
+                }
+            },
+            continuous: {
+                options: {
+                    keepAlive: true
+                }
+            }
+        },
+        connect: {
+            options: {
+                port: 8888,
+                hostname: '192.168.40.20'
+            },
+            e2etest: {
+                /*options: {
+                    // set the location of the application files
+                    base: ['app']
+                }*/
+            }
+        },
+        watch: {
+            options: {
+                livereload: true
+            },
+//            karma: {
+//                files: ['app/js/**/*.js', 'test/unit/*.js'],
+//                tasks: ['karma:continuous:run']
+//            },
+            protractor: {
+                files: ['tests/local/*.html', 'src/**/*.js', 'tests/e2e/*_spec.js'],
+                tasks: ['protractor:continuous']
+            }
         }
     });
 
@@ -297,9 +369,11 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('test', ['jshint'/*, 'karma:mochasingle'*/, 'karma:jasminesingle']);
+    grunt.registerTask('test', ['jshint', /*'karma:mochasingle',*/ 'karma:jasminesingle']);
+    grunt.registerTask('test:e2e', ['connect:e2etest', 'protractor_webdriver:continuous', 'protractor:continuous', 'watch:protractor']);
     //grunt.registerTask('test:mocha', ['jshint', 'karma:mocha']);
     grunt.registerTask('test:jasmine', ['jshint', 'karma:jasmine']);
     grunt.registerTask('build', ['jshint', 'concat', 'ngAnnotate', 'uglify', 'sed:version']);
+
 
 };

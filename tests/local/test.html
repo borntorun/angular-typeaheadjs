@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../../bower_components/angular/angular.min.js"></script>
-    <script src="../../bower_components/typeahead.js-v0.11.0/dist/typeahead.bundle.js"></script>
-    <script src="../../src/angular-typeaheadjs.js"></script>
-
+    <title>Test e2e angular-typeaheadjs</title>
     <style>
-        .container1,
-        .container2,
-        .container3,
-        .container4,
-        .container5 {
-            margin: 75px auto;
+        .usecase1,
+        .usecase2,
+        .usecase3,
+        .usecase4,
+        .usecase5 {
+            margin: 25px auto;
         }
-
 
         /* typeahead.js styles*/
 
@@ -95,57 +89,153 @@
 <body ng-app="myApp">
 
 
-<div class="container1" ng-controller="FilterCtrl1 as vm">
-    Default use case:<br/>
-    <angular-typeaheadjs
-            angty-options="{{vm.options}}"
-            angty-ttoptions="{{vm.ttOptions}}">
-        <input class="typeahead" type="text" placeholder="escreva..." id="idtest1"/>
+<div class="usecase1" ng-controller="UseCase1Controller as vm">
+    Use case 1: [prefetch / remote / no options]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}">
+        <input class="typeahead" type="text" id="usecase1"/>
     </angular-typeaheadjs>
+
 </div>
-<div class="container2" ng-controller="FilterCtrl2 as vm">
-    Passing in Datasets:<br/>
-    <angular-typeaheadjs
-            angty-options="{{vm.options}}"
-            angty-ttoptions="{{vm.ttOptions}}"
-            angty-ttdatasets="vm.ttDatasets">
-        <input class="typeahead" type="text" placeholder="escreva..." id="idtest2"/>
+<div class="usecase2" ng-controller="UseCase2Controller as vm">
+    Use case 2: [prefetch / remote / trigger all events on scope]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}">
+        <input class="typeahead" type="text" id="usecase2"/>
     </angular-typeaheadjs>
+
+    <div class="trigger">{{vm.events.trigger}}</div>
+
 </div>
-<div class="container3" ng-controller="FilterCtrl3 as vm">
-    Test events:<br/>
-    <angular-typeaheadjs id="xxx"
-            angty-options="{{vm.options}}"
-            angty-ttoptions="{{vm.ttOptions}}"
-            angty-oncursorchange
-            angty-onselect
-            angty-onautocomplete
-            angty-onasyncrequest
-            angty-onasyncreceive
-            >
-        <input class="typeahead" type="text" placeholder="escreva..." id="idtest3"/>
+<div class="usecase3" ng-controller="UseCase3Controller as vm">
+    Use case 3: [prefetch / remote / emitOnlyIfPresent]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"  angty-onselect angty-onautocomplete>
+        <input class="typeahead" type="text" id="usecase3"/>
     </angular-typeaheadjs>
+
+    <div class="trigger">{{vm.events.trigger}}</div>
+
+</div>
+<div class="usecase4" ng-controller="UseCase4Controller as vm">
+    Use case 4: [prefetch / remote / selectOnAutocomplete=true / clear=true]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"  angty-onselect angty-onautocomplete>
+        <input class="typeahead" type="text" id="usecase4"/>
+    </angular-typeaheadjs>
+
+    <div class="trigger">{{vm.events.trigger}}</div>
+
 </div>
 
+
+<input id="dummy" type="text" style="border:0px;"/>
+
+
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../../bower_components/angular/angular.min.js"></script>
+<script src="../../bower_components/typeahead.js-v0.11.0/dist/typeahead.bundle.js"></script>
+<script src="../../src/angular-typeaheadjs.js"></script>
 <script>
 
     (function () {
         'use strict';
         angular.module('myApp', ['angularTypeaheadjs'])
-                .controller('FilterCtrl1', [ '$scope', FilterCtrl1 ])
-                .controller('FilterCtrl2', [ '$scope', FilterCtrl2 ])
-                .controller('FilterCtrl3', [ '$scope', FilterCtrl3 ]);
+                .controller('UseCase1Controller', [ '$scope', UseCase1Controller ])
+                .controller('UseCase2Controller', [ '$scope', UseCase2Controller ])
+                .controller('UseCase3Controller', [ '$scope', UseCase3Controller ])
+                .controller('UseCase4Controller', [ '$scope', UseCase4Controller ]);
 
-        function FilterCtrl1($scope) {
+        function UseCase1Controller($scope) {
             var vm = this;
-            vm.options = {
-                useOwnDefaults: false
-            };
             vm.ttOptions = {
-                prefetch:'/tests/integration/data.json'
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
             };
+//            vm.options = {
+//            };
         }
-        function FilterCtrl2($scope) {
+        function UseCase2Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
+            };
+            vm.options = {
+                emitOnlyIfPresent: false
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+
+            vm.events.names.forEach(function(item, index){
+                //console.log(item, index);
+                $scope.$on('typeahead:' + item, function(){
+                    //console.log(index,item,[].slice.call(arguments));
+                    $scope.$apply(function(){
+                        //console.log(vm.events.trigger[index]);
+                        vm.events.trigger[index] = vm.events.trigger[index] + 1;
+                        console.log(item,index,vm.events.trigger);
+                    });
+
+                });
+            });
+        }
+        function UseCase3Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
+            };
+            vm.options = {
+                clear: false
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            vm.events.names.forEach(function(item, index){
+                //console.log(item, index);
+                $scope.$on('typeahead:' + item, function(){
+                    //console.log(index,item,[].slice.call(arguments));
+                    $scope.$apply(function(){
+                        //console.log(vm.events.trigger[index]);
+                        vm.events.trigger[index] = vm.events.trigger[index] + 1;
+                        //console.log(item,vm.events.trigger);
+                    });
+
+                });
+            });
+        }
+        function UseCase4Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
+            };
+
+            vm.options = {
+                clear: true,
+                selectOnAutocomplete: true
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            vm.events.names.forEach(function(item, index){
+                //console.log(item, index);
+                $scope.$on('typeahead:' + item, function(ev, o){
+                    //console.log(item, o, [].slice.call(arguments));
+                    $scope.$apply(function(){
+                        //console.log(vm.events.trigger[index]);
+                        vm.events.trigger[index] = vm.events.trigger[index] + 1;
+                    });
+
+                });
+            });
+        }
+        /*function FilterCtrl2($scope) {
             var vm = this;
             vm.options = {
                 useOwnDefaults: false,
@@ -247,61 +337,9 @@
                 console.log([].slice.call(arguments));
             }
 
-        }
+        }*/
     }());
 
 </script>
 </body>
 </html>
-
-
-
-
-
-<!--
-//            var substringMatcher = function (strs) {
-//                return function findMatches(q, cb) {
-//                    var matches, substrRegex;
-//                    // an array that will be populated with substring matches
-//                    matches = [];
-//                    // regex used to determine if a string contains the substring `q`
-//                    substrRegex = new RegExp(q, 'i');
-//                    // iterate through the pool of strings and for any string that
-//                    // contains the substring `q`, add it to the `matches` array
-//                    $.each(strs, function (i, str) {
-//                        if (substrRegex.test(str)) {
-//                            matches.push(str);
-//                        }
-//                    });
-//                    cb(matches);
-//                };
-//            };
-//            var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-//                'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-//                'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-//                'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-//                'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-//                'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-//                'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-//                'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-//                'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-//            ];
-//            var paises = ['ala teste','palavra ala teste', 's ala teste', 'oooooo'];
-//            vm.ttDatasets = [
-//                {
-//                    source: new Bloodhound({
-//                        initialize: true,
-//                        datumTokenizer: Bloodhound.tokenizers.whitespace,
-//                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-//                        local: states
-//                    }),
-//                    display: '',
-//                    limit: 1
-//                },
-//                {
-//                    source: substringMatcher(paises),
-//                    display: '',
-//                    limit: 1
-//                }
-//            ];
--->
