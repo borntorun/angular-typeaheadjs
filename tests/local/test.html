@@ -3,12 +3,11 @@
 <head>
     <title>Test e2e angular-typeaheadjs</title>
     <style>
-        .usecase1,
-        .usecase2,
-        .usecase3,
-        .usecase4,
-        .usecase5 {
-            margin: 25px auto;
+        body {
+            font-size: 14px;
+        }
+        body div {
+            margin: 15px auto;
         }
 
         /* typeahead.js styles*/
@@ -16,11 +15,11 @@
         .typeahead,
         .tt-query,
         .tt-hint {
-            width: 396px;
-            height: 30px;
-            padding: 8px 12px;
-            font-size: 24px;
-            line-height: 30px;
+            width: 150px;
+            height: 15px;
+            padding: 4px 4px;
+            font-size: 12px;
+            line-height: 15px;
             border: 2px solid #ccc;
             -webkit-border-radius: 8px;
             -moz-border-radius: 8px;
@@ -47,9 +46,9 @@
         }
 
         .tt-menu {
-            width: 422px;
-            margin: 12px 0;
-            padding: 8px 0;
+            width: 222px;
+            margin: 6px 0;
+            padding: 4px 0;
             background-color: #fff;
             border: 1px solid #ccc;
             border: 1px solid rgba(0, 0, 0, 0.2);
@@ -63,8 +62,8 @@
 
         .tt-suggestion {
             padding: 3px 20px;
-            font-size: 18px;
-            line-height: 24px;
+            font-size: 12px;
+            line-height: 12px;
         }
 
         .tt-suggestion:hover {
@@ -104,30 +103,102 @@
         <input class="typeahead" type="text" id="usecase2"/>
     </angular-typeaheadjs>
 
-    <div class="trigger">{{vm.events.trigger}}</div>
+    <span class="trigger">{{vm.events.trigger}}</span>
 
 </div>
 <div class="usecase3" ng-controller="UseCase3Controller as vm">
-    Use case 3: [prefetch / remote / emitOnlyIfPresent]:<br/>
+    Use case 3: [prefetch / remote / emit scope emitOnlyIfPresent]:<br/>
 
     <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"  angty-onselect angty-onautocomplete>
         <input class="typeahead" type="text" id="usecase3"/>
     </angular-typeaheadjs>
 
-    <div class="trigger">{{vm.events.trigger}}</div>
+    <span class="trigger">{{vm.events.trigger}}</span>
 
 </div>
 <div class="usecase4" ng-controller="UseCase4Controller as vm">
-    Use case 4: [prefetch / remote / selectOnAutocomplete=true / clear=true]:<br/>
+    Use case 4: [prefetch / remote / events on scope - selectOnAutocomplete=true / clear=true]:<br/>
 
     <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"  angty-onselect angty-onautocomplete>
         <input class="typeahead" type="text" id="usecase4"/>
     </angular-typeaheadjs>
 
-    <div class="trigger">{{vm.events.trigger}}</div>
+    <span class="trigger">{{vm.events.trigger}}</span>
 
 </div>
 
+<div class="usecase5" ng-controller="UseCase5Controller as vm">
+    Use case 5: [prefetch / remote / trigger all events callbacks]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onactive="vm.onactive"
+                         angty-onidle="vm.onidle"
+                         angty-onopen="vm.onopen"
+                         angty-onclose="vm.onclose"
+                         angty-onchange="vm.onchange"
+                         angty-onrender="vm.onrender"
+                         angty-onselect="vm.onselect"
+                         angty-onautocomplete="vm.onautocomplete"
+                         angty-oncursorchange="vm.oncursorchange"
+                         angty-onasyncrequest="vm.onasyncrequest"
+                         angty-onasynccancel="vm.onasynccancel"
+                         angty-onasyncreceive="vm.onasyncreceive">
+        <input class="typeahead" type="text" id="usecase5"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+<div class="usecase6" ng-controller="UseCase6Controller as vm">
+    Use case 6: [prefetch / remote / callback emitOnlyIfPresent]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onselect="vm.onselect"
+                         angty-onautocomplete="vm.onautocomplete">
+
+        <input class="typeahead" type="text" id="usecase6"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+<div class="usecase7" ng-controller="UseCase7Controller as vm">
+    Use case 7: [prefetch / remote / callback mixed emit scope emitOnlyIfPresent]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onselect="vm.onselect"
+                         angty-onautocomplete>
+
+        <input class="typeahead" type="text" id="usecase7"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+<div class="usecase8" ng-controller="UseCase8Controller as vm">
+    Use case 8: [prefetch / remote / callbacks - selectOnAutocomplete=true / clear=true]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onselect="vm.onselect"
+                         angty-onautocomplete="vm.onautocomplete">
+        <input class="typeahead" type="text" id="usecase8"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+<div class="usecase9" ng-controller="UseCase9Controller as vm">
+    Use case 9: [datasets / callbacks / useOwnDefaults = false]:<br/>
+
+    <angular-typeaheadjs angty-ttdatasets="vm.ttDatasets" angty-options="{{vm.options}}"
+                         angty-onselect="vm.onselect"
+                         angty-onautocomplete="vm.onautocomplete">
+        <input class="typeahead" type="text" id="usecase9"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
 
 <input id="dummy" type="text" style="border:0px;"/>
 
@@ -140,11 +211,17 @@
 
     (function () {
         'use strict';
+
         angular.module('myApp', ['angularTypeaheadjs'])
                 .controller('UseCase1Controller', [ '$scope', UseCase1Controller ])
                 .controller('UseCase2Controller', [ '$scope', UseCase2Controller ])
                 .controller('UseCase3Controller', [ '$scope', UseCase3Controller ])
-                .controller('UseCase4Controller', [ '$scope', UseCase4Controller ]);
+                .controller('UseCase4Controller', [ '$scope', UseCase4Controller ])
+                .controller('UseCase5Controller', [ '$scope', UseCase5Controller ])
+                .controller('UseCase6Controller', [ '$scope', UseCase6Controller ])
+                .controller('UseCase7Controller', [ '$scope', UseCase7Controller ])
+                .controller('UseCase8Controller', [ '$scope', UseCase8Controller ])
+                .controller('UseCase9Controller', [ '$scope', UseCase9Controller ]);
 
         function UseCase1Controller($scope) {
             var vm = this;
@@ -169,42 +246,41 @@
                 trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
             };
 
-            vm.events.names.forEach(function(item, index){
-                //console.log(item, index);
-                $scope.$on('typeahead:' + item, function(){
-                    //console.log(index,item,[].slice.call(arguments));
-                    $scope.$apply(function(){
-                        //console.log(vm.events.trigger[index]);
-                        vm.events.trigger[index] = vm.events.trigger[index] + 1;
-                        console.log(item,index,vm.events.trigger);
-                    });
+            var argLog = function(name, arg) {
+                console.log(name, arg);
+                //console.log(arg[1] instanceof jQuery.Event);
+            };
 
+            vm.events.names.forEach(function(item, index){
+                $scope.$on('typeahead:' + item, function(){
+                    $scope.$apply(function(){
+                        vm.events.trigger[index] = vm.events.trigger[index] + 1;
+                    });
+//                    if (index==7) {
+                    argLog(item, [].slice.call(arguments,1)[0]);
+//                    }
                 });
             });
         }
         function UseCase3Controller($scope) {
             var vm = this;
             vm.ttOptions = {
-                prefetch:'/tests/local/prefetch.json',
-                remote:'/tests/local/%QUERY.json'
+                prefetch:'/tests/local/prefetch.json'/*,
+                remote:'/tests/local/%QUERY.json'*/
             };
             vm.options = {
                 clear: false
             };
+
             vm.events = {
                 names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
                 trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
             };
             vm.events.names.forEach(function(item, index){
-                //console.log(item, index);
                 $scope.$on('typeahead:' + item, function(){
-                    //console.log(index,item,[].slice.call(arguments));
                     $scope.$apply(function(){
-                        //console.log(vm.events.trigger[index]);
                         vm.events.trigger[index] = vm.events.trigger[index] + 1;
-                        //console.log(item,vm.events.trigger);
                     });
-
                 });
             });
         }
@@ -224,120 +300,155 @@
                 trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
             };
             vm.events.names.forEach(function(item, index){
-                //console.log(item, index);
                 $scope.$on('typeahead:' + item, function(ev, o){
-                    //console.log(item, o, [].slice.call(arguments));
                     $scope.$apply(function(){
-                        //console.log(vm.events.trigger[index]);
                         vm.events.trigger[index] = vm.events.trigger[index] + 1;
                     });
 
                 });
             });
         }
-        /*function FilterCtrl2($scope) {
+        function UseCase5Controller($scope) {
             var vm = this;
-            vm.options = {
-                useOwnDefaults: false,
-                clear:false
-            };
-
-            var nbaTeams = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                local: [{ "team": "Boston Celtics" },{ "team": "Dallas Mavericks" },{ "team": "Brooklyn Nets" },{ "team": "Houston Rockets" },{ "team": "New York Knicks" },{ "team": "Memphis Grizzlies" },{ "team": "Philadelphia 76ers" },{ "team": "New Orleans Hornets" },{ "team": "Toronto Raptors" },{ "team": "San Antonio Spurs" },{ "team": "Chicago Bulls" },{ "team": "Denver Nuggets" },{ "team": "Cleveland Cavaliers" },{ "team": "Minnesota Timberwolves" },{ "team": "Detroit Pistons" },{ "team": "Portland Trail Blazers" },{ "team": "Indiana Pacers" },{ "team": "Oklahoma City Thunder" },{ "team": "Milwaukee Bucks" },{ "team": "Utah Jazz" },{ "team": "Atlanta Hawks" },{ "team": "Golden State Warriors" },{ "team": "Charlotte Bobcats" },{ "team": "Los Angeles Clippers" },{ "team": "Miami Heat" },{ "team": "Los Angeles Lakers" },{ "team": "Orlando Magic" },{ "team": "Phoenix Suns" },{ "team": "Washington Wizards" },{ "team": "Sacramento Kings" }]
-                //prefetch: '/temp/nba.json'
-            });
-
-            var nhlTeams = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                local: [{ "team": "New Jersey Devils" },{ "team": "New York Islanders" },{ "team": "New York Rangers" },{ "team": "Philadelphia Flyers" },{ "team": "Pittsburgh Penguins" },{ "team": "Chicago Blackhawks" },{ "team": "Columbus Blue Jackets" },{ "team": "Detroit Red Wings" },{ "team": "Nashville Predators" },{ "team": "St. Louis Blues" },{ "team": "Boston Bruins" },{ "team": "Buffalo Sabres" },{ "team": "Montreal Canadiens" },{ "team": "Ottawa Senators" },{ "team": "Toronto Maple Leafs" },{ "team": "Calgary Flames" },{ "team": "Colorado Avalanche" },{ "team": "Edmonton Oilers" },{ "team": "Minnesota Wild" },{ "team": "Vancouver Canucks" },{ "team": "Carolina Hurricanes" },{ "team": "Florida Panthers" },{ "team": "Tampa Bay Lightning" },{ "team": "Washington Capitals" },{ "team": "Winnipeg Jets" },{ "team": "Anaheim Ducks" },{ "team": "Dallas Stars" },{ "team": "Los Angeles Kings" },{ "team": "Phoenix Coyotes" },{ "team": "San Jose Sharks" }]
-                //prefetch: '/temp/nhl.json'
-            });
             vm.ttOptions = {
-                minLength: 1,
-                highlight: true,
-                hint: true
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
             };
+            vm.options = {
+                emitOnlyIfPresent: false
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            var addTrigger = function(index) {
+                $scope.$apply(function(){vm.events.trigger[index]++;});
+                //console.log(index,[].slice.call(arguments, 1));
+            }
+            vm.onactive = function(){addTrigger(0);};
+            vm.onidle = function(){addTrigger(1);};
+            vm.onopen = function(){addTrigger(2);};
+            vm.onclose = function(){addTrigger(3);};
+            vm.onchange = function(){addTrigger(4);};
+            vm.onrender = function(){addTrigger(5);};
+            vm.onselect = function(){addTrigger(6);};
+            vm.onautocomplete = function(){addTrigger(7);};
+            vm.oncursorchange = function(){addTrigger(8);};
+            vm.onasyncrequest = function(){addTrigger(9);};
+            vm.onasynccancel = function(){addTrigger(10);};
+            vm.onasyncreceive = function(){addTrigger(11);};
+
+        }
+        function UseCase6Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
+            };
+            vm.options = {
+                //emitOnlyIfPresent: true DEFAULT
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            var addTrigger = function(index) {
+                $scope.$apply(function(){vm.events.trigger[index]++;});
+                //console.log(index,[].slice.call(arguments, 1));
+            }
+            vm.onselect = function(){addTrigger(6);};
+            vm.onautocomplete = function(){addTrigger(7);};
+        }
+        function UseCase7Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
+            };
+            vm.options = {
+                //emitOnlyIfPresent: true DEFAULT
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            var addTrigger = function(index) {
+                $scope.$apply(function(){vm.events.trigger[index]++;});
+                console.log(index,[].slice.call(arguments, 1));
+            }
+            vm.onselect = function(){addTrigger(6);};
+
+            $scope.$on('typeahead:autocomplete', function(){
+                addTrigger(7);
+            });
+
+        }
+        function UseCase8Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+                prefetch:'/tests/local/prefetch.json',
+                remote:'/tests/local/%QUERY.json'
+            };
+
+            vm.options = {
+                clear: true,
+                selectOnAutocomplete: true
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            var addTrigger = function(index) {
+                $scope.$apply(function(){vm.events.trigger[index]++;});
+                //console.log(index,[].slice.call(arguments, 1));
+            }
+            vm.onselect = function(){addTrigger(6);};
+            vm.onautocomplete = function(){addTrigger(7);};
+
+        }
+        function UseCase9Controller($scope) {
+            var vm = this;
+            vm.ttOptions = {
+
+            };
+
+            vm.options = {
+                useOwnDefaults: false
+            };
+            vm.events = {
+                names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+                trigger: [0,0,0,0,0,0,0,0,0,0,0,0]
+            };
+            var addTrigger = function(index) {
+                $scope.$apply(function(){vm.events.trigger[index]++;});
+            }
             vm.ttDatasets = [
                 {
                     name: 'nba-teams',
                     display: 'team',
-                    source: nbaTeams,
+                    source: new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: [{ "team": "Boston Celtics" },{ "team": "Dallas Mavericks" },{ "team": "Brooklyn Nets" },{ "team": "Houston Rockets" },{ "team": "New York Knicks" },{ "team": "Memphis Grizzlies" },{ "team": "Philadelphia 76ers" },{ "team": "New Orleans Hornets" },{ "team": "Toronto Raptors" },{ "team": "San Antonio Spurs" },{ "team": "Chicago Bulls" },{ "team": "Denver Nuggets" },{ "team": "Cleveland Cavaliers" },{ "team": "Minnesota Timberwolves" },{ "team": "Detroit Pistons" },{ "team": "Portland Trail Blazers" },{ "team": "Indiana Pacers" },{ "team": "Oklahoma City Thunder" },{ "team": "Milwaukee Bucks" },{ "team": "Utah Jazz" },{ "team": "Atlanta Hawks" },{ "team": "Golden State Warriors" },{ "team": "Charlotte Bobcats" },{ "team": "Los Angeles Clippers" },{ "team": "Miami Heat" },{ "team": "Los Angeles Lakers" },{ "team": "Orlando Magic" },{ "team": "Phoenix Suns" },{ "team": "Washington Wizards" },{ "team": "Sacramento Kings" }]
+                    }),
                     templates: {header: '<h3 class="league-name">NBA Teams</h3>'}
                 },
                 {
                     name: 'nhl-teams',
                     display: 'team',
-                    source: nhlTeams,
+                    source: new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: [{ "team": "New Jersey Devils" },{ "team": "New York Islanders" },{ "team": "New York Rangers" },{ "team": "Philadelphia Flyers" },{ "team": "Pittsburgh Penguins" },{ "team": "Chicago Blackhawks" },{ "team": "Columbus Blue Jackets" },{ "team": "Detroit Red Wings" },{ "team": "Nashville Predators" },{ "team": "St. Louis Blues" },{ "team": "Boston Bruins" },{ "team": "Buffalo Sabres" },{ "team": "Montreal Canadiens" },{ "team": "Ottawa Senators" },{ "team": "Toronto Maple Leafs" },{ "team": "Calgary Flames" },{ "team": "Colorado Avalanche" },{ "team": "Edmonton Oilers" },{ "team": "Minnesota Wild" },{ "team": "Vancouver Canucks" },{ "team": "Carolina Hurricanes" },{ "team": "Florida Panthers" },{ "team": "Tampa Bay Lightning" },{ "team": "Washington Capitals" },{ "team": "Winnipeg Jets" },{ "team": "Anaheim Ducks" },{ "team": "Dallas Stars" },{ "team": "Los Angeles Kings" },{ "team": "Phoenix Coyotes" },{ "team": "San Jose Sharks" }]
+                    }),
                     templates: {header: '<h3 class="league-name">NHL Teams</h3>'}
                 }
             ];
+            vm.onselect = function(){addTrigger(6);};
+            vm.onautocomplete = function(){addTrigger(7);};
         }
-        function FilterCtrl3($scope) {
-            var vm = this;
 
 
-            vm.options = {
-                useOwnDefaults: true,
-                emitOnlyIfPresent: true,
-                selectOnAutocomplete: false,
-                showLog: true
-            };
-            vm.ttOptions = {
-                minLength: 2,
-                prefetch: '/tests/integration/countries.json',
-                remote:'/temp/%QUERY.json',
-                limit:10
-            };
-
-
-            $scope.$on('typeahead:active', function(){
-                console.log('active',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:idle', function(){
-                console.log('idle',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:open', function(){
-                console.log('open',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:close', function(){
-                console.log('close',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:change', function(){
-                console.log('change',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:render', function(){
-                console.log('render',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:select', function(){
-                console.log('select',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:autocomplete', function(){
-                console.log('autocomplete',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:cursorchange', function(){
-                console.log('cursorchange',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:asyncrequest', function(){
-                console.log('asyncrequest',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:asynccancel', function(){
-                console.log('asynccancel',[].slice.call(arguments));
-            });
-            $scope.$on('typeahead:asyncreceive', function(){
-                console.log('asyncreceive',[].slice.call(arguments));
-            });
-
-
-
-
-            vm.oncursorchanged = function() {
-                console.log([].slice.call(arguments));
-            }
-
-        }*/
     }());
 
 </script>

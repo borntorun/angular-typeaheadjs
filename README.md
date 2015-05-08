@@ -4,7 +4,7 @@
 angular-typeaheadjs
 =======================
 
-This is an AngularJS directive to facilitate the use in angular projects of the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
+An AngularJS directive to use the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
 
 Requirements
 ------------

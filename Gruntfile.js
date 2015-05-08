@@ -7,9 +7,12 @@ module.exports = function (grunt) {
         format = require('util').format,
         readlineSync = require('readline-sync');
 
+    require('load-grunt-tasks')(grunt);
+
     //need this to get version... dont work in grunt-sed with <%= pkg.version %>!!! did not understand why!
     var pk = grunt.file.readJSON('package.json'),
         gitVersion;
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         buildDir: 'dist',
@@ -67,7 +70,7 @@ module.exports = function (grunt) {
                 multistr: true,
                 '-W030': true
             },
-            build: ['Grunfile.js', 'src/**/*.js', 'tests/*.js']
+            build: ['Grunfile.js', 'src/**/*.js', 'tests/**/*_spec.js']
         },
         uglify: {
             options: {
@@ -197,6 +200,9 @@ module.exports = function (grunt) {
             }
         },
         exec: {
+            /**
+             * Tasks used for releas to get git status, branch, add and commit
+             */
             test_git_on_master: '[[ $(git symbolic-ref --short -q HEAD) = master ]]',
             test_git_is_clean: '[[ -z "$(git status --porcelain)" ]]',
             git_add: 'git add .',
@@ -205,8 +211,12 @@ module.exports = function (grunt) {
                     return format('git commit -m "%s"', m);
                 }
             },
+
             karma: './node_modules/karma/bin/karma start'
         },
+        /**
+         * Test runner
+         */
         karma: {
             /*mochasingle: {
                 configFile: 'karma.mocha.conf.js',
@@ -227,6 +237,9 @@ module.exports = function (grunt) {
 
 
         },
+        /**
+         * e2e tests with protractor
+         */
         protractor_webdriver: {
             update: {
                 options: {
@@ -260,6 +273,9 @@ module.exports = function (grunt) {
                 }
             }
         },
+        /**
+         * Local Web server
+         */
         connect: {
             options: {
                 port: 8888,
@@ -288,9 +304,10 @@ module.exports = function (grunt) {
     });
 
     /**
-     * Update version on manifests files
+     * Release Tasks
      */
     grunt.registerTask('updmanifests', 'Update manifests.', function () {
+        //Update version on manifests files
         var _ = grunt.util._,
             pkg = grunt.file.readJSON('package.json'),
             bower = grunt.file.readJSON('bower.json'),
@@ -307,16 +324,13 @@ module.exports = function (grunt) {
     });
     /**
      * Task release: Inspired here: http://kroltech.com/2014/04/use-grunt-to-push-a-git-tag/
+     * :patch
+     * :minor
+     * :major
      */
     grunt.registerTask('release:patch', ['release']);
-    grunt.registerTask('release:minor', function () {
-        grunt.option('tagType', 'minor');
-        grunt.task.run(['release']);
-    });
-    grunt.registerTask('release:major', function () {
-        grunt.option('tagType', 'major');
-        grunt.task.run(['release']);
-    });
+    grunt.registerTask('release:minor', function () {grunt.option('tagType', 'minor');grunt.task.run(['release']);});
+    grunt.registerTask('release:major', function () {grunt.option('tagType', 'major');grunt.task.run(['release']);});
     grunt.registerTask('release', function () {
         if (grunt.option('tagType') !== 'major' &&
             grunt.option('tagType') !== 'minor') {
@@ -354,6 +368,7 @@ module.exports = function (grunt) {
         );
     });
     grunt.registerTask('push', function () {
+        //push to remote
         this.requires('release');
         if (grunt.option("remote")) {
             grunt.task.run([
@@ -366,14 +381,20 @@ module.exports = function (grunt) {
         }
     });
 
-    require('load-grunt-tasks')(grunt);
-
-    grunt.registerTask('default', ['build']);
+    /**
+     * Test tasks
+     */
     grunt.registerTask('test', ['jshint', /*'karma:mochasingle',*/ 'karma:jasminesingle']);
-    grunt.registerTask('test:e2e', ['connect:e2etest', 'protractor_webdriver:continuous', 'protractor:continuous', 'watch:protractor']);
+    grunt.registerTask('test:e2e', ['jshint', 'connect:e2etest', 'protractor_webdriver:continuous', 'protractor:continuous', 'watch:protractor']);
     //grunt.registerTask('test:mocha', ['jshint', 'karma:mocha']);
     grunt.registerTask('test:jasmine', ['jshint', 'karma:jasmine']);
+
+    /**
+     * Build Task
+     */
     grunt.registerTask('build', ['jshint', 'concat', 'ngAnnotate', 'uglify', 'sed:version']);
-
-
+    /**
+     * Default
+     */
+    grunt.registerTask('default', ['build']);
 };
