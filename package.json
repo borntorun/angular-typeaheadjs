@@ -1,11 +1,8 @@
 {
   "name": "angular-typeaheadjs",
   "version": "0.5.1",
-  "description": "Angularjs directive to facilitate the use of the typeahead.js library.",
+  "description": "An AngularJS directive to serve as a wrapper to the typeahead.js library.",
   "main": "dist/angular-typeaheadjs.js",
-  "scripts": {
-    "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/borntorun/angular-typeaheadjs.git"
