@@ -2,7 +2,8 @@ language: node_js
 env:
   matrix:
   #- TEST_SUITE=unit
-  - TEST_SUITE=e2e
+  - TEST_SUITE=e2e BROWSER='chrome'
+  - TEST_SUITE=e2e BROWSER='ie'
   #- TEST_SUITE=integration BROWSER='chrome'
   #- TEST_SUITE=integration BROWSER='chrome:40'
   #- TEST_SUITE=integration BROWSER='chrome:39'
