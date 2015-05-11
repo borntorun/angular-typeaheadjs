@@ -28,8 +28,7 @@ exports.config = {
         'build': process.env.TRAVIS_BUILD_NUMBER,
         'name': 'angular-typeaheadjs e2e tests',
         'version': '36',
-        'selenium-version': '2.45.0',
-        'platform': 'LINUX'
+        'selenium-version': '2.45.0'
     }/*, {
         'browserName': 'safari',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
@@ -44,7 +43,7 @@ exports.config = {
         'name': 'angular-typeaheadjs e2e tests',
         'version': '8',
         'selenium-version': '2.44.0'
-    }, {
+    }*/, {
         'browserName': 'internet explorer',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER,
@@ -60,7 +59,7 @@ exports.config = {
         'version': '10',
         'selenium-version': '2.45.0',
         'platform': 'Windows 7'
-    }*/],
+    }],
 
     baseUrl: env.baseUrl,
     rootElement: 'body',
