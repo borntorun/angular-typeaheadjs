@@ -66,8 +66,10 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 //            expect(browser.getTitle()).toBe('Test e2e angular-typeaheadjs');
 //        });
         it('should have an input with typeahead applied', function () {
-            useCase.inputExists();
-            //expect(browser.isElementPresent(elinput)).toBeTruthy();
+            browser.sleep(150).then(function(){
+                useCase.inputExists();
+            });
+
         });
         it('should open dropdown with 3 suggestions and correct hint when typing "uni"', function () {
             useCase.inputExists();
