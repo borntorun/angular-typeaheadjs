@@ -10,26 +10,24 @@ exports.config = {
         '../e2e/local_spec.js'
     ],
 
-    // Two latest versions of Chrome, Firefox, IE, Safari.
-    // TODO - add mobile.
-    multiCapabilities: [/*{
+    multiCapabilities: [{
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER,
         'name': 'angular-typeaheadjs e2e tests',
-        //'version': '40',
-        //'selenium-version': '2.45.0',
-        //'chromedriver-version': '2.14',
+        'version': '40'/*,
+        'selenium-version': '2.45.0',
+        'chromedriver-version': '2.14',
         //'platform': 'OS X 10.9'
-        'platform': 'LINUX'
-    },*/ {
+        'platform': 'LINUX'*/
+    }, {
         'browserName': 'firefox',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER,
         'name': 'angular-typeaheadjs e2e tests',
-        'version': '36',
-        'selenium-version': '2.45.0'
-    }/*, {
+        'version': '36'/*,
+        'selenium-version': '2.45.0'*/
+    }, {
         'browserName': 'safari',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
         'build': process.env.TRAVIS_BUILD_NUMBER,
@@ -59,7 +57,7 @@ exports.config = {
         'version': '10',
         'selenium-version': '2.45.0',
         'platform': 'Windows 7'
-    }*/],
+    }],
 
     baseUrl: env.baseUrl,
     rootElement: 'body',

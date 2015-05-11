@@ -1,8 +1,8 @@
 'use strict';
 describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
-    browser.manage().window().setSize(600, 800);
-    browser.manage().window().setPosition(600, 0);
+//    browser.manage().window().setSize(600, 800);
+//    browser.manage().window().setPosition(600, 0);
     beforeEach(function () {
         browser.get('/tests/local/test.html');
     });
@@ -61,7 +61,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         };
     };
 
-    xdescribe(':use case 1: prefetch / remote / ', function () {
+    describe(':use case 1: prefetch / remote / ', function () {
         var useCase;
 
         beforeEach(function () {
@@ -97,7 +97,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
         });
     });
-    xdescribe(':use case 2: prefetch / remote / trigger all events on scope', function () {
+    describe(':use case 2: prefetch / remote / trigger all events on scope', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(2);
