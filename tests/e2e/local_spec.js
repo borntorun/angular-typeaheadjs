@@ -5,7 +5,6 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 //    browser.manage().window().setPosition(600, 0);
     beforeEach(function () {
         browser.get('/tests/local/test.html');
-        b
     });
 
     var UseCase = function(number) {
