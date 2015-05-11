@@ -279,7 +279,7 @@ module.exports = function (grunt) {
         connect: {
             options: {
                 port: 8888,
-                hostname: '192.168.40.20'
+                hostname: 'localhost'
             },
             e2etest: {
                 /*options: {

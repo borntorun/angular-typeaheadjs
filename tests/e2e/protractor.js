@@ -110,13 +110,14 @@ exports.config = {
     // https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities
     //
     // In addition, you may specify count, shardTestFiles, and maxInstances.
-    capabilities: {
+    /*capabilities: {
         browserName: 'chrome',
+        //browserName: 'firefox',
 
         // Name of the process executing this capability.  Not used directly by
         // protractor or the browser, but instead pass directly to third parties
         // like SauceLabs as the name of the job running this test
-        /*name: 'Unnamed Job',*/
+        *//*name: 'Unnamed Job',*//*
 
         // Number of times to run this set of capabilities (in parallel, unless
         // limited by maxSessions). Default is 1.
@@ -135,19 +136,23 @@ exports.config = {
         maxSessions: 1,
 
         // Additional spec files to be run on this capability only.
-        /*specs: ['spec/chromeOnlySpec.js'],*/
+        *//*specs: ['spec/chromeOnlySpec.js'],*//*
 
         // Spec files to be excluded on this capability only.
-        /*exclude: ['spec/doNotRunInChromeSpec.js'],*/
+        *//*exclude: ['spec/doNotRunInChromeSpec.js'],*//*
 
         // Optional: override global seleniumAddress on this capability only.
         seleniumAddress: null
-    },
+    },*/
 
     // If you would like to run more than one instance of WebDriver on the same
     // tests, use multiCapabilities, which takes an array of capabilities.
     // If this is specified, capabilities will be ignored.
-    multiCapabilities: [],
+    multiCapabilities: [{
+        browserName: 'chrome'
+    },{
+        browserName: 'firefox'
+    }],
 
     // If you need to resolve multiCapabilities asynchronously (i.e. wait for
     // server/proxy, set firefox profile, etc), you can specify a function here
@@ -170,7 +175,7 @@ exports.config = {
     //
     // A base URL for your application under test. Calls to protractor.get()
     // with relative paths will be prepended with this.
-    baseUrl: 'http://192.168.40.20:8888',
+    baseUrl: 'http://localhost:8888',
 
     // CSS Selector for the element housing the angular app - this defaults to
     // body, but is necessary if ng-app is on a descendant of <body>.
