@@ -11,12 +11,9 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'bower_components/jquery/dist/jquery.js',
-            'bower_components/jquery/jquery.js',
             'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
-            //'bower_components/typeahead.js/dist/typeahead.bundle.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-mocks/angular-mocks.js',
-            //jasmine
             'bower_components/sinonjs/sinon.js',
             'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
             'src/angular-typeaheadjs.js',
@@ -41,7 +38,7 @@ module.exports = function (config) {
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['progress'/*, 'coverage'*/],
         // web server port
-        hostname: '192.168.40.20',
+        hostname: 'localhost',
         port: 8080,
         // enable / disable colors in the output (reporters and logs)
         colors: true,
