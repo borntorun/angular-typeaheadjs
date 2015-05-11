@@ -4,7 +4,9 @@
 angular-typeaheadjs
 =======================
 
-An AngularJS directive to use the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
+An AngularJS directive to serve as a wrapper to the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
+It allows to apply to an input field the autocomplete typeahead.js features.
+In the default use case it will apply autocomplete search functionality for an `input.typeahead`. A dataset with a [Bloddhound](https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md) engine as source will be created retrieving data from prefecth and/or remote urls.
 
 Requirements
 ------------
@@ -28,31 +30,18 @@ $ bower install angular-typeaheadjs
 
 [See the demo page](http://borntorun.github.io/angular-typeaheadjs/)
 
-## Default use case
+## Use
 
 In your html template (default and minimal use case):
 ```html
-<angular-typeaheadjs angty-ttoptions='{remote:"url_for_remote_data"}'>
-    <input class="typeahead" type="text" ... />
-</angular-typeaheadjs>
-```
-or
-```html
-<angular-typeaheadjs angty-ttoptions='{prefetch:"url_for_prefetch_data"}'>
+<angular-typeaheadjs angty-ttoptions="..." angty-ttdatasets="..." angty-options="..." ...>
   <input class="typeahead" type="text" ... />
 </angular-typeaheadjs>
 ```
-
-So, for the default use case the directive component will apply autocomplete search functionality for the `input.typeahead`. A dataset with a Bloddhound engine as source will be created retrieving data from a remote and/or prefecth urls.
 
 ### Attributes
 
 #### for options configuration
-```html
-<angular-typeaheadjs angty-ttoptions="..." angty-ttdatasets="..." angty-options="...">
-  <input class="typeahead" type="text" ... />
-</angular-typeaheadjs>
-```
 
 * `angty-ttoptions` - optional - options hash - mimic the typeaheadjs options - used to configure options when NOT using attribute `angty-ttdatasets`
   * For typeahead options (Group I)
@@ -70,15 +59,15 @@ So, for the default use case the directive component will apply autocomplete sea
     * `remote` - `optional`. Can be a URL string for remote suggestions or an options hash. Only `remote.url` and `remote.wildcard` (`default=%QUERY`) are supported.        
       * In the default use case (`angty-ttdatasets` is not passed) one of `remote|prefetch` must be passed in
 
-* `angty-ttdatasets` - optional - [*{}] - An array of datasets to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with `angty-ttoptions` (or defaults) applied.
+* `angty-ttdatasets` - optional - An expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
       * No validation is made on content of the datasets apart the type validation (is-an-array)
 
 * `angty-options` - optional - options hash for other options for the component
-    * `useOwnDefaults` - `optional`, `default=true`. Indicates that the components default values will be used instead of typeaheadjs default ones. 
-    * `selectOnAutocomplete` - `optional`, `default=false`. Indicates that the `select` event is triggered when `autocomplete` event occurs.
-    * `clear` - `optional`, `default=true`. Clear the value on input on suggestion selection.
-    * `emitOnlyIfPresent` - `optional`, `default=true`. Only scope emit the typeahead events that were explicity included in the html tag.
-    * `showLog` - `optional`, `default=false`. Show console log warnings and errors.       
+    * `useOwnDefaults` - `optional`, `default=true`. Specifying that the components default values will be used instead of typeaheadjs default ones. 
+    * `selectOnAutocomplete` - `optional`, `default=false`. Specifying that the `select` event is triggered when `autocomplete` event occurs.
+    * `clear` - `optional`, `default=true`. Indicates that the value on input must be cleared on suggestion selection.
+    * `emitOnlyIfPresent` - `optional`, `default=true`. Indicates to only emit on scope the typeahead events that were explicity included in the html tag.
+    * `showLog` - `optional`, `default=false`. Turn on/off the warnings and errors messages when initializing.       
 
 Example 1: set an autocomplete search from prefetch and remote data and overriding some options
 ```html

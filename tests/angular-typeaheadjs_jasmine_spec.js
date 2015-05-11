@@ -82,12 +82,8 @@ describe('angular-typeaheadjs', function () {
             [
                 {caption: 'should render with just remote option bound to scope',
                     tag: EL.addNewTTOpt(EL.opt.remote).tag(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should render with inline remote option',
-                    tag: EL.addNewTTOpt(EL.opt.remote).inline()},
                 {caption: 'should render with just prefetch option bound to scope',
-                    tag: EL.addNewTTOpt(EL.opt.prefetch).tag(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should render with inline prefetch option',
-                    tag: EL.addNewTTOpt(EL.opt.prefetch).inline()}
+                    tag: EL.addNewTTOpt(EL.opt.prefetch).tag(), ttoptions: EL.scopeTTOptions()}
             ], expectations);
         function expectations(el) {
             //debugger;
@@ -100,7 +96,7 @@ describe('angular-typeaheadjs', function () {
             expect(el.find('span.twitter-typeahead')[0].lastChild.className).toContain('tt-menu');
         }
     });
-    describe('Test passing in invalid "remote|prefetch" option', function () {
+    describe('Test on log passing in invalid prameters', function () {
         var sinonSpies = [
             //here $log dos not exists so just objname is set (obj it will be set from var oInjectedForSpies)
             {objname: '$log', methodname: 'error'}
@@ -110,38 +106,32 @@ describe('angular-typeaheadjs', function () {
         });
         doItAll(
             [
+                {caption: 'should call $log.error if datasets is not an array',
+                    tag: EL.addNewTTOpt().addOpt(EL.opt.showLogTrue).useDatasetsInvalid()
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions(), ttdatasets: EL.scopeTTdatasets(), expectations: expectationsDatasets},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are not passed',
                     tag: EL.addNewTTOpt().addOpt(EL.opt.showLogTrue)
                         .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are not passed inline',
-                    tag: EL.addNewTTOpt().addOpt(EL.opt.showLogTrue)
-                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
                     tag: EL.addNewTTOpt(EL.opt.remoteEmpty).addTTOpt(EL.opt.prefetchEmpty).addOpt(EL.opt.showLogTrue)
                         .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
-                    tag: EL.addNewTTOpt(EL.opt.remoteEmpty).addTTOpt(EL.opt.prefetchEmpty).addOpt(EL.opt.showLogTrue)
-                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as empty strings',
                     tag: EL.addNewTTOpt(EL.opt.remoteUndefined).addTTOpt(EL.opt.prefetchUndefined).addOpt(EL.opt.showLogTrue)
                         .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as empty strings',
-                    tag: EL.addNewTTOpt(EL.opt.remoteUndefined).addTTOpt(EL.opt.prefetchUndefined).addOpt(EL.opt.showLogTrue)
-                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as null',
                     tag: EL.addNewTTOpt(EL.opt.remoteNull).addTTOpt(EL.opt.prefetchNull).addOpt(EL.opt.showLogTrue)
                         .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as null',
-                    tag: EL.addNewTTOpt(EL.opt.remoteNull).addTTOpt(EL.opt.prefetchNull).addOpt(EL.opt.showLogTrue)
-                        .inline()},
                 {caption: 'should call $log.error if both attributtes remote|prefetch are passed as not string',
                     tag: EL.addNewTTOpt(EL.opt.remoteInvalid).addTTOpt(EL.opt.prefetchInvalid).addOpt(EL.opt.showLogTrue)
-                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'should call $log.error if both attributtes remote|prefetch are passed inline as not string',
-                    tag: EL.addNewTTOpt(EL.opt.remoteInvalid).addTTOpt(EL.opt.prefetchInvalid).addOpt(EL.opt.showLogTrue)
-                        .inline()}
+                        .tag(), options: EL.scopeOptions(), ttoptions: EL.scopeTTOptions()}
             ], expectations, { sinonSpySuite: sinonSpies}
         );
+        function expectationsDatasets(el) {
+            /* jshint validthis:true */
+            var log = this.sinonSpySuite[0].spy;
+            expect(log).toHaveBeenCalled();
+            expect(log).toHaveBeenCalledWith('angty-ttdatasets must be an array.([angular-typeaheadjs]:id:' + EL.id + ')');
+        }
         function expectations(el) {
             /* jshint validthis:true */
             var log = this.sinonSpySuite[0].spy;
@@ -184,13 +174,6 @@ describe('angular-typeaheadjs', function () {
                 {caption: 'Should call Bloodhound with default values',
                     tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch)
                         .tag(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'Should call Bloodhound with default values inline',
-                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch)
-                        .inline()},
-                {caption: 'Should call Bloodhound with arg sufficient=5',
-                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addTTOpt(EL.opt.sufficientFive)
-                        .inline(),
-                    expectations: expectPassedValues},
                 {caption: 'Should call Bloodhound with arg sufficient=5',
                     tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addTTOpt(EL.opt.sufficientFive)
                         .tag(),
@@ -253,21 +236,12 @@ describe('angular-typeaheadjs', function () {
                 {caption: 'Should call typeahead with default values',
                     tag: EL.addNewTTOpt(EL.opt.remote)
                         .tag(), ttoptions: EL.scopeTTOptions()},
-                {caption: 'Should call typeahead with default values inline',
-                    tag: EL.addNewTTOpt(EL.opt.remote)
-                        .inline()},
                 {caption: 'Should call typeahead with passed values',
                     tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.hintFalse).addTTOpt(EL.opt.highlightFalse)
                         .addTTOpt(EL.opt.minLengthZero).addTTOpt(EL.opt.classNamesMy).addTTOpt(EL.opt.displayValue)
                         .addTTOpt(EL.opt.nameCountries)
                         .tag(),
                     ttoptions: EL.scopeTTOptions(),
-                    expectations: expectPassedValues},
-                {caption: 'Should call typeahead with passed values inline',
-                    tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.hintFalse).addTTOpt(EL.opt.highlightFalse)
-                        .addTTOpt(EL.opt.minLengthZero).addTTOpt(EL.opt.classNamesMy).addTTOpt(EL.opt.displayValue)
-                        .addTTOpt(EL.opt.nameCountries)
-                        .inline(),
                     expectations: expectPassedValues},
                 {caption: 'Should call typeahead with typeahead default values',
                     tag: EL.addNewTTOpt(EL.opt.remote).addTTOpt(EL.opt.prefetch).addOpt(EL.opt.useOwnDefaultsFalse)
@@ -396,6 +370,7 @@ describe('angular-typeaheadjs', function () {
                 prefetchNull: {prefetch: null},
                 remoteInvalid: {remote: 1},
                 prefetchInvalid: {prefetch: 1},
+                datasetsNotArray: { 'keyI': 'im not an array' },
                 sufficientFive: {sufficient: 5},
                 name: {name: 'datasource'},
                 nameCountries: {name: 'countries'},
@@ -450,6 +425,9 @@ describe('angular-typeaheadjs', function () {
                 '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
                 '</angular-typeaheadjs>';
 
+        function setDatasetsInvalid() {
+            return {'key': 'not an array'};
+        }
         function setDatasets() {
             var ods = [
                 {
@@ -499,11 +477,11 @@ describe('angular-typeaheadjs', function () {
                     .replace('$ttdatasets$', this.ttdatasets ? TTDATASETS : '')
                     .replace('$IDTEST$', IDTEST);
             },
-            inline: function () {
+            /*inline: function () {
                 return this.tag()
                     .replace('{{options}}', this.scopeOptions())
                     .replace('{{ttoptions}}', this.scopeTTOptions());
-            },
+            },*/
             scopeOptions: function () {
                 return angular.toJson(this.options);
             },
@@ -531,6 +509,10 @@ describe('angular-typeaheadjs', function () {
             },
             useDatasets: function () {
                 this.ttdatasets = setDatasets();
+                return this;
+            },
+            useDatasetsInvalid: function () {
+                this.ttdatasets = setDatasetsInvalid();
                 return this;
             }
 

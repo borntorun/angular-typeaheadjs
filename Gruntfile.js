@@ -288,6 +288,9 @@ module.exports = function (grunt) {
                 }*/
             }
         },
+        ngdocs: {
+          all: [ 'src/**/*.js' ]
+        },
         watch: {
             options: {
                 livereload: true

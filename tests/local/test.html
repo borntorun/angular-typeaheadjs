@@ -205,7 +205,7 @@
 
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../../bower_components/angular/angular.min.js"></script>
-<script src="../../bower_components/typeahead.js-v0.11.0/dist/typeahead.bundle.js"></script>
+<script src="../../bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
 <script src="../../src/angular-typeaheadjs.js"></script>
 <script>
 
@@ -331,7 +331,10 @@
             vm.onclose = function(){addTrigger(3);};
             vm.onchange = function(){addTrigger(4);};
             vm.onrender = function(){addTrigger(5);};
-            vm.onselect = function(){addTrigger(6);};
+            vm.onselect = function(){
+                console.log([].slice.call(arguments));
+                addTrigger(6);
+            };
             vm.onautocomplete = function(){addTrigger(7);};
             vm.oncursorchange = function(){addTrigger(8);};
             vm.onasyncrequest = function(){addTrigger(9);};
