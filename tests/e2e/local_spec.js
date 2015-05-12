@@ -61,7 +61,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         };
     };
 
-    describe(':use case 1: prefetch / remote / ', function () {
+    xdescribe(':use case 1: prefetch / remote / ', function () {
         var useCase;
 
         beforeEach(function () {
@@ -97,7 +97,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
         });
     });
-    describe(':use case 2: prefetch / remote / trigger all events on scope', function () {
+    xdescribe(':use case 2: prefetch / remote / trigger all events on scope', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(2);
@@ -165,14 +165,14 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         beforeEach(function () {
             useCase = new UseCase(3);
         });
-        it('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
+        xit('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
             browser.sleep('250');
             useCase.inputSendKeys(protractor.Key.TAB);
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,0,1,0,0,0,0]');
         });
-        it('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
+        xit('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
             browser.sleep('150');
@@ -184,13 +184,16 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger only select event when type "uni" and click first suggestion', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            browser.sleep('150');
-            useCase.firstSuggestionClick();
-            browser.sleep('50');
-            useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+            browser.sleep('1500').then(function(){
+                useCase.firstSuggestionClick();
+                browser.sleep('150');
+                useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+            });
+
+
         });
     });
-    describe(':use case 4: prefetch / remote / trigger events on scope select,autocomplete / selectOnAutocomplete option / clear option', function () {
+    xdescribe(':use case 4: prefetch / remote / trigger events on scope select,autocomplete / selectOnAutocomplete option / clear option', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(4);
@@ -222,7 +225,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
 
     });
-    describe(':use case 5: prefetch / remote / trigger all events callbacks', function () {
+    xdescribe(':use case 5: prefetch / remote / trigger all events callbacks', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(5);
@@ -279,7 +282,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.triggerEventsValueIs('[1,0,1,0,0,2,0,0,3,1,0,1]');
         });
     });
-    describe(':use case 6: prefetch / remote / calbacks emitOnlyIfPresent', function () {
+    xdescribe(':use case 6: prefetch / remote / calbacks emitOnlyIfPresent', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(6);
@@ -310,7 +313,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         });
 
     });
-    describe(':use case 7: prefetch / remote / callbacks mixed emit scope emitOnlyIfPresent', function () {
+    xdescribe(':use case 7: prefetch / remote / callbacks mixed emit scope emitOnlyIfPresent', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(7);
@@ -341,7 +344,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         });
 
     });
-    describe(':use case 8: prefetch / remote / trigger events callbacks select,autocomplete / selectOnAutocomplete option / clear option', function () {
+    xdescribe(':use case 8: prefetch / remote / trigger events callbacks select,autocomplete / selectOnAutocomplete option / clear option', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(8);
@@ -377,7 +380,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
 
     });
-    describe(':use case 9: datasets useOwnDefaults = false', function () {
+    xdescribe(':use case 9: datasets useOwnDefaults = false', function () {
         var useCase;
 
         beforeEach(function () {
