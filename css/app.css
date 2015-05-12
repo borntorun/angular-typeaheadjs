@@ -38,7 +38,7 @@ html {
     text-align: center;
 }
 
-.tt-dropdown-menu,
+.tt-menu,
 .gist {
     text-align: left;
 
@@ -145,7 +145,7 @@ p + p {
     color: #999
 }
 
-.tt-dropdown-menu {
+.tt-menu {
     width: 422px;
     margin-top: 12px;
     padding: 8px 0;
@@ -196,12 +196,12 @@ p + p {
     border-bottom: 1px solid #ccc;
 }
 
-#scrollable-dropdown-menu .tt-dropdown-menu {
+#scrollable-dropdown-menu .tt-menu {
     max-height: 150px;
     overflow-y: auto;
 }
 
-#rtl-support .tt-dropdown-menu {
+#rtl-support .tt-menu {
     text-align: right;
 }
 
