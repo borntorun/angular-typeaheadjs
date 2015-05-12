@@ -10,7 +10,7 @@ exports.config = {
         '../e2e/local_spec.js'
     ],
 
-    capabilities: require('./' + process.env.BROWSER + process.env.BROWSERVERSION).config,
+    capabilities: require('./' + process.env.BROWSER + (process.env.BROWSERVERSION? process.env.BROWSERVERSION:'')).config,
 
     baseUrl: env.baseUrl,
     rootElement: 'body',

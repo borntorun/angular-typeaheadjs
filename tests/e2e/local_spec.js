@@ -58,7 +58,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         };
     };
 
-    xdescribe(':use case 1: prefetch / remote / ', function () {
+    describe(':use case 1: prefetch / remote / ', function () {
         var useCase;
 
         beforeEach(function () {
@@ -94,7 +94,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
         });
     });
-    xdescribe(':use case 2: prefetch / remote / trigger all events on scope', function () {
+    describe(':use case 2: prefetch / remote / trigger all events on scope', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(2);
@@ -192,7 +192,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         }
 
     });
-    xdescribe(':use case 4: prefetch / remote / trigger events on scope select,autocomplete / selectOnAutocomplete option / clear option', function () {
+    describe(':use case 4: prefetch / remote / trigger events on scope select,autocomplete / selectOnAutocomplete option / clear option', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(4);
@@ -203,15 +203,18 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.inputSendKeys(protractor.Key.TAB);
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0]');
         });
-        it('should clear input on select suggestion', function () {
-            useCase.inputExists();
-            useCase.inputSendKeys('uni');
-            browser.sleep('50');
-            useCase.inputValueIs('uni');
-            useCase.firstSuggestionClick();
-            browser.sleep('50');
-            useCase.inputValueIs('');
-        });
+        if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
+            it('should clear input on select suggestion', function () {
+                useCase.inputExists();
+                useCase.inputSendKeys('uni');
+                browser.sleep('50');
+                useCase.inputValueIs('uni');
+                useCase.firstSuggestionClick();
+                browser.sleep('50');
+                useCase.inputValueIs('');
+            });
+        }
+
         it('should clear input on autocomplete (selectOnAutocomplete is true)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
@@ -224,7 +227,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
 
     });
-    xdescribe(':use case 5: prefetch / remote / trigger all events callbacks', function () {
+    describe(':use case 5: prefetch / remote / trigger all events callbacks', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(5);
@@ -281,7 +284,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.triggerEventsValueIs('[1,0,1,0,0,2,0,0,3,1,0,1]');
         });
     });
-    xdescribe(':use case 6: prefetch / remote / calbacks emitOnlyIfPresent', function () {
+    describe(':use case 6: prefetch / remote / calbacks emitOnlyIfPresent', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(6);
@@ -302,17 +305,20 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
-        it('should trigger only select event when type "uni" and click first suggestion', function () {
-            useCase.inputExists();
-            useCase.inputSendKeys('uni');
-            browser.sleep('150');
-            useCase.firstSuggestionClick();
-            browser.sleep('150');
-            useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
-        });
+        if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
+            it('should trigger only select event when type "uni" and click first suggestion', function () {
+                useCase.inputExists();
+                useCase.inputSendKeys('uni');
+                browser.sleep('150');
+                useCase.firstSuggestionClick();
+                browser.sleep('150');
+                useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+            });
+        }
+
 
     });
-    xdescribe(':use case 7: prefetch / remote / callbacks mixed emit scope emitOnlyIfPresent', function () {
+    describe(':use case 7: prefetch / remote / callbacks mixed emit scope emitOnlyIfPresent', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(7);
@@ -333,17 +339,20 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
-        it('should trigger only select event when type "uni" and click first suggestion', function () {
-            useCase.inputExists();
-            useCase.inputSendKeys('uni');
-            browser.sleep('150');
-            useCase.firstSuggestionClick();
-            browser.sleep('150');
-            useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
-        });
+        if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
+            it('should trigger only select event when type "uni" and click first suggestion', function () {
+                useCase.inputExists();
+                useCase.inputSendKeys('uni');
+                browser.sleep('150');
+                useCase.firstSuggestionClick();
+                browser.sleep('150');
+                useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+            });
+        }
+
 
     });
-    xdescribe(':use case 8: prefetch / remote / trigger events callbacks select,autocomplete / selectOnAutocomplete option / clear option', function () {
+    describe(':use case 8: prefetch / remote / trigger events callbacks select,autocomplete / selectOnAutocomplete option / clear option', function () {
         var useCase;
         beforeEach(function () {
             useCase = new UseCase(8);
@@ -356,16 +365,18 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0]');
         });
-        it('should clear input on select suggestion', function () {
-            useCase.inputExists();
-            useCase.inputSendKeys('uni');
-            browser.sleep('150');
-            useCase.inputValueIs('uni');
-            useCase.firstSuggestionClick();
-            browser.sleep('150');
-            useCase.inputValueIs('');
-            useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
-        });
+        if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
+            it('should clear input on select suggestion', function () {
+                useCase.inputExists();
+                useCase.inputSendKeys('uni');
+                browser.sleep('150');
+                useCase.inputValueIs('uni');
+                useCase.firstSuggestionClick();
+                browser.sleep('150');
+                useCase.inputValueIs('');
+                useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+            });
+        }
         it('should clear input on autocomplete (selectOnAutocomplete is true)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
@@ -379,7 +390,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
 
     });
-    xdescribe(':use case 9: datasets useOwnDefaults = false', function () {
+    describe(':use case 9: datasets useOwnDefaults = false', function () {
         var useCase;
 
         beforeEach(function () {
