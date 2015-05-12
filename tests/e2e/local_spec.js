@@ -147,7 +147,11 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.ENTER);
             browser.sleep('150');
-            useCase.inputSendKeys(protractor.Key.TAB);
+            if (process.env.BROWSER !== 'safari' ) {
+                useCase.inputSendKeys(protractor.Key.TAB);
+            } else {
+                useCase.bodyClick();
+            }
             browser.sleep('500').then(function() {
                 useCase.triggerEventsValueIs('[1,1,1,1,1,2,1,0,1,1,0,1]');
             });
