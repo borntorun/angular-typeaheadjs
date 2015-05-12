@@ -57,7 +57,8 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             expect(suggestions.count()).toBe(number);
         };
         this.firstSuggestionClick = function (){
-            element.all(by.css(selectorPath + ' .tt-suggestion')).first().click();
+            element(by.css(selectorUseCase + ' .tt-suggestion:first-child')).click();
+            //element.all(by.css(selectorPath + ' .tt-suggestion')).first().click();
         };
     };
 
