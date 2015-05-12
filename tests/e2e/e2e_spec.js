@@ -269,7 +269,7 @@ describe('angular-typeaheadjs e2e tests: ', function () {
             useCase.inputSendKeys('uni');
             browser.sleep('250');
             useCase.inputSendKeys(protractor.Key.TAB);
-            browser.sleep('250').then(function(){
+            browser.sleep('500').then(function(){
                 useCase.triggerEventsValueIs('[1,0,1,0,0,4,0,1,0,2,0,2]');
             });
         });

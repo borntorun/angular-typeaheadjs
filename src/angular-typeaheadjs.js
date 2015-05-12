@@ -126,13 +126,13 @@
             }
             //set typeahead (get a promise)
             var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets);
+
             plugTypeaheadPromise.then(function (el) {
                 var aEv = angular.copy(_aEvents);
 
                 function clearVal() {
                     el.typeahead('val', '');
                 }
-
                 if (options.selectOnAutocomplete === true) {
                     aEv.push({event: '$autocomplete $select', trigger: 'select'});
                     if (options.clear === true) {
@@ -149,14 +149,15 @@
             }, function (el) {
                 //console.log('rejected:', el);
             });
+
             function bindEvents(el, aEvents) {
                 aEvents.forEach(function (item) {
                     var f = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
-                    if (f !== angular.noop) {
+                    /*if (f !== angular.noop) {
                         //console.log(item);
                         el.on(item.event.replace(/\$/g, 'typeahead:'), options, f);
-                    }
-                    //f !== angular.noop && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, f));
+                    }*/
+                    f !== angular.noop && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, f));
                 });
             }
 

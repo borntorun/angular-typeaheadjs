@@ -253,6 +253,13 @@ module.exports = function (grunt) {
                     path: './node_modules/.bin/',
                     command: 'webdriver-manager start --seleniumPort 4444'
                 }
+            },
+            single: {
+                options: {
+                    keepAlive : false,
+                    path: './node_modules/.bin/',
+                    command: 'webdriver-manager start --seleniumPort 4444'
+                }
             }
         },
         protractor: {
@@ -389,6 +396,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('test', ['jshint', /*'karma:mochasingle',*/ 'karma:jasminesingle']);
     grunt.registerTask('test:e2e', ['jshint', 'connect:e2etest', 'protractor_webdriver:continuous', 'protractor:continuous', 'watch:protractor']);
+    grunt.registerTask('test:e2e:single', ['jshint', 'connect:e2etest', 'protractor_webdriver:single', 'protractor:single']);
     //grunt.registerTask('test:mocha', ['jshint', 'karma:mocha']);
     grunt.registerTask('test:jasmine', ['jshint', 'karma:jasmine']);
 

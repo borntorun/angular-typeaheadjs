@@ -13,7 +13,7 @@ Requirements
 
 [angular.js] (https://angularjs.org/)
 
-[typeahead.js](https://github.com/twitter/typeahead.js) version: ~0.11.0
+[typeahead.js](https://github.com/twitter/typeahead.js) **version: ~0.11.0**
 
 How to use
 ----------
@@ -191,9 +191,13 @@ Notes
 ---------------
 
 * This is a work in progress.
-
 * Latest release only supports [typeahead.js ~0.11.0](https://github.com/twitter/typeahead.js/releases/tag/v0.11.0)
-* Will try to follow the typeaheadjs development and releaes on new features and changes 
+* Will try to follow the typeaheadjs development and releaes on new features and changes.
+
+Contribution
+---------------
+
+* Contributions and comments are welcome.
 
 Authors
 -------
