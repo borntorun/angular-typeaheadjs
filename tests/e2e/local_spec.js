@@ -46,19 +46,15 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 
         };
         this.triggerEventsValueIs = function (value){
-            //console.log(this.triggerEvents);
-
             expect(this.triggerEvents.getText()).toBe(value);
-
-            //expect(this.triggerEvents.getAttribute('innerText')).toBe(value);
         };
         this.numberOfSuggestionsIs = function (number){
             var suggestions = element.all(by.css(selectorPath + ' .tt-suggestion'));
             expect(suggestions.count()).toBe(number);
         };
         this.firstSuggestionClick = function (){
-            element(by.css(selectorUseCase + ' .tt-suggestion:first-child')).click();
-            //element.all(by.css(selectorPath + ' .tt-suggestion')).first().click();
+            //element(by.css(selectorUseCase + ' .tt-suggestion:first-child')).click();
+            element.all(by.css(selectorPath + ' .tt-suggestion')).first().click();
         };
     };
 
@@ -166,14 +162,14 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         beforeEach(function () {
             useCase = new UseCase(3);
         });
-        xit('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
+        it('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
             browser.sleep('250');
             useCase.inputSendKeys(protractor.Key.TAB);
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,0,1,0,0,0,0]');
         });
-        xit('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
+        it('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
             browser.sleep('150');
@@ -182,17 +178,19 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
-        it('should trigger only select event when type "uni" and click first suggestion', function () {
-            useCase.inputExists();
-            useCase.inputSendKeys('uni');
-            browser.sleep('1500').then(function(){
-                useCase.firstSuggestionClick();
-                browser.sleep('150');
-                useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+
+        if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
+            it('should trigger only select event when type "uni" and click first suggestion', function () {
+                useCase.inputExists();
+                useCase.inputSendKeys('uni');
+                browser.sleep('150').then(function(){
+                    useCase.firstSuggestionClick();
+                    browser.sleep('150');
+                    useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
+                });
             });
+        }
 
-
-        });
     });
     xdescribe(':use case 4: prefetch / remote / trigger events on scope select,autocomplete / selectOnAutocomplete option / clear option', function () {
         var useCase;
