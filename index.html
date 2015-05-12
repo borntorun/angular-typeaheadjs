@@ -24,7 +24,7 @@
 </head>
 <body class="ng-cloak">
 
-<div class="container">
+<div class="container"  id="contents">
 
     <h1 class="title">angular-typeaheadjs</h1>
     <div><h2>Directive</h2><img src="data/AngularJS-Shield-small.png" id="logo-angular"/></div>
@@ -39,17 +39,50 @@
 
     <aside>
         <h5>This is a an independent project and not related to the twitter typeahead.js project.</h5>
-        For more information and exemples see the project on <a href="https://github.com/borntorun/angular-typeaheadjs">github</a>
+        For more information see the project on <a href="https://github.com/borntorun/angular-typeaheadjs">github</a>
     </aside>
 
-    <!--<ol class="table-of-contents">
+    <ol class="table-of-contents">
+        <li><a href="#basics">Basics</a></li><span> &middot; </span>
         <li><a href="#remoteprefetch">Remote-Prefetch</a></li><span> &middot; </span>
-    </ol>-->
+    </ol>
+
+    <div class="example" id="basics">
+        <h2 class="example-name">Basics</h2>
+        <p class="example-description">
+            Using a dataset, with a function as source for computing suggestions.
+        </p>
+        <p>
+            Option <strong>selectOnAutocomplete=true</strong> is used to trigger select event on autocomplete with TAB key.
+        </p>
+
+        <div class="demo" ng-controller="BasicsCtrl as vm">
+            <div class="selection">Selection:&nbsp;<span>{{vm.itemonSelected}}</span></div>
+
+            <angular-typeaheadjs angty-ttoptions="{{vm.ttoptions}}"
+                                 angty-ttdatasets="vm.datasets"
+                                 angty-options="{{vm.options}}"
+                                 angty-onselect>
+                <input class="typeahead" type="text" placeholder="Search for US States"/>
+            </angular-typeaheadjs>
+
+        </div>
+
+        <div class="gist" ng-non-bindable>
+            <script src="https://gist.github.com/borntorun/3b95d9dbb16f2c3af859.js"></script>
+        </div>
+
+        <div class="top"><a href="#contents">Top</a></div>
+
+    </div>
 
     <div class="example" id="remoteprefetch">
         <h2 class="example-name">Remote - Prefetch</h2>
         <p class="example-description">
             In this example the directive will create a Bloodhound engine for suggestions from prefetch and remote urls, with options passed in. (see the code)
+        </p>
+        <p>
+            Option <strong>clear=true</strong> is used to clear input after selection.
         </p>
         <p>
             Try to type first the letter <b>'u'</b> , you will see 5 (the limit specifies) items from prefetch data<br/>
@@ -78,6 +111,8 @@
         <div class="gist" ng-non-bindable>
             <script src="https://gist.github.com/borntorun/04eddcf5edd0abdb50d9.js"></script>
         </div>
+
+        <div class="top"><a href="#contents">Top</a></div>
     </div>
 
     <div class="social">

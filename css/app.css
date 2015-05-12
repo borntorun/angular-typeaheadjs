@@ -167,7 +167,11 @@ p + p {
     font-size: 18px;
     line-height: 24px;
 }
-
+.tt-suggestion:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}
 .tt-suggestion.tt-cursor {
     color: #fff;
     background-color: #0097cf;
@@ -261,4 +265,7 @@ header {
 }
 .social-btn {
     padding: 5px;
+}
+.top {
+    text-align: right;
 }
