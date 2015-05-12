@@ -7,8 +7,9 @@ elif [ "$TRAVIS_SECURE_ENV_VARS" == "true" -a "$TEST_SUITE" == "e2e" ]; then
   static -p 8888 &
   sleep 3
   ##./node_modules/mocha/bin/mocha --harmony -R spec ./tests/integration/test.js || true
+
+  # e2e Test can be inconsistents and falible some times so we return true
   protractor tests/integration/ci-protractor.js  || true
-  ## protractor tests/integration/ci-protractor-conf.js  || true
 else
   echo "Tests did not run"
   exit 1

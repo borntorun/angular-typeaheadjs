@@ -4,7 +4,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
 //    browser.manage().window().setSize(600, 800);
 //    browser.manage().window().setPosition(600, 0);
     beforeEach(function () {
-        browser.get('/tests/local/test.html');
+        browser.get('/tests/e2e/test.html');
     });
 
     var UseCase = function(number) {
@@ -102,11 +102,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger events when onfocus and and loose focus', function () {
             useCase.inputExists();
             useCase.inputClick();
-//            if (process.env.BROWSER !== 'safari' ) {
-//                useCase.inputSendKeys(protractor.Key.TAB);
-//            } else {
                 useCase.bodyClick();
-//            }
             browser.sleep(500).then(function(){
                 useCase.triggerEventsValueIs('[1,1,1,1,0,0,0,0,0,0,0,0]');
             });
@@ -147,11 +143,11 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.ENTER);
             browser.sleep('150');
-            if (process.env.BROWSER !== 'safari' ) {
-                useCase.inputSendKeys(protractor.Key.TAB);
-            } else {
+//            if (process.env.BROWSER !== 'safari' ) {
+//                useCase.inputSendKeys(protractor.Key.TAB);
+//            } else {
                 useCase.bodyClick();
-            }
+//            }
             browser.sleep('500').then(function() {
                 useCase.triggerEventsValueIs('[1,1,1,1,1,2,1,0,1,1,0,1]');
             });
@@ -192,6 +188,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         });
 
         //this is not very beatiful.. but well.. IE is not also...
+        //see:https://code.google.com/p/selenium/wiki/InternetExplorerDriver#Clicking_<option>_Elements_or_Submitting_Forms_and_alert()
         if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
             it('should trigger only select event when type "uni" and click first suggestion', function () {
                 useCase.inputExists();
@@ -248,11 +245,11 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger events when onfocus and and loose focus', function () {
             useCase.inputExists();
             useCase.inputClick();
-            if (process.env.BROWSER !== 'safari' ) {
-                useCase.inputSendKeys(protractor.Key.TAB);
-            } else {
+//            if (process.env.BROWSER !== 'safari' ) {
+//                useCase.inputSendKeys(protractor.Key.TAB);
+//            } else {
                 useCase.bodyClick();
-            }
+//            }
             useCase.triggerEventsValueIs('[1,1,1,1,0,0,0,0,0,0,0,0]');
         });
         it('should trigger events when typing "uni"', function () {
@@ -288,11 +285,11 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.ENTER);
-            if (process.env.BROWSER !== 'safari' ) {
-                useCase.inputSendKeys(protractor.Key.TAB);
-            } else {
+//            if (process.env.BROWSER !== 'safari' ) {
+//                useCase.inputSendKeys(protractor.Key.TAB);
+//            } else {
                 useCase.bodyClick();
-            }
+//            }
             useCase.triggerEventsValueIs('[1,1,1,1,1,2,1,0,1,1,0,1]');
         });
         it('should trigger events when typing "uni" and scroll suggestions', function () {

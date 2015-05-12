@@ -257,7 +257,7 @@ module.exports = function (grunt) {
         },
         protractor: {
             options: {
-                configFile: "tests/e2e/protractor.js",
+                configFile: "tests/e2e/local/protractor.js",
                 noColor: false,
                 debug: false,
                 args: { }
@@ -300,7 +300,7 @@ module.exports = function (grunt) {
 //                tasks: ['karma:continuous:run']
 //            },
             protractor: {
-                files: ['tests/local/*.html', 'src/**/*.js', 'tests/e2e/*_spec.js'],
+                files: ['tests/e2e/*.html', 'src/**/*.js', 'tests/e2e/*_spec.js'],
                 tasks: ['protractor:continuous']
             }
         }
