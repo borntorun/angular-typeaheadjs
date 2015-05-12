@@ -179,6 +179,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
 
+        //this is not very beatiful.. but well.. IE is not also...
         if (process.env.BROWSER + process.env.BROWSERVERSION  !== 'ie10' ) {
             it('should trigger only select event when type "uni" and click first suggestion', function () {
                 useCase.inputExists();
