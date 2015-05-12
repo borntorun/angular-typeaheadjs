@@ -6,7 +6,7 @@ env:
   #- TEST_SUITE=e2e BROWSER='ie' BROWSERVERSION='10'
   #- TEST_SUITE=e2e BROWSER='ie' BROWSERVERSION='11'
   - TEST_SUITE=e2e BROWSER='firefox'
-  #- TEST_SUITE=e2e BROWSER='safari'
+  - TEST_SUITE=e2e BROWSER='safari'
   #- TEST_SUITE=integration BROWSER='chrome'
   #- TEST_SUITE=integration BROWSER='chrome:40'
   #- TEST_SUITE=integration BROWSER='chrome:39'
