@@ -137,7 +137,7 @@ p + p {
 
 .tt-query {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgbgit a(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
@@ -147,7 +147,7 @@ p + p {
 
 .tt-menu {
     width: 422px;
-    margin-top: 12px;
+    margin: 12px 0;
     padding: 8px 0;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -155,11 +155,9 @@ p + p {
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
-
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    padding: 0px;
 }
 
 .tt-suggestion {
@@ -167,11 +165,13 @@ p + p {
     font-size: 18px;
     line-height: 24px;
 }
+
 .tt-suggestion:hover {
     cursor: pointer;
     color: #fff;
     background-color: #0097cf;
 }
+
 .tt-suggestion.tt-cursor {
     color: #fff;
     background-color: #0097cf;
@@ -181,6 +181,7 @@ p + p {
 .tt-suggestion p {
     margin: 0;
 }
+
 
 .gist {
     font-size: 14px;
