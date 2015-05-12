@@ -168,25 +168,25 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('250');
+            browser.sleep('250');
             useCase.inputSendKeys(protractor.Key.TAB);
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,0,1,0,0,0,0]');
         });
         it('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.ENTER);
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
         it('should trigger only select event when type "uni" and click first suggestion', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.firstSuggestionClick();
-            //browser.sleep('50');
+            browser.sleep('50');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
     });
@@ -204,19 +204,19 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should clear input on select suggestion', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('50');
+            browser.sleep('50');
             useCase.inputValueIs('uni');
             useCase.firstSuggestionClick();
-            //browser.sleep('50');
+            browser.sleep('50');
             useCase.inputValueIs('');
         });
         it('should clear input on autocomplete (selectOnAutocomplete is true)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('50');
+            browser.sleep('150');
             useCase.inputValueIs('uni');
             useCase.inputSendKeys(protractor.Key.TAB);
-            //browser.sleep('50');
+            browser.sleep('150');
             useCase.inputValueIs('');
         });
 
@@ -253,10 +253,10 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger events when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.ENTER);
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[1,0,1,1,0,2,1,0,1,1,0,1]');
 
         });
@@ -272,13 +272,10 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger events when typing "uni" and scroll suggestions', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.DOWN);
-            //browser.sleep('10');
             useCase.inputSendKeys(protractor.Key.DOWN);
-            //browser.sleep('10');
             useCase.inputSendKeys(protractor.Key.UP);
-            //browser.sleep('10');
             useCase.triggerEventsValueIs('[1,0,1,0,0,2,0,0,3,1,0,1]');
         });
     });
@@ -290,25 +287,25 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('250');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.TAB);
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,0,1,0,0,0,0]');
         });
         it('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.ENTER);
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
         it('should trigger only select event when type "uni" and click first suggestion', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.firstSuggestionClick();
-            //browser.sleep('50');
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
 
@@ -321,25 +318,25 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger only autocomplete event when typing "uni" and autocomplete', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('250');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.TAB);
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,0,1,0,0,0,0]');
         });
         it('should trigger only select event when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.ENTER);
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
         it('should trigger only select event when type "uni" and click first suggestion', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            //browser.sleep('150');
+            browser.sleep('150');
             useCase.firstSuggestionClick();
-            //browser.sleep('50');
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
 
@@ -352,22 +349,28 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
         it('should trigger select and autocomplete events when typing "uni" and autocomplete', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
+            browser.sleep('150');
             useCase.inputSendKeys(protractor.Key.TAB);
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0]');
         });
         it('should clear input on select suggestion', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
+            browser.sleep('150');
             useCase.inputValueIs('uni');
             useCase.firstSuggestionClick();
+            browser.sleep('150');
             useCase.inputValueIs('');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
         });
         it('should clear input on autocomplete (selectOnAutocomplete is true)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
+            browser.sleep('150');
             useCase.inputValueIs('uni');
             useCase.inputSendKeys(protractor.Key.TAB);
+            browser.sleep('150');
             useCase.inputValueIs('');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0]');
         });
@@ -388,6 +391,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.inputExists();
             useCase.hintExists();
             useCase.inputSendKeys('new');
+            browser.sleep('150');
             useCase.dropdownExists();
             useCase.hintValueIs('new York Knicks');
             useCase.numberOfSuggestionsIs(5);
@@ -397,6 +401,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.DOWN);
             useCase.inputSendKeys(protractor.Key.ENTER);
+            browser.sleep('150');
             useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
             useCase.inputValueIs('New York Rangers');
 
