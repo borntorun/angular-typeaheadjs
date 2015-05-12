@@ -37,6 +37,7 @@
     "module": true,
     "inject": true,
     "it": true,
+    "xit": true,
     "spyOn": true,
     "expect": true,
     "browser": true,
@@ -44,7 +45,7 @@
     "by": true,
     "sinon": true,
     "jasmine": true,
-
+      "protractor": true,
       "Bloodhound": true,
       "typeahead": true
   }

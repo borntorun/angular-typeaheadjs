@@ -1,0 +1,78 @@
+<h1><code ng:non-bindable="">angularTypeaheadjs</code>
+<div><span class="hint"></span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="angulartypeaheadjs-page"><p>An AngularJS directive to serve as a wrapper to the <a href="https://github.com/twitter/typeahead.js">typeahead.js</a> autocomplete library.
+It allows to apply to an input field the autocomplete typeahead.js features.
+In the default use case it will apply autocomplete search functionality for an <code>input.typeahead</code>. A dataset with a <a href="https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md">Bloddhound</a> engine as source will be created retrieving data from prefecth and/or remote urls.</p>
+<pre><code class="lang-html">&lt;angular-typeaheadjs angty-ttoptions=&quot;...&quot; angty-ttdatasets=&quot;...&quot; angty-options=&quot;...&quot; ...&gt;
+ &lt;input class=&quot;typeahead&quot; type=&quot;text&quot; ... /&gt;
+&lt;/angular-typeaheadjs&gt;
+</code></pre>
+<h6 id="description_note">Note</h6>
+<p> Although all the parameters are optional, at least <code>angty-ttoptions</code> or <code>angty-ttdatasets</code> must be used for the component to be useful.</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;angular-typeaheadjs
+       [angty-options="{object}"]
+       [angty-ttoptions="{object}"]
+       [angty-ttdatasets="{expression}"]
+       [angty-onactive="{expression}"]
+       [angty-onidle="{expression}"]
+       [angty-onopen="{expression}"]
+       [angty-onclose="{expression}"]
+       [angty-onchange="{expression}"]
+       [angty-onrender="{expression}"]
+       [angty-onselect="{expression}"]
+       [angty-onautocomplete="{expression}"]
+       [angty-oncursorchange="{expression}"]
+       [angty-onasyncrequest="{expression}"]
+       [angty-onasynccancel="{expression}"]
+       [angty-onasyncreceive="{expression}"]&gt;
+&lt;/angular-typeaheadjs&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>angty-options <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="angulartypeaheadjs-page"><p>options hash to apply for configuration. Valid keys:</p>
+<ul>
+<li><code>[useOwnDefaults=true]</code>: boolean value specifying that the components default values will be used instead of typeaheadjs default ones.</li>
+<li><code>[selectOnAutocomplete=false]</code>: boolean value specifying that the <code>select</code> event is triggered when <code>autocomplete</code> event occurs.</li>
+<li><code>[clear=false]</code>: boolean value which indicates that the value on input must be cleared on suggestion selection.</li>
+<li><code>[emitOnlyIfPresent=true]</code>: boolean value which indicates to only emit on scope the typeahead events that were explicity included in the html tag.</li>
+<li><code>[showLog=false]</code>: boolean value to turn on/off the warnings and errors messages when initializing.</li>
+</ul>
+</div></td></tr><tr><td>angty-ttoptions <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="angulartypeaheadjs-page"><p>options hash for the typeahead configuration. Mimic the typeaheadjs options - used to configure options when NOT using attribute <code>angty-ttdatasets</code>. Valid keys:</p>
+<ul>
+<li>Group I - typeahead options<ul>
+<li><code>[highlight=true]</code>: boolean value see typeaheadjs documentation</li>
+<li><code>[hint=true]</code>: boolean value see typeaheadjs documentation</li>
+<li><code>[minLength=3]</code>: integer value see typeaheadjs documentation</li>
+<li><code>[classNames]</code>: object see typeaheadjs documentation</li>
+</ul>
+</li>
+<li>Group II - typeahead dataset options<ul>
+<li><code>[name]</code>: string value (see typeaheadjs documentation)</li>
+<li><code>[display=&quot;name&quot;]</code>: string value (see typeaheadjs documentation)</li>
+<li><code>[limit=10]</code>: integer value (see typeaheadjs documentation)</li>
+</ul>
+</li>
+<li>Group III - Bloodhound options<ul>
+<li><code>[sufficient=10]</code>: integer value (see typeaheadjs documentation)</li>
+<li><code>[prefetch]</code>: string url (see typeaheadjs documentation)</li>
+<li><code>[remote]</code>: string url or an options hash; Only <code>remote.url</code> and <code>remote.wildcard</code> (<code>default=%QUERY</code>) are supported. (see typeaheadjs documentation)</li>
+</ul>
+</li>
+</ul>
+</div></td></tr><tr><td>angty-ttdatasets <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>an expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the &#39;angty-ttoptions&#39; attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with <code>angty-ttoptions</code> (or defaults) applied.</p>
+</div></td></tr><tr><td>angty-onactive <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:active</code> event</p>
+</div></td></tr><tr><td>angty-onidle <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:idle</code> event</p>
+</div></td></tr><tr><td>angty-onopen <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:open</code> event</p>
+</div></td></tr><tr><td>angty-onclose <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:close</code> event</p>
+</div></td></tr><tr><td>angty-onchange <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:change</code> event</p>
+</div></td></tr><tr><td>angty-onrender <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:render</code> event</p>
+</div></td></tr><tr><td>angty-onselect <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:select</code> event</p>
+</div></td></tr><tr><td>angty-onautocomplete <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:autocomplete</code> event</p>
+</div></td></tr><tr><td>angty-oncursorchange <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:cursorchange</code> event</p>
+</div></td></tr><tr><td>angty-onasyncrequest <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:asyncreques</code>t event</p>
+</div></td></tr><tr><td>angty-onasynccancel <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:asynccancel</code> event</p>
+</div></td></tr><tr><td>angty-onasyncreceive <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="angulartypeaheadjs-page"><p>funtion to call on the <code>typeahead:asyncreceive</code> event</p>
+</div></td></tr></tbody></table></div>
+</div>

@@ -7,3 +7,4 @@ TODO
 npm*.log
 ./*.log
 temp
+coverage

@@ -1,16 +1,18 @@
 /**
  * Created by Joao Carvalho on 31-03-2015.
  */
-    //gruntfile.js
 module.exports = function (grunt) {
     var semver = require('semver'),
         child_process = require('child_process'),
         format = require('util').format,
         readlineSync = require('readline-sync');
 
+    require('load-grunt-tasks')(grunt);
+
     //need this to get version... dont work in grunt-sed with <%= pkg.version %>!!! did not understand why!
     var pk = grunt.file.readJSON('package.json'),
         gitVersion;
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         buildDir: 'dist',
@@ -68,7 +70,7 @@ module.exports = function (grunt) {
                 multistr: true,
                 '-W030': true
             },
-            build: ['Grunfile.js', 'src/**/*.js', 'tests/*.js']
+            build: ['Grunfile.js', 'src/**/*.js', 'tests/**/*_spec.js']
         },
         uglify: {
             options: {
@@ -92,21 +94,28 @@ module.exports = function (grunt) {
                 stdout: true,
                 stderr: true
             },
+
             /**
              * Get remote repos on git and set grunt.option('remote');
              * If more than one user is able to choose which
              */
             remote: {
                 command: function (ok) {
-                    return (ok && 'gruntlistremotes=$(git remote);printf "$gruntlistremotes"') || '$(exit 1)';
+
+                    //return (ok && 'gruntlistremotes=$(git remote);printf "$gruntlistremotes"') || '$(exit 1)';
+                    return ok === 'true'?
+                            'gruntlistremotes=$(git remote);printf "$gruntlistremotes"'
+                            :
+                            '$(echo "Task shell:remote not running" >&2 ; exit 1)';
                 },
                 options: {
+                    async: false,
                     stdout: false,
                     stderr: true,
                     stdin: false,
                     callback: function (error, stdout, stderr, cb) {
-                        if (error !== null) {
-                            grunt.log.write(stderr);
+                        if (error !== 0) {
+                            grunt.log.write('Error:',error,'\n');
                             cb(false);
                         }
                         else {
@@ -128,6 +137,7 @@ module.exports = function (grunt) {
                                 resp = parseInt(resp);
                             }
                             grunt.option('remote',stdout.split('\n')[resp-1]);//using original array
+                            //grunt.log.write(grunt.option('remote'));
                             cb();
                         }
 
@@ -140,15 +150,19 @@ module.exports = function (grunt) {
              */
             tag: {
                 command: function (ok) {
-                    return (ok && 'git tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\'') || '$(exit 1)';
+                    return ok === 'true'?
+                        'git tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\''
+                        :
+                        '$(echo "Task shell:tag not running" >&2 ; exit 1)';
+                    //return ok? 'xxxgit tag -a v<%= grunt.option("tag") %> -m \'Version <%= grunt.option("tag") %>\'' : '$(exit 1)';
                 },
                 options: {
                     stdout: false,
                     stderr: true,
                     stdin: false,
                     callback: function(error, stdout, stderr, cb) {
-                        if (error !== null) {
-                            grunt.log.write(stderr);
+                        if (error !== 0) {
+                            grunt.log.write('Error:',error,'\n');
                             cb(false);
                         }
                         cb();
@@ -161,15 +175,18 @@ module.exports = function (grunt) {
              */
             push: {
                 command: function (ok) {
-                    return (ok && 'git push <%= grunt.option("remote") %> master --tags') || '$(exit 1)';
+                    return ok === 'true'?
+                        'git push <%= grunt.option("remote") %> master --tags'
+                        :
+                        '$(echo "Task shell:push not running" >&2 ; exit 1)';
                 },
                 options: {
                     stdout: false,
                     stderr: true,
                     stdin: false,
                     callback: function(error, stdout, stderr, cb) {
-                        if (error !== null) {
-                            grunt.log.write(stderr);
+                        if (error !== 0) {
+                            grunt.log.write('Error:',error,'\n');
                             cb(false);
                         }
                         cb();
@@ -183,6 +200,9 @@ module.exports = function (grunt) {
             }
         },
         exec: {
+            /**
+             * Tasks used for releas to get git status, branch, add and commit
+             */
             test_git_on_master: '[[ $(git symbolic-ref --short -q HEAD) = master ]]',
             test_git_is_clean: '[[ -z "$(git status --porcelain)" ]]',
             git_add: 'git add .',
@@ -190,20 +210,114 @@ module.exports = function (grunt) {
                 cmd: function (m) {
                     return format('git commit -m "%s"', m);
                 }
+            },
+
+            karma: './node_modules/karma/bin/karma start'
+        },
+        /**
+         * Test runner
+         */
+        karma: {
+            /*mochasingle: {
+                configFile: 'karma.mocha.conf.js',
+                singleRun: true
+            },*/
+            jasminesingle: {
+                configFile: 'karma.jasmine.conf.js',
+                singleRun: true
+            },
+            /*mocha: {
+                configFile: 'karma.mocha.conf.js',
+                singleRun: false
+            },*/
+            jasmine: {
+                configFile: 'karma.jasmine.conf.js',
+                singleRun: false
+            }
+
+
+        },
+        /**
+         * e2e tests with protractor
+         */
+        protractor_webdriver: {
+            update: {
+                options: {
+                    path: './node_modules/.bin/',
+                    command: 'webdriver-manager update --standalone'
+                }
+            },
+            continuous: {
+                options: {
+                    keepAlive : true,
+                    path: './node_modules/.bin/',
+                    command: 'webdriver-manager start --seleniumPort 4444'
+                }
+            },
+            single: {
+                options: {
+                    keepAlive : false,
+                    path: './node_modules/.bin/',
+                    command: 'webdriver-manager start --seleniumPort 4444'
+                }
             }
         },
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js',
-                singleRun: true
+        protractor: {
+            options: {
+                configFile: "tests/e2e/local/protractor.js",
+                noColor: false,
+                debug: false,
+                args: { }
+            },
+            single: {
+                options: {
+                    keepAlive: false
+                }
+            },
+            continuous: {
+                options: {
+                    keepAlive: true
+                }
+            }
+        },
+        /**
+         * Local Web server
+         */
+        connect: {
+            options: {
+                port: 8888,
+                hostname: 'localhost'
+            },
+            e2etest: {
+                /*options: {
+                    // set the location of the application files
+                    base: ['app']
+                }*/
+            }
+        },
+        ngdocs: {
+          all: [ 'src/**/*.js' ]
+        },
+        watch: {
+            options: {
+                livereload: true
+            },
+//            karma: {
+//                files: ['app/js/**/*.js', 'test/unit/*.js'],
+//                tasks: ['karma:continuous:run']
+//            },
+            protractor: {
+                files: ['tests/e2e/*.html', 'src/**/*.js', 'tests/e2e/*_spec.js'],
+                tasks: ['protractor:continuous']
             }
         }
     });
 
     /**
-     * Update version on manifests files
+     * Release Tasks
      */
     grunt.registerTask('updmanifests', 'Update manifests.', function () {
+        //Update version on manifests files
         var _ = grunt.util._,
             pkg = grunt.file.readJSON('package.json'),
             bower = grunt.file.readJSON('bower.json'),
@@ -220,16 +334,13 @@ module.exports = function (grunt) {
     });
     /**
      * Task release: Inspired here: http://kroltech.com/2014/04/use-grunt-to-push-a-git-tag/
+     * :patch
+     * :minor
+     * :major
      */
     grunt.registerTask('release:patch', ['release']);
-    grunt.registerTask('release:minor', function () {
-        grunt.option('tagType', 'minor');
-        grunt.task.run(['release']);
-    });
-    grunt.registerTask('release:major', function () {
-        grunt.option('tagType', 'major');
-        grunt.task.run(['release']);
-    });
+    grunt.registerTask('release:minor', function () {grunt.option('tagType', 'minor');grunt.task.run(['release']);});
+    grunt.registerTask('release:major', function () {grunt.option('tagType', 'major');grunt.task.run(['release']);});
     grunt.registerTask('release', function () {
         if (grunt.option('tagType') !== 'major' &&
             grunt.option('tagType') !== 'minor') {
@@ -267,6 +378,7 @@ module.exports = function (grunt) {
         );
     });
     grunt.registerTask('push', function () {
+        //push to remote
         this.requires('release');
         if (grunt.option("remote")) {
             grunt.task.run([
@@ -279,10 +391,21 @@ module.exports = function (grunt) {
         }
     });
 
-    require('load-grunt-tasks')(grunt);
+    /**
+     * Test tasks
+     */
+    grunt.registerTask('test', ['jshint', /*'karma:mochasingle',*/ 'karma:jasminesingle']);
+    grunt.registerTask('test:e2e', ['jshint', 'connect:e2etest', 'protractor_webdriver:continuous', 'protractor:continuous', 'watch:protractor']);
+    grunt.registerTask('test:e2e:single', ['jshint', 'connect:e2etest', 'protractor_webdriver:single', 'protractor:single']);
+    //grunt.registerTask('test:mocha', ['jshint', 'karma:mocha']);
+    grunt.registerTask('test:jasmine', ['jshint', 'karma:jasmine']);
 
-    grunt.registerTask('default', ['build']);
-    grunt.registerTask('test', ['jshint', 'karma']);
+    /**
+     * Build Task
+     */
     grunt.registerTask('build', ['jshint', 'concat', 'ngAnnotate', 'uglify', 'sed:version']);
-
+    /**
+     * Default
+     */
+    grunt.registerTask('default', ['build']);
 };

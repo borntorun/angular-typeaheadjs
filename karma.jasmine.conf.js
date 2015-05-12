@@ -11,28 +11,34 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'bower_components/jquery/dist/jquery.js',
-            'bower_components/jquery/jquery.js',
-            //'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
-            'bower_components/typeahead.js/dist/typeahead.bundle.js',
-            'bower_components/angular/angular.min.js',
+            'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
+            'bower_components/angular/angular.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/sinonjs/sinon.js',
             'bower_components/jasmine-sinon/lib/jasmine-sinon.js',
             'src/angular-typeaheadjs.js',
-            'tests/**/*_spec.js'
+            'tests/*jasmine_spec.js',
+            'tests/assets/*.json'
         ],
         // list of files to exclude
         exclude: [
         ],
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {
-        },
+        /*preprocessors: {
+            'src*//*.js': ['coverage']
+        },*/
+        /*coverageReporter: {
+            type : 'html',
+            //type : 'text-summary',
+            dir : 'coverage/'
+        },*/
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: ['progress'/*, 'coverage'*/],
         // web server port
+        hostname: 'localhost',
         port: 8080,
         // enable / disable colors in the output (reporters and logs)
         colors: true,
@@ -43,11 +49,11 @@ module.exports = function (config) {
         autoWatch: true,
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['PhantomJS'],
+        browsers: ['PhantomJS'/*,'Chrome'*/],
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false/*,
-        customLaunchers: {
+        singleRun: false
+        /*,customLaunchers: {
             'PhantomJS_custom': {
                 base: 'PhantomJS',
                 options: {
@@ -58,5 +64,7 @@ module.exports = function (config) {
                 }
             }
         }*/
+//        ,transports : ['flashsocket', 'xhr-polling', 'jsonp-polling']
+
     });
 };
