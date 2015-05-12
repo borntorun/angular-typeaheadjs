@@ -4,5 +4,6 @@ exports.config = {
     'build': process.env.TRAVIS_BUILD_NUMBER,
     'name': 'angular-typeaheadjs e2e tests',
     'version': '8',
+    'platform': 'OS X 10.10',
     'selenium-version': '2.44.0'
 };
