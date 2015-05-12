@@ -112,7 +112,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             });
 
         });
-        xit('should trigger events when typing "uni"', function () {
+        it('should trigger events when typing "uni"', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
             browser.sleep('500').then(function(){
@@ -268,9 +268,9 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.inputSendKeys('uni');
             browser.sleep('250');
             useCase.inputSendKeys(protractor.Key.TAB);
-            browser.sleep('250');
-            useCase.triggerEventsValueIs('[1,0,1,0,0,4,0,1,0,2,0,2]');
-
+            browser.sleep('250').then(function(){
+                useCase.triggerEventsValueIs('[1,0,1,0,0,4,0,1,0,2,0,2]');
+            };
         });
         it('should trigger events when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
