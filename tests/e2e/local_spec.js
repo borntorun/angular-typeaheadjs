@@ -270,7 +270,7 @@ describe('Suite: angular-typeaheadjs e2e local tests', function () {
             useCase.inputSendKeys(protractor.Key.TAB);
             browser.sleep('250').then(function(){
                 useCase.triggerEventsValueIs('[1,0,1,0,0,4,0,1,0,2,0,2]');
-            };
+            });
         });
         it('should trigger events when typing "uni" and select suggestion (with Enter)', function () {
             useCase.inputExists();
