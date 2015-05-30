@@ -13,7 +13,7 @@ Requirements
 
 [angular.js] (https://angularjs.org/)
 
-[typeahead.js](https://github.com/twitter/typeahead.js) **version: ~0.11.0**
+[typeahead.js](https://github.com/twitter/typeahead.js) **version: ~0.11.1**
 
 Dependencies
 ------------
