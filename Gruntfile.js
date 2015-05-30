@@ -399,7 +399,6 @@ module.exports = function (grunt) {
     grunt.registerTask('test:e2e:single', ['jshint', 'connect:e2etest', 'protractor_webdriver:single', 'protractor:single']);
     //grunt.registerTask('test:mocha', ['jshint', 'karma:mocha']);
     grunt.registerTask('test:jasmine', ['jshint', 'karma:jasmine']);
-
     /**
      * Build Task
      */
