@@ -1,6 +1,6 @@
 {
   "name": "angular-typeaheadjs",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "An AngularJS directive to serve as a wrapper to the typeahead.js library.",
   "main": "dist/angular-typeaheadjs.js",
   "repository": {
