@@ -16,6 +16,7 @@ describe('angular-typeaheadjs', function () {
         $compile = _$compile_;
         oInjectedForSpies.$log = _$log_;
     }));
+
     /**
      * Run the set: compiles the angular element for the test and do assertions
      * @param item
@@ -23,6 +24,7 @@ describe('angular-typeaheadjs', function () {
      */
     function runSet(item, done) {
         setSpies(item);
+
         /**
          * Definitions for element ar set on describes suites bellow
          */
@@ -44,7 +46,7 @@ describe('angular-typeaheadjs', function () {
              */
             item.expectations(element);
             done && done();
-        }, item.waitms || 100);
+        }, item.waitms || 50);
     }
 
     /**
@@ -352,6 +354,7 @@ describe('angular-typeaheadjs', function () {
             expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
         }
     });
+
     /**
      * Maker for tag element
      * @returns {{opt: {remoteObj: {url: string, wildcard: string}, remote: {remote: string}, prefetchData: {prefetch: string}, prefetch: {prefetch: string}, remoteEmpty: {remote: string}, prefetchEmpty: {prefetch: string}, remoteUndefined: {remote: undefined}, prefetchUndefined: {prefetch: undefined}, remoteNull: {remote: null}, prefetchNull: {prefetch: null}, remoteInvalid: {remote: number}, prefetchInvalid: {prefetch: number}, datasetsNotArray: {keyI: string}, sufficientFive: {sufficient: number}, name: {name: string}, nameCountries: {name: string}, nameNBATeams: {name: string}, nameNHLTeams: {name: string}, limitFive: {limit: number}, displayValue: {display: string}, display: {display: string}, displayTeam: {display: string}, highlight: {highlight: boolean}, hint: {hint: boolean}, minLength: {minLength: number}, classNames: {classNames: undefined}, highlightFalse: {highlight: boolean}, highlightTrue: {highlight: boolean}, hintFalse: {hint: boolean}, hintTrue: {hint: boolean}, minLengthZero: {minLength: number}, minLengthTwo: {minLength: number}, classNamesMy: {classNames: {wrapper: string, input: string, hint: string, menu: string, dataset: string, suggestion: string, selectable: string, empty: string, open: string, cursor: string, highlight: string}}, useOwnDefaultsFalse: {useOwnDefaults: boolean}, useOwnDefaultsTrue: {useOwnDefaults: boolean}, selectOnAutocompleteFalse: {selectOnAutocomplete: boolean}, selectOnAutocompleteTrue: {selectOnAutocomplete: boolean}, clearFalse: {clear: boolean}, clearTrue: {clear: boolean}, emitOnlyIfPresentFalse: {emitOnlyIfPresent: boolean}, emitOnlyIfPresentTrue: {emitOnlyIfPresent: boolean}, showLogFalse: {showLog: boolean}, showLogTrue: {showLog: boolean}}, id: string, options: undefined, ttoptions: undefined, ttdatasets: undefined, clear: clear, tag: tag, scopeOptions: scopeOptions, scopeTTOptions: scopeTTOptions, scopeTTdatasets: scopeTTdatasets, addNewOpt: addNewOpt, addOpt: addOpt, addNewTTOpt: addNewTTOpt, addTTOpt: addTTOpt, useDatasets: useDatasets, useDatasetsInvalid: useDatasetsInvalid}}

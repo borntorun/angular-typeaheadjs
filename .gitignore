@@ -8,3 +8,4 @@ npm*.log
 ./*.log
 temp
 coverage
+docs

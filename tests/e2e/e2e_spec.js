@@ -1,8 +1,7 @@
 'use strict';
 describe('angular-typeaheadjs e2e tests: ', function () {
-
-//    browser.manage().window().setSize(600, 800);
-//    browser.manage().window().setPosition(600, 0);
+    browser.manage().window().setSize(600, 800);
+    browser.manage().window().setPosition(600, 0);
     beforeEach(function () {
         browser.get('/tests/e2e/test.html');
     });
