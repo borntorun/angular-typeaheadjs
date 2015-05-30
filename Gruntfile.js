@@ -367,7 +367,7 @@ module.exports = function (grunt) {
                         'updmanifests',
                         'build',
                         'exec:git_add',
-                        format('exec:git_commit:%s', format('Release version %s', gitVersion)),
+                        format('exec:git_commit:%s', format('Release version %s [ci skip]', gitVersion)),
                         'shell:tag:true',
                         'shell:remote:true',
                         'push'
