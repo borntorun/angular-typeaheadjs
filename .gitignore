@@ -27,7 +27,7 @@ temp
 !/bower_components/angular-typeaheadjs/dist/angular-typeaheadjs.js
 !/bower_components/angular-typeaheadjs/dist/angular-typeaheadjs.min.js
 
-#the same login as above
+#the same process as above
 !/bower_components/jquery
 /bower_components/jquery/*
 !/bower_components/jquery/dist
@@ -35,15 +35,19 @@ temp
 !/bower_components/jquery/dist/jquery.min.js
 !/bower_components/jquery/dist/jquery.min.map
 
-#the same login as above
+#the same process as above
 !/bower_components/typeahead.js
 /bower_components/typeahead.js/*
 !/bower_components/typeahead.js/dist
 /bower_components/typeahead.js/dist/*
 !/bower_components/typeahead.js/dist/typeahead.bundle.min.js
 
-#the same login as above
+#the same process as above
 !/bower_components/handlebars
 /bower_components/handlebars/*
 !/bower_components/handlebars/handlebars.min.js
 
+#the same process as above
+!/bower_components/q
+/bower_components/q/*
+!/bower_components/q/q.js
