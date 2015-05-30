@@ -24,6 +24,7 @@
     "angular": true,
     "console": true,
     "Bloodhound": true,
+    "Q": true,
     "$": true,
     "_": true,
     "moment": true,
