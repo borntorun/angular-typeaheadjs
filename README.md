@@ -15,6 +15,9 @@ Requirements
 
 [typeahead.js](https://github.com/twitter/typeahead.js) **version: ~0.11.0**
 
+Dependencies
+------------
+
 [Q](https://github.com/kriskowal/q) **version: 1.0.1**
 
 How to use
