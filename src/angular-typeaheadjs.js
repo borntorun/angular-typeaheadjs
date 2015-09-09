@@ -41,7 +41,9 @@
    *  - `[sufficient=10]`: integer value (see typeaheadjs documentation)
    *  - `[prefetch]`: string url (see typeaheadjs documentation)
    *  - `[remote]`: string url or an options hash; Only `remote.url` and `remote.wildcard` (`default=%QUERY`) are supported. (see typeaheadjs documentation)
-   * @param {expression=} angty-ttdatasets an expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
+   * @param {expression=} angty-ttdatasets optional expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered).
+   *                                        When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
+   * @param {expression=} angty-bhfunctions optional expression that resolves to an object with functions to be passed to Bloodhound - identify/sorter - (see Bloodhound documentation)
    * @param {expression=} angty-onactive funtion to call on the `typeahead:active` event
    * @param {expression=} angty-onidle funtion to call on the `typeahead:idle` event
    * @param {expression=} angty-onopen funtion to call on the `typeahead:open` event
@@ -103,19 +105,21 @@
           angtyOnasyncrequest: '&?',
           angtyOnasynccancel: '&?',
           angtyOnasyncreceive: '&?',
-          ngModel: '=?'
+          ngModel: '=?',
+          angtyBhfunctions: '&?'
         },
         link: linkFunction
       };
     return directive;
     ////////////////
     function linkFunction( scope, element, attrs, ctrl ) {
-      var ttOptions, ttDatasets, typeaheadOptions, options, elinput;
+      var ttOptions, ttDatasets, bhFunctions, typeaheadOptions, options, elinput;
 
       //read attr passed in
       options = scope.$eval(scope.angtyOptions);
       ttOptions = scope.$eval(scope.angtyTtoptions);
       ttDatasets = scope.$eval(scope.angtyTtdatasets);
+      bhFunctions = scope.$eval(scope.angtyBhfunctions);
 
       //set default component options and extend
       options = angular.extend(angular.copy(_defaultOptions), options || {});
@@ -131,7 +135,7 @@
 
 
       //set typeahead (get a promise)
-      var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets);
+      var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets, bhFunctions);
 
       plugTypeaheadPromise
         .then(function( el ) {
@@ -185,7 +189,7 @@
         return angular.noop;
       }
 
-      function plugTypeahead( element, ttopt, datasets ) {
+      function plugTypeahead( element, ttopt, datasets, bhFunctions ) {
         var plugDefer = Q.defer(), datasetbh, optionsbh, optionstt, engine;
         setTimeout(function() {
           plugIt();
@@ -228,6 +232,8 @@
           }
           optionsbh = angular.extend(optionsbh, {
             initialize: false,
+            identify: bhFunctions && bhFunctions.identify? bhFunctions.identify: function( obj ) {return obj[ttopt.display];},
+            sorter: bhFunctions && bhFunctions.sorter? bhFunctions.sorter: undefined,
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace(ttopt.display),
             queryTokenizer: Bloodhound.tokenizers.whitespace
           });

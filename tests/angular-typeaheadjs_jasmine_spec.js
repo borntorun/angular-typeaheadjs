@@ -33,6 +33,9 @@ describe('angular-typeaheadjs', function () {
         (item.options && ($scope.options = $scope.$eval(item.options)));
         (item.ttoptions && ($scope.ttoptions = $scope.$eval(item.ttoptions)));
         (item.ttdatasets && ($scope.ttdatasets = $scope.$eval(item.ttdatasets)));
+        (item.bhfunctions && ($scope.bhfunctions = $scope.$eval(item.bhfunctions)));
+
+
         $compile(element)($scope);
         $scope.$digest();
         /**
@@ -187,6 +190,14 @@ describe('angular-typeaheadjs', function () {
                     options: EL.scopeOptions(),
                     expectations: expectBHDefaultValues
                 },
+                {caption: 'Passing bhfunctions should call Bloodhound with default values',
+                  tag: EL.addNewTTOpt(EL.opt.remote)
+                    .addTTOpt(EL.opt.prefetch)
+                    .useBhfunctions()
+                    .tag(),
+                  ttoptions: EL.scopeTTOptions(),
+                  bhfunctions: EL.scopeBHfunctions()
+                }
             ], expectations, { sinonSpySuite: sinonSpies}
         );
         function expectations(el) {
@@ -424,10 +435,14 @@ describe('angular-typeaheadjs', function () {
             OPTIONS = ' angty-options=\'{{options}}\'',
             TTOPTIONS = ' angty-ttoptions=\'{{ttoptions}}\'',
             TTDATASETS = ' angty-ttdatasets=\'ttdatasets\'',
-            TAG = '<angular-typeaheadjs $options$$ttoptions$$ttdatasets$/>' +
+            BHFUNCTIONS = ' angtyBhfunctions=\'ttbhfunctions\'',
+            TAG = '<angular-typeaheadjs $options$$ttoptions$$ttdatasets$$ttbhfunctions$/>' +
                 '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
                 '</angular-typeaheadjs>';
 
+        function setBhfunctionsInvalid() {
+          return {identify: 'not a function'};
+        }
         function setDatasetsInvalid() {
             return {'key': 'not an array'};
         }
@@ -460,6 +475,13 @@ describe('angular-typeaheadjs', function () {
             ];
             return ods;
         }
+        function setBhFunctions() {
+          return {
+            identify: function(obj) {
+              return 'hello';
+            }
+          };
+        }
 
         function add(options, op) {
             return angular.extend(options || {}, op || {});
@@ -471,13 +493,15 @@ describe('angular-typeaheadjs', function () {
             options: undefined,
             ttoptions: undefined,
             ttdatasets: undefined,
+            bhfunctions: undefined,
             clear: function () {
-                this.options = this.ttoptions = this.ttdatasets = undefined;
+                this.options = this.ttoptions = this.ttdatasets = this.bhfunctions = undefined;
             },
             tag: function () {
                 return TAG.replace('$options$', this.options ? OPTIONS : '')
                     .replace('$ttoptions$', this.ttoptions ? TTOPTIONS : '')
                     .replace('$ttdatasets$', this.ttdatasets ? TTDATASETS : '')
+                    .replace('$ttbhfunctions$', this.bhfunctions? BHFUNCTIONS : '')
                     .replace('$IDTEST$', IDTEST);
             },
             /*inline: function () {
@@ -493,6 +517,9 @@ describe('angular-typeaheadjs', function () {
             },
             scopeTTdatasets: function () {
                 return angular.toJson(this.ttdatasets);
+            },
+            scopeBHfunctions: function () {
+              return angular.toJson(this.bhfunctions);
             },
             addNewOpt: function (op) {
                 this.clear();
@@ -513,6 +540,10 @@ describe('angular-typeaheadjs', function () {
             useDatasets: function () {
                 this.ttdatasets = setDatasets();
                 return this;
+            },
+            useBhfunctions: function () {
+              this.bhfunctions = setBhFunctions();
+              return this;
             },
             useDatasetsInvalid: function () {
                 this.ttdatasets = setDatasetsInvalid();
