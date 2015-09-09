@@ -7,7 +7,7 @@
   /**
    * @ngdoc directive
    * @name angularTypeaheadjs
-   * @restrict E
+   * @restrict ACE
    * @description
    * An AngularJS directive to serve as a wrapper to the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
    * It allows to apply to an input field the autocomplete typeahead.js features.
@@ -86,8 +86,7 @@
         sufficient: 10
       },
       directive = {
-        // use as attribute: <input angular-typeaheadjs .../>
-        restrict: 'E',
+        restrict: 'ACE',
         scope: {
           angtyOptions: '@?',
           angtyTtoptions: '@?',
@@ -129,6 +128,7 @@
         options.showLog && (logerror('No element with ".typeahead" found to apply.', attrs.id));
         return;
       }
+
 
       //set typeahead (get a promise)
       var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets);
@@ -262,6 +262,7 @@
           return okPrefetch || okRemote;
         }
       }
+
     }
 
     /**

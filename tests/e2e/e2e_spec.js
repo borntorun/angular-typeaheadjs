@@ -67,7 +67,7 @@ describe('angular-typeaheadjs e2e tests: ', function () {
 //            expect(browser.getTitle()).toBe('Test e2e angular-typeaheadjs');
 //        });
         it('/==>should have an input with typeahead applied', function () {
-            browser.sleep(150).then(function(){
+            browser.sleep(250).then(function(){
                 useCase.inputExists();
             });
 
@@ -76,7 +76,7 @@ describe('angular-typeaheadjs e2e tests: ', function () {
             useCase.inputExists();
             useCase.hintExists();
             useCase.inputSendKeys('uni');
-            browser.sleep(150).then(function(){
+            browser.sleep(250).then(function(){
                 useCase.dropdownExists();
                 useCase.hintValueIs('united Arab Emirates');
                 useCase.numberOfSuggestionsIs(3);
@@ -87,7 +87,7 @@ describe('angular-typeaheadjs e2e tests: ', function () {
             useCase.inputExists();
             useCase.hintExists();
             useCase.inputSendKeys('uto');
-            browser.sleep(150).then(function(){
+            browser.sleep(250).then(function(){
                 useCase.dropdownExists();
                 useCase.hintValueIs('utopia');
                 useCase.numberOfSuggestionsIs(1);
@@ -401,10 +401,10 @@ describe('angular-typeaheadjs e2e tests: ', function () {
             it('/==>should clear input on select suggestion', function () {
                 useCase.inputExists();
                 useCase.inputSendKeys('uni');
-                browser.sleep('150');
+                browser.sleep('250');
                 useCase.inputValueIs('uni');
                 useCase.firstSuggestionClick();
-                browser.sleep('150').then(function(){
+                browser.sleep('250').then(function(){
                     useCase.inputValueIs('');
                     useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0]');
                 });
@@ -413,10 +413,10 @@ describe('angular-typeaheadjs e2e tests: ', function () {
         it('/==>should clear input on autocomplete (selectOnAutocomplete is true)', function () {
             useCase.inputExists();
             useCase.inputSendKeys('uni');
-            browser.sleep('150');
+            browser.sleep('250');
             useCase.inputValueIs('uni');
             useCase.inputSendKeys(protractor.Key.TAB);
-            browser.sleep('150').then(function(){
+            browser.sleep('250').then(function(){
                 useCase.inputValueIs('');
                 useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0]');
             });
