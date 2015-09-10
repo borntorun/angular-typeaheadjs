@@ -78,6 +78,7 @@ In your html template (default and minimal use case):
     * `watchInitEvent` - `optional`, `default=false`. Indicates that a watch to 'angtty:init:<input id|input name>' event must be set on parent scope to allow set the input value on initialization (this event will be listened only once)
     * `watchSetValEvent` - `optional`, `default=false`. Indicates that a watch to 'angtty:setval:<input id|input name>' event must be set on parent scope to allow set the input value
 
+
 Example 1: set an autocomplete search from prefetch and remote data and overriding some options
 ```html
 <angular-typeaheadjs angty-options="{{vm.options}}" angty-ttoptions="{{vm.ttOptions}}" angty-bhfunctions="{{vm.bhFunctions}}">
