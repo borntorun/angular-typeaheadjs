@@ -67,16 +67,21 @@ In your html template (default and minimal use case):
 * `angty-ttdatasets` - optional - An expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
       * No validation is made on content of the datasets apart the type validation (is-an-array)
 
+* `angty-bhfunctions` - optional - An expression that resolves to an object with functions to be passed to Bloodhound - supportted: identify/sorter
+
 * `angty-options` - optional - options hash for other options for the component
     * `useOwnDefaults` - `optional`, `default=true`. Specifying that the components default values will be used instead of typeaheadjs default ones. 
     * `selectOnAutocomplete` - `optional`, `default=false`. Specifying that the `select` event is triggered when `autocomplete` event occurs.
     * `clear` - `optional`, `default=true`. Indicates that the value on input must be cleared on suggestion selection.
     * `emitOnlyIfPresent` - `optional`, `default=true`. Indicates to only emit on scope the typeahead events that were explicity included in the html tag.
     * `showLog` - `optional`, `default=false`. Turn on/off the warnings and errors messages when initializing.       
+    * `watchInitEvent` - `optional`, `default=false`. Indicates that a watch to 'angtty:init:<input id|input name>' event must be set on parent scope to allow set the input value on initialization (this event will be listened only once)
+    * `watchSetValEvent` - `optional`, `default=false`. Indicates that a watch to 'angtty:setval:<input id|input name>' event must be set on parent scope to allow set the input value
+
 
 Example 1: set an autocomplete search from prefetch and remote data and overriding some options
 ```html
-<angular-typeaheadjs angty-options="{{vm.options}}" angty-ttoptions="{{vm.ttOptions}}">
+<angular-typeaheadjs angty-options="{{vm.options}}" angty-ttoptions="{{vm.ttOptions}}" angty-bhfunctions="{{vm.bhFunctions}}">
   <input class="typeahead" type="text"/>
 </angular-typeaheadjs>
 ``` 
@@ -94,6 +99,15 @@ vm.ttOptions = {
   limit: 10,
   prefetch: '/url/for/prefetch/data',
   remote: '/url/for/remote/data'
+};
+vm.bhFunctions = {
+  identify: function(obj) {
+    obj.name = obj.name + '-some sufix'; 
+    return obj.name;
+  },
+  sorter: function(a,b) {
+    //...
+  } 
 };
 ```
 
@@ -137,7 +151,7 @@ vm.ttDatasets = [{
 ```
 
 
-#### for events configuration
+#### for typeahead events configuration
 ```html
 <angular-typeaheadjs angty-onactive="..." angty-onidle="..." angty-onopen="..." ... >
   <input class="typeahead" type="text" ... />
