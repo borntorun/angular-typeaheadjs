@@ -227,7 +227,15 @@
         }
         if ( options.emitOnlyIfPresent === false || attrs.$attr.hasOwnProperty('angtyOn' + tag) ) {
           return function() {
-            scope.$emit('typeahead:' + tag, [].slice.call(arguments));
+            //(https://github.com/borntorun/angular-typeaheadjs/issues/6)
+            var avars = [].slice.call(arguments);
+            var input = arguments[0].target;
+            avars.push({
+              id: input.id,
+              name: input.name,
+              value: input.value
+            });
+            scope.$emit('typeahead:' + tag, avars);
           };
         }
         return angular.noop;
