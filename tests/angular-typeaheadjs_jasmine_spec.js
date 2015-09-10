@@ -87,7 +87,11 @@ describe('angular-typeaheadjs', function() {
         {caption: 'should render with just remote option bound to scope',
           tag: EL.addNewTTOpt(EL.opt.remote).tag(), ttoptions: EL.scopeTTOptions()},
         {caption: 'should render with just prefetch option bound to scope',
-          tag: EL.addNewTTOpt(EL.opt.prefetch).tag(), ttoptions: EL.scopeTTOptions()}
+          tag: EL.addNewTTOpt(EL.opt.prefetch).tag(), ttoptions: EL.scopeTTOptions()},
+        {caption: 'should render with tag as attribute - just remote option bound to scope',
+          tag: EL.addNewTTOpt(EL.opt.remote).tagAttr(), ttoptions: EL.scopeTTOptions()},
+        {caption: 'should render with tag as class - just remote option bound to scope',
+          tag: EL.addNewTTOpt(EL.opt.remote).tagClass(), ttoptions: EL.scopeTTOptions()}
       ], expectations);
     function expectations( el ) {
       //debugger;
@@ -440,9 +444,15 @@ describe('angular-typeaheadjs', function() {
       TTOPTIONS = ' angty-ttoptions=\'{{ttoptions}}\'',
       TTDATASETS = ' angty-ttdatasets=\'ttdatasets\'',
       BHFUNCTIONS = ' angtyBhfunctions=\'ttbhfunctions\'',
-      TAG = '<angular-typeaheadjs $options$$ttoptions$$ttdatasets$$ttbhfunctions$/>' +
+      TAG = '<angular-typeaheadjs $options$$ttoptions$$ttdatasets$$ttbhfunctions$>' +
         '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
-        '</angular-typeaheadjs>';
+        '</angular-typeaheadjs>',
+      TAGATTR = '<span angular-typeaheadjs $options$$ttoptions$$ttdatasets$$ttbhfunctions$>' +
+      '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
+      '</span>',
+      TAGCLASS = '<span class="angular-typeaheadjs" $options$$ttoptions$$ttdatasets$$ttbhfunctions$>' +
+        '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
+        '</span>';
 
     function setBhfunctionsInvalid() {
       return {identify: 'not a function'};
@@ -503,6 +513,20 @@ describe('angular-typeaheadjs', function() {
       bhfunctions: undefined,
       clear: function() {
         this.options = this.ttoptions = this.ttdatasets = this.bhfunctions = undefined;
+      },
+      tagAttr: function() {
+        return TAGATTR.replace('$options$', this.options ? OPTIONS : '')
+          .replace('$ttoptions$', this.ttoptions ? TTOPTIONS : '')
+          .replace('$ttdatasets$', this.ttdatasets ? TTDATASETS : '')
+          .replace('$ttbhfunctions$', this.bhfunctions ? BHFUNCTIONS : '')
+          .replace('$IDTEST$', IDTEST);
+      },
+      tagClass: function() {
+        return TAGCLASS.replace('$options$', this.options ? OPTIONS : '')
+          .replace('$ttoptions$', this.ttoptions ? TTOPTIONS : '')
+          .replace('$ttdatasets$', this.ttdatasets ? TTDATASETS : '')
+          .replace('$ttbhfunctions$', this.bhfunctions ? BHFUNCTIONS : '')
+          .replace('$IDTEST$', IDTEST);
       },
       tag: function() {
         return TAG.replace('$options$', this.options ? OPTIONS : '')
