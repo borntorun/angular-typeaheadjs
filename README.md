@@ -75,8 +75,8 @@ In your html template (default and minimal use case):
     * `clear` - `optional`, `default=true`. Indicates that the value on input must be cleared on suggestion selection.
     * `emitOnlyIfPresent` - `optional`, `default=true`. Indicates to only emit on scope the typeahead events that were explicity included in the html tag.
     * `showLog` - `optional`, `default=false`. Turn on/off the warnings and errors messages when initializing.       
-    * `watchInitEvent` - `optional`, `default=false`. Indicates that a watch to 'angtty:init:<input id|input name>' event must be set on parent scope to allow set the input value on initialization (this event will be listened only once)
-    * `watchSetValEvent` - `optional`, `default=false`. Indicates that a watch to 'angtty:setval:<input id|input name>' event must be set on parent scope to allow set the input value
+    * `watchInitEvent` - `optional`, `default=false`. Indicates that a watch to `"angtty:init:<input id|input name>"` event must be set on parent scope to allow set the input value on initialization (this event will be listened only once)
+    * `watchSetValEvent` - `optional`, `default=false`. Indicates that a watch to `"angtty:setval:<input id|input name>"` event must be set on parent scope to allow set the input value
 
 
 Example 1: set an autocomplete search from prefetch and remote data and overriding some options
