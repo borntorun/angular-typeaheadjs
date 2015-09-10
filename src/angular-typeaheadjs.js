@@ -63,6 +63,7 @@
    * @param {expression=} angty-onasynccancel funtion to call on the `typeahead:asynccancel` event
    * @param {expression=} angty-onasyncreceive funtion to call on the `typeahead:asyncreceive` event
    */
+  
   /* @ngInject */
   function angularTypeaheadjs( $log, Q ) {
     var _aEvents = [
