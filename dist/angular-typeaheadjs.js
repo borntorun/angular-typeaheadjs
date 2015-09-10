@@ -7,7 +7,7 @@
   /**
    * @ngdoc directive
    * @name angularTypeaheadjs
-   * @restrict E
+   * @restrict ACE
    * @description
    * An AngularJS directive to serve as a wrapper to the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
    * It allows to apply to an input field the autocomplete typeahead.js features.
@@ -27,6 +27,12 @@
    *  - `[clear=false]`: boolean value which indicates that the value on input must be cleared on suggestion selection.
    *  - `[emitOnlyIfPresent=true]`: boolean value which indicates to only emit on scope the typeahead events that were explicity included in the html tag.
    *  - `[showLog=false]`: boolean value to turn on/off the warnings and errors messages when initializing.
+   *  - `[watchInitEvent=false]`: boolean value that indicates that a watch to 'angtty:init:<input id|input name>' event must be set on parent scope (this event will occurs only once)
+   *                                 use case: default value of input is delayed on some async proccess (ajax call) which cause the value of query to be empty on initialization of typeahead
+   *                                 so this allows the consumer to emit this event and set the proper value; the handler will call input.typeahead('val', value_passed_in);
+   *  - `[watchSetValEvent=false]`: boolean value that indicates that a watch to 'angtty:setval:<input id|input name>' event must be set on parent scope
+   *                                 use case: allows the consumer to emit this event and set the input value; the handler will call input.typeahead('val', value_passed_in);
+
    * @param {object=} angty-ttoptions options hash for the typeahead configuration. Mimic the typeaheadjs options - used to configure options when NOT using attribute `angty-ttdatasets`. Valid keys:
    * - Group I - typeahead options
    *  - `[highlight=true]`: boolean value see typeaheadjs documentation
@@ -41,7 +47,9 @@
    *  - `[sufficient=10]`: integer value (see typeaheadjs documentation)
    *  - `[prefetch]`: string url (see typeaheadjs documentation)
    *  - `[remote]`: string url or an options hash; Only `remote.url` and `remote.wildcard` (`default=%QUERY`) are supported. (see typeaheadjs documentation)
-   * @param {expression=} angty-ttdatasets an expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered). When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
+   * @param {expression=} angty-ttdatasets optional expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered).
+   *                                        When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
+   * @param {expression=} angty-bhfunctions optional expression that resolves to an object with functions to be passed to Bloodhound - identify/sorter - (see Bloodhound documentation)
    * @param {expression=} angty-onactive funtion to call on the `typeahead:active` event
    * @param {expression=} angty-onidle funtion to call on the `typeahead:idle` event
    * @param {expression=} angty-onopen funtion to call on the `typeahead:open` event
@@ -55,6 +63,7 @@
    * @param {expression=} angty-onasynccancel funtion to call on the `typeahead:asynccancel` event
    * @param {expression=} angty-onasyncreceive funtion to call on the `typeahead:asyncreceive` event
    */
+
   /* @ngInject */
   function angularTypeaheadjs( $log, Q ) {
     var _aEvents = [
@@ -75,7 +84,9 @@
         selectOnAutocomplete: false,
         clear: false,
         emitOnlyIfPresent: true,
-        showLog: false
+        showLog: false,
+        watchInitEvent: false,
+        watchSetValEvent: false
       },
       _defaultTTOptions = {
         highlight: true,
@@ -86,8 +97,7 @@
         sufficient: 10
       },
       directive = {
-        // use as attribute: <input angular-typeaheadjs .../>
-        restrict: 'E',
+        restrict: 'ACE',
         scope: {
           angtyOptions: '@?',
           angtyTtoptions: '@?',
@@ -104,19 +114,21 @@
           angtyOnasyncrequest: '&?',
           angtyOnasynccancel: '&?',
           angtyOnasyncreceive: '&?',
-          ngModel: '=?'
+          ngModel: '=?',
+          angtyBhfunctions: '&?'
         },
         link: linkFunction
       };
     return directive;
     ////////////////
     function linkFunction( scope, element, attrs, ctrl ) {
-      var ttOptions, ttDatasets, typeaheadOptions, options, elinput;
+      var ttOptions, ttDatasets, bhFunctions, typeaheadOptions, options, elinput;
 
       //read attr passed in
       options = scope.$eval(scope.angtyOptions);
       ttOptions = scope.$eval(scope.angtyTtoptions);
       ttDatasets = scope.$eval(scope.angtyTtdatasets);
+      bhFunctions = scope.$eval(scope.angtyBhfunctions);
 
       //set default component options and extend
       options = angular.extend(angular.copy(_defaultOptions), options || {});
@@ -130,8 +142,32 @@
         return;
       }
 
+      //set event handlers on scope.parent
+      var watchEventHandlers = [];
+      var inputName = elinput.attr('id') || elinput.attr('name');
+      if ( inputName ) {
+        options.watchInitEvent === true && watchEventHandlers.push(setEventHandler(scope.$parent, elinput, 'angtty:init:' + inputName, true));
+        options.watchSetValEvent === true && watchEventHandlers.push(setEventHandler(scope.$parent, elinput, 'angtty:setval:' + inputName, false));
+
+        if ( watchEventHandlers.length > 0 ) {
+          scope.$parent.$on('$destroy', function() {
+            watchEventHandlers.forEach(function( item ) {
+              try {
+                item && item();
+              } catch( e ) {
+                $log(e);
+              }
+            });
+          });
+        }
+
+      }
+      else {
+        options.showLog && logerror('Input element has no "id" or "name" attribute.', attrs.id);
+      }
+
       //set typeahead (get a promise)
-      var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets);
+      var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets, bhFunctions);
 
       plugTypeaheadPromise
         .then(function( el ) {
@@ -159,6 +195,19 @@
           options.showLog && (logerror(error, elinput[0].id));
         });
 
+      function setEventHandler( scopeParent, el, name, cancel ) {
+        var handler = scopeParent.$on(name, function( event, value ) {
+          //typeahead was not plugged in
+          if ( el.attr('class').indexOf('tt-input') === -1 ) {
+            return;
+          }
+          //console.log('on:' + name);
+          el.typeahead('val', value);
+          cancel && handler();
+        });
+        return handler;
+      }
+
       function bindEvents( el, aEvents ) {
         aEvents.forEach(function( item ) {
           var f = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
@@ -179,13 +228,21 @@
         }
         if ( options.emitOnlyIfPresent === false || attrs.$attr.hasOwnProperty('angtyOn' + tag) ) {
           return function() {
-            scope.$emit('typeahead:' + tag, [].slice.call(arguments));
+            //(https://github.com/borntorun/angular-typeaheadjs/issues/6)
+            var avars = [].slice.call(arguments);
+            var input = arguments[0].target;
+            avars.push({
+              id: input.id,
+              name: input.name,
+              value: input.value
+            });
+            scope.$emit('typeahead:' + tag, avars);
           };
         }
         return angular.noop;
       }
 
-      function plugTypeahead( element, ttopt, datasets ) {
+      function plugTypeahead( element, ttopt, datasets, bhFunctions ) {
         var plugDefer = Q.defer(), datasetbh, optionsbh, optionstt, engine;
         setTimeout(function() {
           plugIt();
@@ -228,6 +285,10 @@
           }
           optionsbh = angular.extend(optionsbh, {
             initialize: false,
+            identify: bhFunctions && bhFunctions.identify ? bhFunctions.identify : function( obj ) {
+              return obj[ttopt.display];
+            },
+            sorter: bhFunctions && bhFunctions.sorter ? bhFunctions.sorter : undefined,
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace(ttopt.display),
             queryTokenizer: Bloodhound.tokenizers.whitespace
           });
@@ -262,6 +323,7 @@
           return okPrefetch || okRemote;
         }
       }
+
     }
 
     /**
@@ -329,5 +391,9 @@
     }
   }
   angularTypeaheadjs.$inject = ["$log", "Q"];
-}());
+}
+
+()
+  )
+;
 
