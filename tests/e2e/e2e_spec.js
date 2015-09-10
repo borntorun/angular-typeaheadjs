@@ -7,6 +7,9 @@ describe('angular-typeaheadjs e2e tests: ', function() {
   });
 
   var UseCase = function( number ) {
+
+    browser.executeScript('if (window.localStorage) {window.localStorage.clear();}');
+
     var selectorUseCase = 'div.usecase' + number,
       selectorPath = selectorUseCase + ' span.twitter-typeahead',
       selectorInput = selectorPath + ' > input[id="usecase' + number + '"].tt-input',
@@ -453,47 +456,67 @@ describe('angular-typeaheadjs e2e tests: ', function() {
 
     });
   });
-  describe('[Use Case 10]: bhfunctions|prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete/clear', function() {
+  xdescribe('[Use Case 10]: bhfunctions|prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete/clear', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(10);
     });
     it('/==>should trigger select and autocomplete events when typing "xun" and autocomplete', function() {
       useCase.inputExists();
-      useCase.inputSendKeys('xun');
+      useCase.inputSendKeys('uni');
       browser.sleep('350').then(function() {
         useCase.inputSendKeys(protractor.Key.TAB);
         browser.sleep('350').then(function() {
-          useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0,2]');
+          useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0,2,1]');
         });
       });
     });
     if ( process.env.BROWSER + process.env.BROWSERVERSION !== 'ie10' ) {
       it('/==>should clear input on select suggestion', function() {
         useCase.inputExists();
-        useCase.inputSendKeys('xun');
+        useCase.inputSendKeys('uni');
         browser.sleep('350').then(function() {
-          useCase.inputValueIs('xun');
+          useCase.inputValueIs('uni');
           useCase.firstSuggestionClick();
           browser.sleep('350').then(function() {
             useCase.inputValueIs('');
-            useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0,2]');
+            useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,0,0,0,0,0,2,1]');
           });
         });
       });
     }
     it('/==>should clear input on autocomplete (selectOnAutocomplete is true)', function() {
       useCase.inputExists();
-      useCase.inputSendKeys('xun');
+      useCase.inputSendKeys('uni');
       browser.sleep('350').then(function() {
-        useCase.inputValueIs('xun');
+        useCase.inputValueIs('uni');
         useCase.inputSendKeys(protractor.Key.TAB);
         browser.sleep('350').then(function() {
           useCase.inputValueIs('');
-          useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0,2]');
+          useCase.triggerEventsValueIs('[0,0,0,0,0,0,1,1,0,0,0,0,2,1]');
         });
       });
     });
+
+  });
+  describe('[Use Case 11]: events | prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete', function() {
+    var useCase;
+    beforeEach(function() {
+      useCase = new UseCase(11);
+    });
+    it('/==>should trigger events angtty:init and angtty:setval', function() {
+      useCase.inputExists();
+      browser.sleep('1000').then(function() {
+        useCase.inputValueIs('Angola');
+        useCase.inputClick();
+        useCase.firstSuggestionClick();
+        browser.sleep('300').then(function(){
+          useCase.inputValueIs('Angola Angola');
+        });
+
+      });
+    });
+
 
   });
 

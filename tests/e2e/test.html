@@ -89,7 +89,7 @@
 <body ng-app="myApp">
 
 
-<!--<div class="usecase1" ng-controller="UseCase1Controller as vm">
+<div class="usecase1" ng-controller="UseCase1Controller as vm">
     Use case 1: [prefetch / remote / no options]:<br/>
 
     <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}">
@@ -199,7 +199,7 @@
 
     <span class="trigger">{{vm.events.trigger}}</span>
 
-</div>-->
+</div>
 
 <div class="usecase10" ng-controller="UseCase10Controller as vm">
     Use case 10: [bhfunctions / prefetch / remote / callbacks - selectOnAutocomplete=true / clear=true]:<br/>
@@ -208,6 +208,19 @@
                          angty-onselect="vm.onselect"
                          angty-onautocomplete="vm.onautocomplete">
         <input class="typeahead" type="text" id="usecase10"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+
+<div class="usecase11" ng-controller="UseCase11Controller as vm">
+    Use case 11: [events / prefetch / remote / callbacks - selectOnAutocomplete=true / clear=true]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onselect="vm.onselect"
+                         angty-onautocomplete="vm.onautocomplete">
+        <input class="typeahead" type="text" id="usecase11"/>
     </angular-typeaheadjs>
 
     <span class="trigger">{{vm.events.trigger}}</span>
@@ -238,7 +251,8 @@
             .controller('UseCase7Controller', [ '$scope', UseCase7Controller ])
             .controller('UseCase8Controller', [ '$scope', UseCase8Controller ])
             .controller('UseCase9Controller', [ '$scope', UseCase9Controller ])
-            .controller('UseCase10Controller', [ '$scope', UseCase10Controller ]);
+            .controller('UseCase10Controller', [ '$scope', UseCase10Controller ])
+            .controller('UseCase11Controller', [ '$scope', '$timeout', UseCase11Controller ]);
     function UseCase1Controller($scope) {
         var vm = this;
         vm.ttOptions = {
@@ -575,10 +589,6 @@
     function UseCase10Controller($scope) {
         var vm = this;
         vm.bhFunctions = {
-            identify: function(obj) {
-                obj.name = 'x' + obj.name;
-                return obj.name;
-            },
             sorter: function compare(a, b) {
                 addTrigger(12);
                 if (a<b) {
@@ -588,10 +598,15 @@
                     return 1;
                 }
                 return 0;
+            },
+            identify: function(obj) {
+                console.log(obj);
+                vm.events.trigger[13] === 0 && addTrigger(13);
+                return obj.name;
             }
-        }
+        };
         vm.ttOptions = {
-            prefetch: '/tests/assets/prefetch.json',
+            prefetch: '/tests/assets/prefetch2.json',
             remote: '/tests/assets/%QUERY.json'
         };
         vm.options = {
@@ -600,8 +615,8 @@
         };
         vm.events = {
             names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive',
-                'sorter'],
-            trigger: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                'sorter', 'identify'],
+            trigger: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         };
         var addTrigger = function (index) {
             $scope.$apply(function () {
@@ -616,6 +631,36 @@
         vm.onautocomplete = function () {
             addTrigger(7);
         };
+    }
+
+    function UseCase11Controller($scope, $timeout) {
+        var vm = this;
+        vm.ttOptions = {
+            prefetch: '/tests/assets/prefetch.json',
+            remote: '/tests/assets/%QUERY.json'
+        };
+        vm.options = {
+            watchInitEvent: true,
+            watchSetValEvent: true,
+            clear: false
+        };
+        vm.events = {
+            names: ['active', 'idle', 'open', 'close', 'change', 'render', 'select', 'autocomplete', 'cursorchange', 'asyncrequest', 'asynccancel', 'asyncreceive'],
+            trigger: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        };
+
+        $timeout (function(){
+            $scope.$emit('angtty:init:usecase11', 'Angola');
+        },100);
+
+        $scope.$on('typeahead:select', function () {
+            $scope.$apply(function () {
+                vm.events.trigger[6] = vm.events.trigger[6] + 1;
+                $scope.$emit('angtty:setval:usecase11', 'Angola Angola');
+
+            });
+        });
+
     }
 
 }());

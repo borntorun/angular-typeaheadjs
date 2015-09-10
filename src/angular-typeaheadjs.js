@@ -27,6 +27,12 @@
    *  - `[clear=false]`: boolean value which indicates that the value on input must be cleared on suggestion selection.
    *  - `[emitOnlyIfPresent=true]`: boolean value which indicates to only emit on scope the typeahead events that were explicity included in the html tag.
    *  - `[showLog=false]`: boolean value to turn on/off the warnings and errors messages when initializing.
+   *  - `[watchInitEvent=false]`: boolean value that indicates that a watch to 'angtty:init:<input id|input name>' event must be set on parent scope (this event will occurs only once)
+   *                                 use case: default value of input is delayed on some async proccess (ajax call) which cause the value of query to be empty on initialization of typeahead
+   *                                 so this allows the consumer to emit this event and set the proper value; the handler will call input.typeahead('val', value_passed_in);
+   *  - `[watchSetValEvent=false]`: boolean value that indicates that a watch to 'angtty:setval:<input id|input name>' event must be set on parent scope
+   *                                 use case: allows the consumer to emit this event and set the input value; the handler will call input.typeahead('val', value_passed_in);
+
    * @param {object=} angty-ttoptions options hash for the typeahead configuration. Mimic the typeaheadjs options - used to configure options when NOT using attribute `angty-ttdatasets`. Valid keys:
    * - Group I - typeahead options
    *  - `[highlight=true]`: boolean value see typeaheadjs documentation
@@ -77,7 +83,9 @@
         selectOnAutocomplete: false,
         clear: false,
         emitOnlyIfPresent: true,
-        showLog: false
+        showLog: false,
+        watchInitEvent: false,
+        watchSetValEvent: false
       },
       _defaultTTOptions = {
         highlight: true,
@@ -133,6 +141,29 @@
         return;
       }
 
+      //set event handlers on scope.parent
+      var watchEventHandlers = [];
+      var inputName = elinput.attr('id') || elinput.attr('name');
+      if ( inputName ) {
+        options.watchInitEvent === true && watchEventHandlers.push(setEventHandler(scope.$parent, elinput, 'angtty:init:' + inputName, true));
+        options.watchSetValEvent === true && watchEventHandlers.push(setEventHandler(scope.$parent, elinput, 'angtty:setval:' + inputName, false));
+
+        if ( watchEventHandlers.length > 0 ) {
+          scope.$parent.$on('$destroy', function() {
+            watchEventHandlers.forEach(function( item ) {
+              try {
+                item && item();
+              } catch( e ) {
+                $log(e);
+              }
+            });
+          });
+        }
+
+      }
+      else {
+        options.showLog && logerror('Input element has no "id" or "name" attribute.', attrs.id);
+      }
 
       //set typeahead (get a promise)
       var plugTypeaheadPromise = plugTypeahead(elinput, typeaheadOptions, ttDatasets, bhFunctions);
@@ -162,6 +193,19 @@
         .catch(function( error ) {
           options.showLog && (logerror(error, elinput[0].id));
         });
+
+      function setEventHandler( scopeParent, el, name, cancel ) {
+        var handler = scopeParent.$on(name, function( event, value ) {
+          //typeahead was not plugged in
+          if ( el.attr('class').indexOf('tt-input') === -1 ) {
+            return;
+          }
+          //console.log('on:' + name);
+          el.typeahead('val', value);
+          cancel && handler();
+        });
+        return handler;
+      }
 
       function bindEvents( el, aEvents ) {
         aEvents.forEach(function( item ) {
@@ -232,8 +276,10 @@
           }
           optionsbh = angular.extend(optionsbh, {
             initialize: false,
-            identify: bhFunctions && bhFunctions.identify? bhFunctions.identify: function( obj ) {return obj[ttopt.display];},
-            sorter: bhFunctions && bhFunctions.sorter? bhFunctions.sorter: undefined,
+            identify: bhFunctions && bhFunctions.identify ? bhFunctions.identify : function( obj ) {
+              return obj[ttopt.display];
+            },
+            sorter: bhFunctions && bhFunctions.sorter ? bhFunctions.sorter : undefined,
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace(ttopt.display),
             queryTokenizer: Bloodhound.tokenizers.whitespace
           });
@@ -335,5 +381,9 @@
       $log.error(message + '([angular-typeaheadjs]:id:' + elemId + ')');
     }
   }
-}());
+}
+
+()
+  )
+;
 
