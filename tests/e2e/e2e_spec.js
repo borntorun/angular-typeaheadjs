@@ -60,7 +60,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
     };
   };
 
-  xdescribe('[Use Case 1]: prefetch|remote /', function() {
+  describe('[Use Case 1]: prefetch|remote /', function() {
     var useCase;
 
     beforeEach(function() {
@@ -98,7 +98,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
 
     });
   });
-  xdescribe('[Use Case 2]: prefetch|remote /trigger all events on scope', function() {
+  describe('[Use Case 2]: prefetch|remote /trigger all events on scope', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(2);
@@ -165,7 +165,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
 
     });
   });
-  xdescribe('[Use Case 3]: prefetch|remote /trigger all events on scope emitOnlyIfPresent', function() {
+  describe('[Use Case 3]: prefetch|remote /trigger all events on scope emitOnlyIfPresent', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(3);
@@ -206,7 +206,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
     }
 
   });
-  xdescribe('[Use Case 4]: prefetch|remote /trigger events on scope select,autocomplete /selectOnAutocomplete/clear', function() {
+  describe('[Use Case 4]: prefetch|remote /trigger events on scope select,autocomplete /selectOnAutocomplete/clear', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(4);
@@ -244,7 +244,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
     });
 
   });
-  xdescribe('[Use Case 5]: prefetch|remote /trigger all events callbacks', function() {
+  describe('[Use Case 5]: prefetch|remote /trigger all events callbacks', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(5);
@@ -310,7 +310,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
 
     });
   });
-  xdescribe('[Use Case 6]: prefetch|remote /calbacks emitOnlyIfPresent', function() {
+  describe('[Use Case 6]: prefetch|remote /calbacks emitOnlyIfPresent', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(6);
@@ -347,7 +347,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
     }
 
   });
-  xdescribe('[Use Case 7]: prefetch|remote /callbacks mixed emit scope emitOnlyIfPresent', function() {
+  describe('[Use Case 7]: prefetch|remote /callbacks mixed emit scope emitOnlyIfPresent', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(7);
@@ -383,7 +383,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
       });
     }
   });
-  xdescribe('[Use Case 8]: prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete/clear', function() {
+  describe('[Use Case 8]: prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete/clear', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(8);
@@ -423,7 +423,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
     });
 
   });
-  xdescribe('[Use Case 9]: datasets useOwnDefaults = false', function() {
+  describe('[Use Case 9]: datasets useOwnDefaults = false', function() {
     var useCase;
 
     beforeEach(function() {
@@ -456,7 +456,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
 
     });
   });
-  xdescribe('[Use Case 10]: bhfunctions|prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete/clear', function() {
+  describe('[Use Case 10]: bhfunctions|prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete/clear', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(10);
@@ -499,7 +499,7 @@ describe('angular-typeaheadjs e2e tests: ', function() {
     });
 
   });
-  xdescribe('[Use Case 11]: events | prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete', function() {
+  describe('[Use Case 11]: events | prefetch|remote /trigger events callbacks select,autocomplete /selectOnAutocomplete', function() {
     var useCase;
     beforeEach(function() {
       useCase = new UseCase(11);
