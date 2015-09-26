@@ -74,6 +74,7 @@ In your html template (default and minimal use case):
     * `selectOnAutocomplete` - `optional`, `default=false`. Specifying that the `select` event is triggered when `autocomplete` event occurs.
     * `clear` - `optional`, `default=true`. Indicates that the value on input must be cleared on suggestion selection.
     * `emitOnlyIfPresent` - `optional`, `default=true`. Indicates to only emit on scope the typeahead events that were explicity included in the html tag.
+    * `setSameListenerEventBefore` - `optional`, `default=false`. Indicates to set the the listener to typeahead:before<event> the same that is set to typeahead:<event>
     * `showLog` - `optional`, `default=false`. Turn on/off the warnings and errors messages when initializing.       
     * `watchInitEvent` - `optional`, `default=false`. Indicates that a watch to `"angtty:init:<input id|input name>"` event must be set on parent scope to allow set the input value on initialization (this event will be listened only once)
     * `watchSetValEvent` - `optional`, `default=false`. Indicates that a watch to `"angtty:setval:<input id|input name>"` event must be set on parent scope to allow set the input value
@@ -157,18 +158,26 @@ vm.ttDatasets = [{
   <input class="typeahead" type="text" ... />
 </angular-typeaheadjs>
 ```
-* `angty-onactive` - funtion to call on the `typeahead:active` event
-* `angty-onidle` - funtion to call on the `typeahead:idle` event
-* `angty-onopen` - funtion to call on the `typeahead:open` event
-* `angty-onclose` - funtion to call on the `typeahead:close` event
-* `angty-onchange` - funtion to call on the `typeahead:change` event
-* `angty-onrender` - funtion to call on the `typeahead:render` event
-* `angty-onselect` - funtion to call on the `typeahead:select` event
-* `angty-onautocomplete` - funtion to call on the `typeahead:autocomplete` event
-* `angty-oncursorchange` - funtion to call on the `typeahead:cursorchange` event
-* `angty-onasyncrequest` - funtion to call on the `typeahead:asyncreques`t event
-* `angty-onasynccancel` - funtion to call on the `typeahead:asynccancel` event
-* `angty-onasyncreceive` - funtion to call on the `typeahead:asyncreceive` event
+* `angty-onactive` - funtion handler to the `typeahead:active` event
+* `angty-onidle` - funtion handler to the `typeahead:idle` event
+* `angty-onopen` - funtion handler to the `typeahead:open` event
+* `angty-onclose` - funtion handler to the `typeahead:close` event
+* `angty-onchange` - funtion handler to the `typeahead:change` event
+* `angty-onrender` - funtion handler to the `typeahead:render` event
+* `angty-onselect` - funtion handler to the `typeahead:select` event
+* `angty-onautocomplete` - funtion handler to the `typeahead:autocomplete` event
+* `angty-oncursorchange` - funtion handler to the `typeahead:cursorchange` event
+* `angty-onasyncrequest` - funtion handler to the `typeahead:asyncreques`t event
+* `angty-onasynccancel` - funtion handler to the `typeahead:asynccancel` event
+* `angty-onasyncreceive` - funtion handler to the `typeahead:asyncreceive` event
+
+* `angty-onbeforeactive` function handler to the `typeahead:beforeactive` event
+* `angty-onbeforeidle` function handler to the `typeahead:beforeidle` event
+* `angty-onbeforeopen` function handler to the `typeahead:beforeopen` event
+* `angty-onbeforeclose` function handler to the `typeahead:beforeclose` event
+* `angty-onbeforeautocomplete` function handler to the `typeahead:beforeautocomplete` event
+* `angty-onbeforeselect` function handler to the `typeahead:beforeselect` event
+* `angty-onbeforecursorchange` function handler to the `typeahead:beforecursorchange` event
 
 Example:
 ```html

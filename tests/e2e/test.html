@@ -163,6 +163,7 @@
     <span class="trigger">{{vm.events.trigger}}</span>
 
 </div>
+
 <div class="usecase7" ng-controller="UseCase7Controller as vm">
     Use case 7: [prefetch / remote / callback mixed emit scope emitOnlyIfPresent]:<br/>
 
@@ -176,6 +177,7 @@
     <span class="trigger">{{vm.events.trigger}}</span>
 
 </div>
+
 <div class="usecase8" ng-controller="UseCase8Controller as vm">
     Use case 8: [prefetch / remote / callbacks - selectOnAutocomplete=true / clear=true]:<br/>
 
@@ -188,6 +190,7 @@
     <span class="trigger">{{vm.events.trigger}}</span>
 
 </div>
+
 <div class="usecase9" ng-controller="UseCase9Controller as vm">
     Use case 9: [datasets / callbacks / useOwnDefaults = false]:<br/>
 
@@ -215,12 +218,44 @@
 </div>
 
 <div class="usecase11" ng-controller="UseCase11Controller as vm">
-    Use case 11: [events / prefetch / remote / callbacks - selectOnAutocomplete=true / clear=true]:<br/>
+    Use case 11: [angtty:setval angtty:init / events / prefetch / remote / callbacks - selectOnAutocomplete=true / clear=true]:<br/>
 
     <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
                          angty-onselect="vm.onselect"
                          angty-onautocomplete="vm.onautocomplete">
         <input class="typeahead" type="text" id="usecase11"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+
+<div class="usecase12" ng-controller="UseCase12Controller as vm">
+    Use case 12: [prefetch / remote / handlers on before events]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onbeforeidle="vm.onbeforeidle"
+                         angty-onbeforeactive="vm.onbeforeactive"
+                         angty-onbeforeopen="vm.onbeforeopen"
+                         angty-onbeforeclose="vm.onbeforeclose"
+                         angty-onbeforecursorchange="vm.onbeforecursorchange"
+                         angty-onbeforeautocomplete="vm.onbeforeautocomplete"
+                         angty-onbeforeselect="vm.onbeforeselect">
+
+        <input class="typeahead" type="text" id="usecase12"/>
+    </angular-typeaheadjs>
+
+    <span class="trigger">{{vm.events.trigger}}</span>
+
+</div>
+
+<div class="usecase13" ng-controller="UseCase13Controller as vm">
+    Use case 13: [prefetch / remote / same handlers on before events - setSameListenerEventBefore=true]:<br/>
+
+    <angular-typeaheadjs angty-ttoptions="{{vm.ttOptions}}" angty-options="{{vm.options}}"
+                         angty-onopen="vm.onopen">
+
+        <input class="typeahead" type="text" id="usecase13"/>
     </angular-typeaheadjs>
 
     <span class="trigger">{{vm.events.trigger}}</span>
@@ -233,10 +268,10 @@
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../../bower_components/q/q.js"></script>
 <script src="../../bower_components/angular/angular.min.js"></script>
-<!--<script src="../../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>-->
-<script src="../../bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
-<!--<script src="../../dist/angular-typeaheadjs.min.js"></script>-->
-<script src="../../src/angular-typeaheadjs.js"></script>
+<script src="../../bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+<!--<script src="../../bower_components/typeahead.js/dist/typeahead.bundle.js"></script>-->
+<script src="../../dist/angular-typeaheadjs.min.js"></script>
+<!--<script src="../../src/angular-typeaheadjs.js"></script>-->
 <script>
 
 (function () {
@@ -252,7 +287,9 @@
             .controller('UseCase8Controller', [ '$scope', UseCase8Controller ])
             .controller('UseCase9Controller', [ '$scope', UseCase9Controller ])
             .controller('UseCase10Controller', [ '$scope', UseCase10Controller ])
-            .controller('UseCase11Controller', [ '$scope', '$timeout', UseCase11Controller ]);
+            .controller('UseCase11Controller', [ '$scope', '$timeout', UseCase11Controller ])
+            .controller('UseCase12Controller', [ '$scope', UseCase12Controller ])
+            .controller('UseCase13Controller', [ '$scope', UseCase13Controller ]);
     function UseCase1Controller($scope) {
         var vm = this;
         vm.ttOptions = {
@@ -277,8 +314,8 @@
             trigger: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         };
         var argLog = function (name, arg) {
-            console.log(name, arg);
-            //console.log(arg[1] instanceof jQuery.Event);
+            //console.log(name, arg);
+            ////console.log(arg[1] instanceof jQuery.Event);
         };
         vm.events.names.forEach(function (item, index) {
             $scope.$on('typeahead:' + item, function () {
@@ -375,7 +412,7 @@
             addTrigger(5);
         };
         vm.onselect = function () {
-            console.log([].slice.call(arguments));
+            //console.log([].slice.call(arguments));
             addTrigger(6);
         };
         vm.onautocomplete = function () {
@@ -439,7 +476,7 @@
             $scope.$apply(function () {
                 vm.events.trigger[index]++;
             });
-            console.log(index, [].slice.call(arguments, 1));
+            //console.log(index, [].slice.call(arguments, 1));
         }
         vm.onselect = function () {
             addTrigger(6);
@@ -600,7 +637,7 @@
                 return 0;
             },
             identify: function(obj) {
-                console.log(obj);
+                //console.log(obj);
                 vm.events.trigger[13] === 0 && addTrigger(13);
                 return obj.name;
             }
@@ -625,7 +662,7 @@
             //console.log(index,[].slice.call(arguments, 1));
         }
         vm.onselect = function () {
-            console.log(arguments);
+            //console.log(arguments);
             addTrigger(6);
         };
         vm.onautocomplete = function () {
@@ -661,6 +698,72 @@
             });
         });
 
+    }
+
+    function UseCase12Controller($scope) {
+        var vm = this;
+        vm.ttOptions = {
+            prefetch: '/tests/assets/prefetch.json',
+            remote: '/tests/assets/%QUERY.json'
+        };
+        vm.options = {
+
+        };
+        vm.events = {
+            names: ['beforeactive', 'beforeidle', 'beforeopen', 'beforclose', 'beforeselect', 'beforeautocomplete', 'beforecursorchange'],
+            trigger: [0, 0, 0, 0, 0, 0, 0]
+        };
+        var addTrigger = function (index) {
+            $scope.$apply(function () {
+                vm.events.trigger[index]++;
+            });
+            //console.log(index, [].slice.call(arguments, 1));
+        }
+        vm.onbeforeactive = function () {
+            addTrigger(0);
+        };
+        vm.onbeforeidle = function () {
+            addTrigger(1);
+        };
+        vm.onbeforeopen = function () {
+            addTrigger(2);
+        };
+        vm.onbeforeclose = function () {
+            addTrigger(3);
+        };
+        vm.onbeforeselect = function () {
+            addTrigger(4);
+        };
+        vm.onbeforeautocomplete = function () {
+            addTrigger(5);
+        };
+        vm.onbeforecursorchange = function () {
+            addTrigger(6);
+        };
+    }
+
+    function UseCase13Controller($scope) {
+        var vm = this;
+        vm.ttOptions = {
+            prefetch: '/tests/assets/prefetch.json',
+            remote: '/tests/assets/%QUERY.json'
+        };
+        vm.options = {
+            setSameListenerEventBefore: true
+        };
+        vm.events = {
+            names: ['open'],
+            trigger: [0]
+        };
+        var addTrigger = function (index) {
+            $scope.$apply(function () {
+                vm.events.trigger[index]++;
+            });
+            //console.log(index, [].slice.call(arguments, 1));
+        }
+        vm.onopen = function () {
+            addTrigger(0);
+        };
     }
 
 }());
