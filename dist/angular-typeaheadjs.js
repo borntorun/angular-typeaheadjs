@@ -26,6 +26,7 @@
    *  - `[selectOnAutocomplete=false]`: boolean value specifying that the `select` event is triggered when `autocomplete` event occurs.
    *  - `[clear=false]`: boolean value which indicates that the value on input must be cleared on suggestion selection.
    *  - `[emitOnlyIfPresent=true]`: boolean value which indicates to only emit on scope the typeahead events that were explicity included in the html tag.
+   *  - `[setSameListenerEventBefore]`: boolean value which indicates to set the the listener to typeahead:before<event> the same that is set to typeahead:<event>
    *  - `[showLog=false]`: boolean value to turn on/off the warnings and errors messages when initializing.
    *  - `[watchInitEvent=false]`: boolean value that indicates that a watch to 'angtty:init:<input id|input name>' event must be set on parent scope (this event will occurs only once)
    *                                 use case: default value of input is delayed on some async proccess (ajax call) which cause the value of query to be empty on initialization of typeahead
@@ -50,18 +51,26 @@
    * @param {expression=} angty-ttdatasets optional expression that resolves to an array of typeahead datasets [*{}] to pass to typeahead.datasets (the datasets are used as is, no options(from groups II | III) from the 'angty-ttoptions' attribute are considered).
    *                                        When this attribute is NOT passed, an internal dataset with a Bloodhound engine as source is created for prefetch and/or remote suggestions, with group I `angty-ttoptions` (or defaults) applied.
    * @param {expression=} angty-bhfunctions optional expression that resolves to an object with functions to be passed to Bloodhound - identify/sorter - (see Bloodhound documentation)
-   * @param {expression=} angty-onactive funtion to call on the `typeahead:active` event
-   * @param {expression=} angty-onidle funtion to call on the `typeahead:idle` event
-   * @param {expression=} angty-onopen funtion to call on the `typeahead:open` event
-   * @param {expression=} angty-onclose funtion to call on the `typeahead:close` event
-   * @param {expression=} angty-onchange funtion to call on the `typeahead:change` event
-   * @param {expression=} angty-onrender funtion to call on the `typeahead:render` event
-   * @param {expression=} angty-onselect funtion to call on the `typeahead:select` event
-   * @param {expression=} angty-onautocomplete funtion to call on the `typeahead:autocomplete` event
-   * @param {expression=} angty-oncursorchange funtion to call on the `typeahead:cursorchange` event
-   * @param {expression=} angty-onasyncrequest funtion to call on the `typeahead:asyncreques`t event
-   * @param {expression=} angty-onasynccancel funtion to call on the `typeahead:asynccancel` event
-   * @param {expression=} angty-onasyncreceive funtion to call on the `typeahead:asyncreceive` event
+   * @param {expression=} angty-onactive function handler to the `typeahead:active` event
+   * @param {expression=} angty-onidle function handler to the `typeahead:idle` event
+   * @param {expression=} angty-onopen function handler to the `typeahead:open` event
+   * @param {expression=} angty-onclose function handler to the `typeahead:close` event
+   * @param {expression=} angty-onchange function handler to the `typeahead:change` event
+   * @param {expression=} angty-onrender function handler to the `typeahead:render` event
+   * @param {expression=} angty-onselect function handler to the `typeahead:select` event
+   * @param {expression=} angty-onautocomplete function handler to the `typeahead:autocomplete` event
+   * @param {expression=} angty-oncursorchange function handler to the `typeahead:cursorchange` event
+   * @param {expression=} angty-onasyncrequest function handler to the `typeahead:asyncrequest` event
+   * @param {expression=} angty-onasynccancel function handler to the `typeahead:asynccancel` event
+   * @param {expression=} angty-onasyncreceive function handler to the `typeahead:asyncreceive` event
+   *
+   * @param {expression=} angty-onbeforeactive function handler to the `typeahead:beforeactive` event
+   * @param {expression=} angty-onbeforeidle function handler to the `typeahead:beforeidle` event
+   * @param {expression=} angty-onbeforeopen function handler to the `typeahead:beforeopen` event
+   * @param {expression=} angty-onbeforeclose function handler to the `typeahead:beforeclose` event
+   * @param {expression=} angty-onbeforeautocomplete function handler to the `typeahead:beforeautocomplete` event
+   * @param {expression=} angty-onbeforeselect function handler to the `typeahead:beforeselect` event
+   * @param {expression=} angty-onbeforecursorchange funtion handler to the `typeahead:beforecursorchange` event
    */
 
   /* @ngInject */
@@ -102,6 +111,7 @@
           angtyOptions: '@?',
           angtyTtoptions: '@?',
           angtyTtdatasets: '&?',
+
           angtyOnactive: '&?',
           angtyOnidle: '&?',
           angtyOnopen: '&?',
@@ -114,6 +124,15 @@
           angtyOnasyncrequest: '&?',
           angtyOnasynccancel: '&?',
           angtyOnasyncreceive: '&?',
+
+          angtyOnbeforeactive: '&?',
+          angtyOnbeforeidle: '&?',
+          angtyOnbeforeopen: '&?',
+          angtyOnbeforeclose: '&?',
+          angtyOnbeforeautocomplete: '&?',
+          angtyOnbeforecursorchange: '&?',
+          angtyOnbeforeselect: '&?',
+
           ngModel: '=?',
           angtyBhfunctions: '&?'
         },
@@ -210,12 +229,27 @@
 
       function bindEvents( el, aEvents ) {
         aEvents.forEach(function( item ) {
-          var f = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
-          /*if (f !== angular.noop) {
-              //console.log(item);
-              el.on(item.event.replace(/\$/g, 'typeahead:'), options, f);
-          }*/
-          f !== angular.noop && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, f));
+          //get listener to event tag
+          var fEvent = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
+
+          var existsTagFunction = (fEvent !== angular.noop);
+          //set listener if exists
+          existsTagFunction && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, fEvent));
+
+          //get listener to before event tag
+          var fEventBefore = getEventCallback('before' + (item.trigger || item.event).replace('$', ''));
+
+          //set listener if exists
+          if (fEventBefore !== angular.noop) {
+            el.on(item.event.replace(/\$/g, 'typeahead:before'), options, fEventBefore);
+          }
+          else {
+            //if not and triggerBeforeSameListener is set
+            if(options.setSameListenerEventBefore === true && existsTagFunction) {
+              //set the same listener
+              el.on(item.event.replace(/\$/g, 'typeahead:before'), options, fEvent);
+            }
+          }
         });
       }
 
@@ -391,9 +425,4 @@
     }
   }
   angularTypeaheadjs.$inject = ["$log", "Q"];
-}
-
-()
-  )
-;
-
+}());
