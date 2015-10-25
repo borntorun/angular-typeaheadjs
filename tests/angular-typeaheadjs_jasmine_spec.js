@@ -37,6 +37,9 @@ describe('angular-typeaheadjs', function() {
 
     $compile(element)($scope);
     $scope.$digest();
+
+
+
     /**
      * if need to wait before expects...wait
      */
@@ -46,9 +49,12 @@ describe('angular-typeaheadjs', function() {
       /**
        * call expects
        */
+      if ( item.actionBeforeExpectations ) {
+        item.actionBeforeExpectations.call(null, element.find('input').scope(), item, element);
+      }
       item.expectations(element);
       done && done();
-    }, item.waitms || 50);
+    }, item.waitms || 100);
   }
 
   /**
@@ -369,6 +375,35 @@ describe('angular-typeaheadjs', function() {
       expect(typeaheadargs[1][1].name).toBe(EL.opt.nameNHLTeams.name);
     }
   });
+  describe('Test call to jquery.off: unset listeners', function() {
+    var sinonSpies = [
+      {obj: $.fn, methodname: 'off'}
+    ];
+    afterEach(function() {
+      restoreSpies(sinonSpies);
+    });
+    var _destroyscope = function( scope ) {
+      scope.$destroy();
+    };
+    doItAll(
+      [
+        {
+          caption: 'Should call jquery.off 24 times',
+          tag: EL.addNewTTOpt(EL.opt.remote).addOpt(EL.opt.emitOnlyIfPresentFalse).tag(),
+          options: EL.scopeOptions(),
+          ttoptions: EL.scopeTTOptions(),
+          actionBeforeExpectations: _destroyscope
+        }
+      ], expectations, { sinonSpySuite: sinonSpies}
+    );
+    function expectations( /*el*/ ) {
+      /*jshint validthis:true*/
+      var _jqueryoff = this.sinonSpySuite[0].spy/*,
+        _jqueryoffArgs = _jqueryoff.args[0]*/;
+      expect(_jqueryoff).toHaveBeenCalled();
+      expect(_jqueryoff.callCount).toBe(24);
+    }
+  });
 
   /**
    * Maker for tag element
@@ -430,8 +465,8 @@ describe('angular-typeaheadjs', function() {
         selectOnAutocompleteTrue: {selectOnAutocomplete: true},
         clearFalse: {clear: false},
         clearTrue: {clear: false},
-        emitOnlyIfPresentFalse: {emitOnlyIfPresent: true},
-        emitOnlyIfPresentTrue: {emitOnlyIfPresent: false},
+        emitOnlyIfPresentFalse: {emitOnlyIfPresent: false},
+        emitOnlyIfPresentTrue: {emitOnlyIfPresent: true},
         showLogFalse: {showLog: false},
         showLogTrue: {showLog: true},
         watchInitEventTrue: {watchInitEvent: true},
@@ -448,8 +483,8 @@ describe('angular-typeaheadjs', function() {
         '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
         '</angular-typeaheadjs>',
       TAGATTR = '<span angular-typeaheadjs $options$$ttoptions$$ttdatasets$$ttbhfunctions$>' +
-      '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
-      '</span>',
+        '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
+        '</span>',
       TAGCLASS = '<span class="angular-typeaheadjs" $options$$ttoptions$$ttdatasets$$ttbhfunctions$>' +
         '<input class="typeahead" type="text" placeholder="filter..." id="$IDTEST$"/>' +
         '</span>';

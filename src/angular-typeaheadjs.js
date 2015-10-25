@@ -141,7 +141,7 @@
     return directive;
     ////////////////
     function linkFunction( scope, element, attrs, ctrl ) {
-      var ttOptions, ttDatasets, bhFunctions, typeaheadOptions, options, elinput;
+      var ttOptions, ttDatasets, bhFunctions, typeaheadOptions, options, elinput, evToUnbind = [];
 
       //read attr passed in
       options = scope.$eval(scope.angtyOptions);
@@ -227,30 +227,49 @@
         return handler;
       }
 
+      function setListener( el, name, opt, handler ) {
+        evToUnbind.push({
+          el: el,
+          name: name,
+          opt: opt,
+          handler: handler
+        });
+        el.on(name, opt, handler);
+      }
       function bindEvents( el, aEvents ) {
-        aEvents.forEach(function( item ) {
+        for ( var i = 0; i < aEvents.length; i++ ) {
+          var item = aEvents[i];
           //get listener to event tag
           var fEvent = isFunction(item.trigger) ? item.trigger : getEventCallback((item.trigger || item.event).replace('$', ''));
-
           var existsTagFunction = (fEvent !== angular.noop);
           //set listener if exists
-          existsTagFunction && (el.on(item.event.replace(/\$/g, 'typeahead:'), options, fEvent));
+          existsTagFunction && (setListener(el, item.event.replace(/\$/g, 'typeahead:'), options, fEvent));
 
           //get listener to before event tag
-          var fEventBefore = getEventCallback('before' + (item.trigger || item.event).replace('$', ''));
+          var fEventBefore = isFunction(item.trigger) ? angular.noop : getEventCallback('before' + (item.trigger || item.event).replace('$', ''));
 
           //set listener if exists
-          if (fEventBefore !== angular.noop) {
-            el.on(item.event.replace(/\$/g, 'typeahead:before'), options, fEventBefore);
+          if ( fEventBefore !== angular.noop ) {
+            setListener(el, item.event.replace(/\$/g, 'typeahead:before'), options, fEventBefore);
           }
           else {
             //if not and triggerBeforeSameListener is set
-            if(options.setSameListenerEventBefore === true && existsTagFunction) {
+            if ( options.setSameListenerEventBefore === true && existsTagFunction ) {
               //set the same listener
-              el.on(item.event.replace(/\$/g, 'typeahead:before'), options, fEvent);
+              setListener(el, item.event.replace(/\$/g, 'typeahead:before'), options, fEvent);
             }
           }
-        });
+        }
+        if ( evToUnbind.length > 0 ) {
+          scope.$on('$destroy', function() {
+            evToUnbind.forEach(function( item ) {
+              try {
+                item.el.off(item.name, item.handler);
+              } catch( e ) {
+              }
+            });
+          });
+        }
       }
 
       function getEventCallback( tag ) {
