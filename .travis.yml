@@ -25,7 +25,7 @@ env:
     - secure: cUI29F9xzu0VSJ6lxy+koBVjLDf4aVuvc75GWikZw3gNVJKNEgorxTIdS7u2y0UWKfLYI0++uqaUecbJS2NAQ+TGP97UwsCfrB24XV7u9a9mWhnYqTqnkQXECnGUoQRHPcNQ0K81CZhjP5VlqL1+pVJG8t8/gveCc5o1EZm8jnE=
     - secure: YRtGf9M4KRN8Xr1ScBzQK/yfeMH76mofr9bhMDaro/rVabH/IER8eVSlTIB2JA5xZy1EWCz05wyeHnXMO3Ei1QXkcFaexs4Z5Va+GEMTfhQhwDlCUy5irA/4K1SB5vGKUih9pWazV4Hd/4Eo56WdrwJnXZvWftArKxN35HLYD1g=
 node_js:
-- 0.12
+- 4.4.5
 script: tests/e2e/integration/run-ci
 branches:
   only:
@@ -33,9 +33,9 @@ branches:
     - /^integration-.*$/
     - /^changes-to-.*$/
 before_script:
-- npm install -g grunt-cli@0.1.13
-- npm install -g node-static@0.7.6
-- npm install -g bower@1.3.12
+- npm install -g grunt-cli@1.2.0
+- npm install -g node-static@0.7.7
+- npm install -g bower@1.7.9
 - npm install -g protractor
 - npm install colors
 - bower install
