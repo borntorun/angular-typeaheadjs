@@ -1,6 +1,7 @@
 /*jshint -W098 */
 (function() {
   'use strict';
+  angularTypeaheadjs.$inject = ["$log", "Q"];
   angular.module('angularTypeaheadjs', [])
     .constant('Q', Q)
     .directive('angularTypeaheadjs', angularTypeaheadjs);
@@ -443,5 +444,4 @@
       $log.error(message + '([angular-typeaheadjs]:id:' + elemId + ')');
     }
   }
-  angularTypeaheadjs.$inject = ["$log", "Q"];
 }());
