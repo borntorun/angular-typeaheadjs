@@ -645,7 +645,7 @@ describe('angular-typeaheadjs', function() {
   // This is the equivalent of the old waitsFor/runs syntax
   // which was removed from Jasmine 2
   // Credits: https://gist.github.com/abreckner/110e28897d42126a3bb9
-  var waitsForAndRuns = function( escapeFunction, runFunction, escapeTime ) {
+  function waitsForAndRuns( escapeFunction, runFunction, escapeTime ) {
     if ( escapeFunction() ) {
       runFunction();
       return;
@@ -668,6 +668,6 @@ describe('angular-typeaheadjs', function() {
       clearInterval(interval);
       clearTimeout(timeOut);
     }
-  };
+  }
 });
 

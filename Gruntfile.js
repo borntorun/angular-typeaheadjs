@@ -150,7 +150,7 @@ module.exports = function( grunt ) {
         configFile: "tests/e2e/local/protractor.js",
         noColor: false,
         debug: false,
-        args: { }
+        args: {}
       },
       single: {
         options: {

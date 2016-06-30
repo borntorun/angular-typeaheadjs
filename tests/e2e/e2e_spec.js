@@ -509,10 +509,14 @@ describe('angular-typeaheadjs e2e tests: ', function() {
       browser.sleep('1000').then(function() {
         useCase.inputValueIs('Angola');
         useCase.inputClick();
-        useCase.firstSuggestionClick();
         browser.sleep('300').then(function(){
-          useCase.inputValueIs('Angola Angola');
+          useCase.firstSuggestionClick();
+          browser.sleep('300').then(function(){
+            useCase.inputValueIs('Angola Angola');
+          });
         });
+
+
 
       });
     });
