@@ -47,7 +47,7 @@
     "grunt-ngdocs": "^0.2.7",
     "grunt-protractor-runner": "^3.2.0",
     "grunt-protractor-webdriver": "^0.2.0",
-    "grunt-release-build": "^0.1.2",
+    "grunt-release-build": "^0.2.0",
     "grunt-sed": "^0.1.1",
     "grunt-shell-spawn": "^0.3.8",
     "grunt-step": "^1.0.0",
