@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/borntorun/angular-typeaheadjs.svg?branch=master)](https://travis-ci.org/borntorun/angular-typeaheadjs)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![devDependency Status](https://david-dm.org/borntorun/angular-typeaheadjs/dev-status.svg)](https://david-dm.org/borntorun/angular-typeaheadjs#info=devDependencies)
 
 angular-typeaheadjs
 =======================
