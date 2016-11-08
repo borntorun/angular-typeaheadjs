@@ -6,7 +6,7 @@ angular-typeaheadjs
 
 An AngularJS directive to serve as a wrapper to the [typeahead.js](https://github.com/twitter/typeahead.js) autocomplete library.
 It allows to apply to an input field the autocomplete typeahead.js features.
-In the default use case it will apply autocomplete search functionality for an `input.typeahead`. A dataset with a [Bloddhound](https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md) engine as source will be created retrieving data from prefecth and/or remote urls.
+In the default use case it will apply autocomplete search functionality for an `input.typeahead`. A dataset with a [Bloodhound](https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md) engine as source will be created retrieving data from prefecth and/or remote urls.
 
 Requirements
 ------------
