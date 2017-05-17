@@ -32,6 +32,7 @@ branches:
     - master
     - /^integration-.*$/
     - /^changes-to-.*$/
+    - /^greenkeeper/.*$/
 before_script:
 - npm install -g grunt-cli@0.1.13
 - npm install -g node-static@0.7.6
